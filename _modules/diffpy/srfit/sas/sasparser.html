@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.sas.sasparser &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.sas.sasparser &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,12 +91,12 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;This module contains parsers for SAS data.</span>
+<span class="sd">"""This module contains parsers for SAS data.</span>
 
 <span class="sd">SASParser uses the sas DataLoader class to load data.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SASParser&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SASParser"</span><span class="p">]</span>
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParseError</span>
@@ -106,16 +106,16 @@
 <div class="viewcode-block" id="SASParser">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.SASParser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SASParser</span><span class="p">(</span><span class="n">ProfileParser</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for parsing a sas profile.</span>
+<span class="w">    </span><span class="sd">"""Class for parsing a sas profile.</span>
 
 <span class="sd">    This uses a sas DataLoader to load the data. The DataInfo object it returns</span>
-<span class="sd">    is held in the metadata under the name &quot;datainfo&quot;.</span>
+<span class="sd">    is held in the metadata under the name "datainfo".</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    _format</span>
 <span class="sd">        Name of the data format that this parses (string, default</span>
-<span class="sd">        &quot;&quot;). The format string is a unique identifier for the data</span>
+<span class="sd">        ""). The format string is a unique identifier for the data</span>
 <span class="sd">        format handled by the parser.</span>
 <span class="sd">    _banks</span>
 <span class="sd">        The data from each bank. Each bank contains a</span>
@@ -165,14 +165,14 @@
 
 
 <span class="sd">    These may appear in the metadata dictionary</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">_format</span> <span class="o">=</span> <span class="s2">&quot;SAS&quot;</span>
+    <span class="n">_format</span> <span class="o">=</span> <span class="s2">"SAS"</span>
 
 <div class="viewcode-block" id="SASParser.parse_file">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.SASParser.parse_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">parse_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">column_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a file and set the _x, _y, _dx, _dy and _meta</span>
+<span class="w">        </span><span class="sd">"""Parse a file and set the _x, _y, _dx, _dy and _meta</span>
 <span class="sd">        variables.</span>
 
 <span class="sd">        The sas DataLoader reads the data and the metadata together, so</span>
@@ -198,7 +198,7 @@
 <span class="sd">            if the file cannot be read</span>
 <span class="sd">        ParseError</span>
 <span class="sd">            if the file cannot be parsed</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">sasdata.dataloader.loader</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sas_dataloader</span>
 
         <span class="n">Loader</span> <span class="o">=</span> <span class="n">sas_dataloader</span><span class="o">.</span><span class="n">Loader</span>
@@ -213,8 +213,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_banks</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;datainfo&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">"filename"</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">"datainfo"</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
 
         <span class="k">for</span> <span class="n">data_obj</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_banks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>crystalpdfobjcryst.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>crystalpdfobjcryst.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,17 +122,17 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of a PDF refinement using pyobjcryst and PDFGenerator.</span>
+<span class="sd">"""Example of a PDF refinement using pyobjcryst and PDFGenerator.</span>
 
 <span class="sd">This example is similar to crystalpdf.py, except that here we refine a</span>
 <span class="sd">pyobjcryst crystal object. In this example we use internal constraints</span>
 <span class="sd">provided by the ObjCrystCrystalParSet structure adapter.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">gaussianrecipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">scipyOptimize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadCrystal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst.crystal</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_crystal_from_cif</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FitContribution</span><span class="p">,</span>
@@ -147,7 +147,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">datname</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a fitting recipe for crystalline PDF data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create a fitting recipe for crystalline PDF data."""</span>
     <span class="c1"># The Profile</span>
     <span class="c1"># This will be used to store the observed and calculated PDF profile.</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
@@ -165,15 +165,15 @@
     <span class="c1"># This time we use the CreateCrystalFromCIF method of pyobjcryst.crystal to</span>
     <span class="c1"># create a Crystal object. That object is passed to the PDFGenerator as in</span>
     <span class="c1"># the previous example.</span>
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
-    <span class="n">stru</span> <span class="o">=</span> <span class="n">loadCrystal</span><span class="p">(</span><span class="n">ciffile</span><span class="p">)</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">"G"</span><span class="p">)</span>
+    <span class="n">stru</span> <span class="o">=</span> <span class="n">create_crystal_from_cif</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ciffile</span><span class="p">))</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setQmax</span><span class="p">(</span><span class="mf">40.0</span><span class="p">)</span>
 
     <span class="c1"># The FitContribution</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;nickel&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">"nickel"</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
 
     <span class="c1"># Make the FitRecipe and add the FitContribution.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
@@ -183,7 +183,7 @@
 
     <span class="c1"># As before, we get a handle to the structure parameter set. In this case,</span>
     <span class="c1"># it is a ObjCrystCrystalParSet instance that was created when we called</span>
-    <span class="c1"># &#39;setStructure&#39; above. The ObjCrystCrystalParSet has different Parameters</span>
+    <span class="c1"># 'setStructure' above. The ObjCrystCrystalParSet has different Parameters</span>
     <span class="c1"># and options than the DiffpyStructureParSet used in the last example. See</span>
     <span class="c1"># its documentation in diffpy.srfit.structure.objcrystparset.</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">phase</span>
@@ -191,13 +191,13 @@
     <span class="c1"># Here is where we created space group constraints in the previous example.</span>
     <span class="c1"># The difference in this example is that the ObjCrystCrystalParSet is aware</span>
     <span class="c1"># of space groups, and the DiffpyStructureParSet is not. Constraints are</span>
-    <span class="c1"># created internally when &quot;sgpars&quot; attribute is called for. These</span>
+    <span class="c1"># created internally when "sgpars" attribute is called for. These</span>
     <span class="c1"># constraints get enforced within the ObjCrystCrystalParSet. Free</span>
-    <span class="c1"># Parameters are stored within the &#39;sgpars&#39; member of the</span>
+    <span class="c1"># Parameters are stored within the 'sgpars' member of the</span>
     <span class="c1"># ObjCrystCrystalParSet, which is the same as the object returned from</span>
-    <span class="c1"># &#39;constrain_as_space_group&#39;.</span>
+    <span class="c1"># 'constrain_as_space_group'.</span>
     <span class="c1">#</span>
-    <span class="c1"># As before, we have one free lattice parameter (&#39;a&#39;). We can simplify</span>
+    <span class="c1"># As before, we have one free lattice parameter ('a'). We can simplify</span>
     <span class="c1"># things by iterating through all the sgpars.</span>
     <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">phase</span><span class="o">.</span><span class="n">sgpars</span><span class="p">:</span>
         <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
@@ -215,16 +215,16 @@
 
 
 <span class="n">plot_styles</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$r (\AA)$&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$G (\AA^{-2})$&quot;</span><span class="p">,</span>
+    <span class="s2">"xlabel"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"$r (\AA)$"</span><span class="p">,</span>
+    <span class="s2">"ylabel"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"$G (\AA^{-2})$"</span><span class="p">,</span>
 <span class="p">}</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="c1"># Make the data and the recipe</span>
-    <span class="n">ciffile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/si.cif&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/si-q27r60-xray.gr&quot;</span>
+    <span class="n">ciffile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/si.cif"</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/si-q27r60-xray.gr"</span>
 
     <span class="c1"># Make the recipe</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>

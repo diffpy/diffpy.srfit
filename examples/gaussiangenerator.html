@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gaussiangenerator.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>gaussiangenerator.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,7 +122,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of using ProfileGenerators in FitContributions.</span>
+<span class="sd">"""Example of using ProfileGenerators in FitContributions.</span>
 
 <span class="sd">This is an example of building a ProfileGenerator and using it in a</span>
 <span class="sd">FitContribution in order to fit a Gaussian profile. The recipe creation is much</span>
@@ -136,24 +136,24 @@
 <span class="sd">Instructions</span>
 
 <span class="sd">Run gaussianrecipe.py and this example. Note how the output is identical. Next</span>
-<span class="sd">read through &#39;GaussianGenerator&#39; class.  This provides a simple example of how</span>
-<span class="sd">to create a custom ProfileGenerator.  Finally read the &#39;makeRecipe&#39; code to see</span>
-<span class="sd">how the GaussianGenerator is used.  Contrast this to the &#39;makeRecipe&#39; section</span>
+<span class="sd">read through 'GaussianGenerator' class.  This provides a simple example of how</span>
+<span class="sd">to create a custom ProfileGenerator.  Finally read the 'makeRecipe' code to see</span>
+<span class="sd">how the GaussianGenerator is used.  Contrast this to the 'makeRecipe' section</span>
 <span class="sd">in gaussianrecipe.py.</span>
 
 <span class="sd">Extensions</span>
 
 <span class="sd">- Remove the amplitude from GaussianGenerator and instead use the</span>
-<span class="sd">  &#39;set_equation&#39; method of the</span>
+<span class="sd">  'set_equation' method of the</span>
 <span class="sd">  FitContribution to account for it. Note that the</span>
-<span class="sd">  GaussianGenerator will be accessible by its name, &quot;g&quot;.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  GaussianGenerator will be accessible by its name, "g".</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FitContribution</span><span class="p">,</span>
     <span class="n">FitRecipe</span><span class="p">,</span>
     <span class="n">Profile</span><span class="p">,</span>
@@ -165,7 +165,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GaussianGenerator</span><span class="p">(</span><span class="n">ProfileGenerator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for calculating a Gaussian profile.</span>
+<span class="w">    </span><span class="sd">"""A class for calculating a Gaussian profile.</span>
 
 <span class="sd">    Generating a Gaussian is not difficult, as was shown in</span>
 <span class="sd">    gaussianrecipe.py. Here we create a class that encapsulates this</span>
@@ -180,10 +180,10 @@
 <span class="sd">    Thus, this class overloads the __init__ method to create the</span>
 <span class="sd">    necessary Parameters for the calculation, and the __call__ method to</span>
 <span class="sd">    generate the signal.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Define the generator.</span>
+<span class="w">        </span><span class="sd">"""Define the generator.</span>
 
 <span class="sd">        Note that a ProfileGenerator needs a name passed in the initializer.</span>
 <span class="sd">        This makes it so the generator can be referenced by name when it is</span>
@@ -194,25 +194,25 @@
 <span class="sd">        A       --  The amplitude</span>
 <span class="sd">        x0      --  The center</span>
 <span class="sd">        sigma   --  The width</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># This initializes various parts of the generator</span>
         <span class="n">ProfileGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
-        <span class="c1"># Here we create new Parameters using the &#39;_new_parameter&#39; method of</span>
+        <span class="c1"># Here we create new Parameters using the '_new_parameter' method of</span>
         <span class="c1"># ProfileGenerator. The signature is</span>
         <span class="c1"># _new_parameter(name, value).</span>
         <span class="c1"># See the API for full details.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">"A"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">"x0"</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">"sigma"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the profile.</span>
+<span class="w">        </span><span class="sd">"""Calculate the profile.</span>
 
 <span class="sd">        Here we calculate the Gaussian profile given the independent</span>
 <span class="sd">        variable, x. We will define it as we did in gaussianrecipe.py.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># First we must get the values of the Parameters. Since we used</span>
         <span class="c1"># _new_parameter to create them, the Parameters are accessible as</span>
         <span class="c1"># attributes by name.</span>
@@ -232,30 +232,30 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a recipe that uses the GaussianGenerator.</span>
+<span class="w">    </span><span class="sd">"""Create a recipe that uses the GaussianGenerator.</span>
 
 <span class="sd">    This will create a FitContribution that uses the GaussianGenerator,</span>
 <span class="sd">    associate this with a Profile, and use this to define a FitRecipe.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># The Profile</span>
     <span class="c1"># Create a Profile to hold the experimental and calculated signal.</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
 
     <span class="c1"># Load data and add it to the profile. This uses the loadtxt function from</span>
     <span class="c1"># numpy.</span>
-    <span class="n">profile</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/gaussian.dat&quot;</span><span class="p">)</span>
+    <span class="n">profile</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/gaussian.dat"</span><span class="p">)</span>
 
     <span class="c1"># The ProfileGenerator</span>
-    <span class="c1"># Create a GaussianGenerator named &quot;g&quot;. This will be the name we use to</span>
+    <span class="c1"># Create a GaussianGenerator named "g". This will be the name we use to</span>
     <span class="c1"># refer to the generator from within the FitContribution equation.</span>
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">GaussianGenerator</span><span class="p">(</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">GaussianGenerator</span><span class="p">(</span><span class="s2">"g"</span><span class="p">)</span>
 
     <span class="c1"># The FitContribution</span>
     <span class="c1"># Create a FitContribution that will associate the Profile with the</span>
     <span class="c1"># GaussianGenerator.  The GaussianGenerator will be accessible as an</span>
-    <span class="c1"># attribute of the FitContribution by its name (&quot;g&quot;). Note that this will</span>
-    <span class="c1"># set the fitting equation to &quot;g&quot;, which calls the GaussianGenerator.</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;g1&quot;</span><span class="p">)</span>
+    <span class="c1"># attribute of the FitContribution by its name ("g"). Note that this will</span>
+    <span class="c1"># set the fitting equation to "g", which calls the GaussianGenerator.</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">"g1"</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
 
@@ -274,16 +274,16 @@
     <span class="c1"># gaussianrecipe.py so we can expect the same output.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sig&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">generator</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"sig"</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="c1"># Give the recipe away so it can be used!</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
-    <span class="c1"># We can use main from gaussianrecipe.py, since this doesn&#39;t care if we use</span>
+    <span class="c1"># We can use main from gaussianrecipe.py, since this doesn't care if we use</span>
     <span class="c1"># a ProfileGenerator or not.</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">gaussianrecipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">main</span>
 

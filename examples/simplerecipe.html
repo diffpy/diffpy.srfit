@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>simplerecipe.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>simplerecipe.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,34 +122,34 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of simplified fitting.</span>
+<span class="sd">"""Example of simplified fitting.</span>
 
 <span class="sd">This is like gaussianrecipe.py, but it uses the SimpleRecipe, which</span>
 <span class="sd">integrates the FitContribution and Profile objects for simple recipe</span>
 <span class="sd">creation.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleRecipe</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleRecipe</span>
 
 <span class="c1">######</span>
 <span class="c1">#  Example Code</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up a simple recipe in a few lines.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Set up a simple recipe in a few lines."""</span>
     <span class="c1"># The SimpleRecipe class is a type of FitRecipe. It provides attribute-like</span>
     <span class="c1"># access to variables and a residual function that can be minimized.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">SimpleRecipe</span><span class="p">()</span>
 
     <span class="c1"># Load text from file.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/gaussian.dat&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/gaussian.dat"</span><span class="p">)</span>
 
-    <span class="c1"># Set the equation. The variable &quot;x&quot; is taken from the data that was just</span>
-    <span class="c1"># loaded. The other variables, &quot;A&quot;, &quot;x0&quot; and &quot;sigma&quot; are turned into</span>
+    <span class="c1"># Set the equation. The variable "x" is taken from the data that was just</span>
+    <span class="c1"># loaded. The other variables, "A", "x0" and "sigma" are turned into</span>
     <span class="c1"># attributes with an initial value of 0.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">&quot;A * exp(-0.5*(x-x0)**2/sigma**2)&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">"A * exp(-0.5*(x-x0)**2/sigma**2)"</span><span class="p">)</span>
 
     <span class="c1"># We can give them other values here.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="mi">1</span>
@@ -167,7 +167,7 @@
     <span class="k">return</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 

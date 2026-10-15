@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.util &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.util &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,43 +91,61 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Utilities and constants used throughout SrFit.&quot;&quot;&quot;</span>
+<span class="sd">"""Utilities and constants used throughout SrFit."""</span>
 
-<span class="n">_DASHEDLINE</span> <span class="o">=</span> <span class="mi">78</span> <span class="o">*</span> <span class="s2">&quot;-&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">_DASHEDLINE</span> <span class="o">=</span> <span class="mi">78</span> <span class="o">*</span> <span class="s2">"-"</span>
+
+<span class="n">sortKeyForNumericString_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="s2">"diffpy.srfit.util"</span><span class="p">,</span>
+    <span class="s2">"sortKeyForNumericString"</span><span class="p">,</span>
+    <span class="s2">"sort_key_for_numeric_string"</span><span class="p">,</span>
+    <span class="s2">"4.0.0"</span><span class="p">,</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="sortKeyForNumericString">
-<a class="viewcode-back" href="../../../api/diffpy.srfit.util.html#diffpy.srfit.util.sortKeyForNumericString">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">sortKeyForNumericString</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute key for sorting strings according to their integer</span>
-<span class="sd">    numeric value.</span>
+<div class="viewcode-block" id="sort_key_for_numeric_string">
+<a class="viewcode-back" href="../../../api/diffpy.srfit.util.html#diffpy.srfit.util.sort_key_for_numeric_string">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">sort_key_for_numeric_string</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return a sort key that orders the numbers in a string by value.</span>
 
-<span class="sd">    Each string gets split to string and integer segments to create keys</span>
-<span class="sd">    for comparison.  Signs, decimal points and exponents are ignored.</span>
-<span class="sd">    This function is intended as the ``key`` argument for the ``sorted``</span>
-<span class="sd">    or ``list.sort`` function.</span>
+<span class="sd">    The string is split into text and integer segments, so ``"a2"`` sorts</span>
+<span class="sd">    before ``"a10"``. Signs, decimal points and exponents are ignored. Use it</span>
+<span class="sd">    as the ``key`` argument of ``sorted`` or ``list.sort``.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    s : str</span>
-<span class="sd">        String which may have numeric components, e.g., &quot;a12b&quot;.</span>
+<span class="sd">    string : str</span>
+<span class="sd">        The string to build a key for, which may contain numbers, e.g.</span>
+<span class="sd">        ``"a12b"``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    tuple</span>
-<span class="sd">        Tuple of non-numeric segments intermixed with integer values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">sortKeyForNumericString</span><span class="o">.</span><span class="n">_rx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="sd">        The text segments of ``string`` with integer values in between,</span>
+<span class="sd">        e.g. ``("a", 12, "b")``.</span>
+<span class="sd">    """</span>
+    <span class="n">segments</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(\d+)"</span><span class="p">,</span> <span class="n">string</span><span class="p">)</span>
+    <span class="n">sort_key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="k">if</span> <span class="n">segment</span><span class="o">.</span><span class="n">isdecimal</span><span class="p">()</span> <span class="k">else</span> <span class="n">segment</span>
+        <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">segments</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sort_key</span></div>
 
-        <span class="n">sortKeyForNumericString</span><span class="o">.</span><span class="n">_rx</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\d+)&quot;</span><span class="p">)</span>
-    <span class="n">rx</span> <span class="o">=</span> <span class="n">sortKeyForNumericString</span><span class="o">.</span><span class="n">_rx</span>
-    <span class="n">rv</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">w</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rx</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
-    <span class="k">return</span> <span class="n">rv</span></div>
 
 
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">sortKeyForNumericString_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sortKeyForNumericString</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
 
-<span class="n">sortKeyForNumericString</span><span class="o">.</span><span class="n">_rx</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="sd">    Please use diffpy.srfit.util.sort_key_for_numeric_string instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">sort_key_for_numeric_string</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
 
 <span class="c1"># End of file</span>
 </pre></div>

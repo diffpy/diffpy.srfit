@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.sas.sasparameter &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.sas.sasparameter &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,13 +91,13 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;SAS profile generator.</span>
+<span class="sd">"""SAS profile generator.</span>
 
 <span class="sd">The SASGenerator class wraps a sas.models.BaseModel object as a</span>
 <span class="sd">ProfileGenerator.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SASParameter&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SASParameter"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
 
@@ -105,7 +105,7 @@
 <div class="viewcode-block" id="SASParameter">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.sasparameter.SASParameter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SASParameter</span><span class="p">(</span><span class="n">Parameter</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class adapting a sasmodel parameter to srfit Parameter.</span>
+<span class="w">    </span><span class="sd">"""Class adapting a sasmodel parameter to srfit Parameter.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -114,9 +114,9 @@
 <span class="sd">    const</span>
 <span class="sd">        A flag indicating whether this is considered a constant.</span>
 <span class="sd">    _value</span>
-<span class="sd">        The value of the Parameter. Modified with &#39;set_value&#39;.</span>
+<span class="sd">        The value of the Parameter. Modified with 'set_value'.</span>
 <span class="sd">    value</span>
-<span class="sd">        Property for &#39;getValue&#39; and &#39;set_value&#39;.</span>
+<span class="sd">        Property for 'get_value' and 'set_value'.</span>
 <span class="sd">    constrained</span>
 <span class="sd">        A flag indicating if the Parameter is constrained</span>
 <span class="sd">        (default False).</span>
@@ -128,10 +128,10 @@
 <span class="sd">        The BaseModel to which the underlying parameter belongs.</span>
 <span class="sd">    _parname</span>
 <span class="sd">        The name of the underlying BaseModel parameter.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">parname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the Parameter.</span>
+<span class="w">        </span><span class="sd">"""Create the Parameter.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -142,17 +142,17 @@
 <span class="sd">        parname</span>
 <span class="sd">            Name of parameter used by the model. If this is None</span>
 <span class="sd">            (default), then name is used.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parname</span> <span class="o">=</span> <span class="n">parname</span> <span class="ow">or</span> <span class="n">name</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getParam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parname</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
         <span class="n">Parameter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="k">return</span>
 
-<div class="viewcode-block" id="SASParameter.getValue">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.sasparameter.SASParameter.getValue">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of the Parameter.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SASParameter.get_value">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.sasparameter.SASParameter.get_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Get the value of the Parameter."""</span>
         <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">getParam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parname</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span></div>
 
@@ -160,8 +160,8 @@
 <div class="viewcode-block" id="SASParameter.set_value">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.sasparameter.SASParameter.set_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of the Parameter.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">"""Set the value of the Parameter."""</span>
+        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">setParam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parname</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>

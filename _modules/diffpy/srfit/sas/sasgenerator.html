@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.sas.sasgenerator &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.sas.sasgenerator &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,13 +91,13 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;SAS profile generator.</span>
+<span class="sd">"""SAS profile generator.</span>
 
 <span class="sd">The SASGenerator class wraps a sas.models.BaseModel object as a</span>
 <span class="sd">ProfileGenerator.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SASGenerator&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SASGenerator"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProfileGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.sas.sasparameter</span><span class="w"> </span><span class="kn">import</span> <span class="n">SASParameter</span>
@@ -106,7 +106,7 @@
 <div class="viewcode-block" id="SASGenerator">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.SASGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SASGenerator</span><span class="p">(</span><span class="n">ProfileGenerator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for calculating I(Q) from a scattering type.</span>
+<span class="w">    </span><span class="sd">"""A class for calculating I(Q) from a scattering type.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -115,14 +115,14 @@
 
 <span class="sd">    Managed Parameters</span>
 <span class="sd">        These depend on the parameters of the BaseModel object held by _model.</span>
-<span class="sd">        They are created from the &#39;params&#39; attribute of the BaseModel. If a</span>
-<span class="sd">        dispersion is set for the BaseModel, the dispersion &quot;width&quot; will be</span>
-<span class="sd">        accessible under &quot;&lt;parname&gt;_width&quot;, where &lt;parname&gt; is the name a</span>
+<span class="sd">        They are created from the 'params' attribute of the BaseModel. If a</span>
+<span class="sd">        dispersion is set for the BaseModel, the dispersion "width" will be</span>
+<span class="sd">        accessible under "&lt;parname&gt;_width", where &lt;parname&gt; is the name a</span>
 <span class="sd">        parameter adjusted by dispersion.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the generator.</span>
+<span class="w">        </span><span class="sd">"""Initialize the generator.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -130,7 +130,7 @@
 <span class="sd">            A name for the SASGenerator</span>
 <span class="sd">        model</span>
 <span class="sd">            SASModel object this adapts.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ProfileGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_model</span> <span class="o">=</span> <span class="n">model</span>
@@ -138,19 +138,19 @@
         <span class="c1"># Wrap normal parameters</span>
         <span class="k">for</span> <span class="n">parname</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">params</span><span class="p">:</span>
             <span class="n">par</span> <span class="o">=</span> <span class="n">SASParameter</span><span class="p">(</span><span class="n">parname</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 
         <span class="c1"># Wrap dispersion parameters</span>
         <span class="k">for</span> <span class="n">parname</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">dispersion</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">parname</span> <span class="o">+</span> <span class="s2">&quot;_width&quot;</span>
-            <span class="n">parname</span> <span class="o">+=</span> <span class="s2">&quot;.width&quot;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">parname</span> <span class="o">+</span> <span class="s2">"_width"</span>
+            <span class="n">parname</span> <span class="o">+=</span> <span class="s2">".width"</span>
             <span class="n">par</span> <span class="o">=</span> <span class="n">SASParameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">parname</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate I(Q) for the BaseModel.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Calculate I(Q) for the BaseModel."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">evalDistribution</span><span class="p">(</span><span class="n">q</span><span class="p">)</span></div>
 
 

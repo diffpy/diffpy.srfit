@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.sas package &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.sas package &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -312,7 +312,7 @@ this overrides parse_file itself rather than the
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IOError" title="(in Python v3.14)"><strong>IOError</strong></a> – if the file cannot be read</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#IOError" title="(in Python v3.15)"><strong>IOError</strong></a> – if the file cannot be read</p></li>
 <li><p><a class="reference internal" href="diffpy.srfit.html#diffpy.srfit.exceptions.ParseError" title="diffpy.srfit.exceptions.ParseError"><strong>ParseError</strong></a> – if the file cannot be parsed</p></li>
 </ul>
 </dd>
@@ -427,8 +427,8 @@ parser.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.sas.SASProfile.setObservedProfile">
-<span class="sig-name descname"><span class="pre">setObservedProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dyobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/sas/sasprofile.html#SASProfile.setObservedProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.sas.SASProfile.setObservedProfile" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="diffpy.srfit.sas.SASProfile.set_observed_profile">
+<span class="sig-name descname"><span class="pre">set_observed_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dyobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/sas/sasprofile.html#SASProfile.set_observed_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.sas.SASProfile.set_observed_profile" title="Link to this definition"></a></dt>
 <dd><p>Set the observed profile.</p>
 <p>This is overloaded to change the value within the datainfo object.</p>
 <dl class="field-list simple">
@@ -437,14 +437,14 @@ parser.</p>
 <li><p><strong>xobs</strong> – Numpy array of the independent variable.</p></li>
 <li><p><strong>yobs</strong> – Numpy array of the observed signal.</p></li>
 <li><p><strong>dyobs</strong> – Numpy array of the uncertainty in the observed signal. If
-<code class="docutils literal notranslate"><span class="pre">dyobs</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), it will be set to 1 at each
-observed <code class="docutils literal notranslate"><span class="pre">xobs</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">dyobs</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), it stays <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate
+no uncertainty was observed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">len(yobs)</span> <span class="pre">!=</span> <span class="pre">len(xobs)</span></code>.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">dyobs</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code> and <code class="docutils literal notranslate"><span class="pre">len(dyobs)</span> <span class="pre">!=</span> <span class="pre">len(xobs)</span></code>.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">len(yobs)</span> <span class="pre">!=</span> <span class="pre">len(xobs)</span></code>.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">dyobs</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code> and <code class="docutils literal notranslate"><span class="pre">len(dyobs)</span> <span class="pre">!=</span> <span class="pre">len(xobs)</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -564,7 +564,7 @@ this overrides parse_file itself rather than the
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#IOError" title="(in Python v3.14)"><strong>IOError</strong></a> – if the file cannot be read</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#IOError" title="(in Python v3.15)"><strong>IOError</strong></a> – if the file cannot be read</p></li>
 <li><p><a class="reference internal" href="diffpy.srfit.html#diffpy.srfit.exceptions.ParseError" title="diffpy.srfit.exceptions.ParseError"><strong>ParseError</strong></a> – if the file cannot be parsed</p></li>
 </ul>
 </dd>
@@ -784,8 +784,8 @@ parser.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.sas.sasprofile.SASProfile.setObservedProfile">
-<span class="sig-name descname"><span class="pre">setObservedProfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dyobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/sas/sasprofile.html#SASProfile.setObservedProfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.sas.sasprofile.SASProfile.setObservedProfile" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="diffpy.srfit.sas.sasprofile.SASProfile.set_observed_profile">
+<span class="sig-name descname"><span class="pre">set_observed_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yobs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dyobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/sas/sasprofile.html#SASProfile.set_observed_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.sas.sasprofile.SASProfile.set_observed_profile" title="Link to this definition"></a></dt>
 <dd><p>Set the observed profile.</p>
 <p>This is overloaded to change the value within the datainfo object.</p>
 <dl class="field-list simple">
@@ -794,14 +794,14 @@ parser.</p>
 <li><p><strong>xobs</strong> – Numpy array of the independent variable.</p></li>
 <li><p><strong>yobs</strong> – Numpy array of the observed signal.</p></li>
 <li><p><strong>dyobs</strong> – Numpy array of the uncertainty in the observed signal. If
-<code class="docutils literal notranslate"><span class="pre">dyobs</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), it will be set to 1 at each
-observed <code class="docutils literal notranslate"><span class="pre">xobs</span></code>.</p></li>
+<code class="docutils literal notranslate"><span class="pre">dyobs</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (default), it stays <code class="docutils literal notranslate"><span class="pre">None</span></code> to indicate
+no uncertainty was observed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">len(yobs)</span> <span class="pre">!=</span> <span class="pre">len(xobs)</span></code>.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">dyobs</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code> and <code class="docutils literal notranslate"><span class="pre">len(dyobs)</span> <span class="pre">!=</span> <span class="pre">len(xobs)</span></code>.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">len(yobs)</span> <span class="pre">!=</span> <span class="pre">len(xobs)</span></code>.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">dyobs</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">None</span></code> and <code class="docutils literal notranslate"><span class="pre">len(dyobs)</span> <span class="pre">!=</span> <span class="pre">len(xobs)</span></code>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -841,7 +841,7 @@ ProfileGenerator.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.sas.sasparameter.SASParameter.value">
 <span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter.value" title="Link to this definition"></a></dt>
-<dd><p>Property for ‘getValue’ and ‘set_value’.</p>
+<dd><p>Property for ‘get_value’ and ‘set_value’.</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -872,8 +872,8 @@ bounds are unrelated to restraints on a Parameter.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.sas.sasparameter.SASParameter.getValue">
-<span class="sig-name descname"><span class="pre">getValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/sas/sasparameter.html#SASParameter.getValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter.getValue" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="diffpy.srfit.sas.sasparameter.SASParameter.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/sas/sasparameter.html#SASParameter.get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.sas.sasparameter.SASParameter.get_value" title="Link to this definition"></a></dt>
 <dd><p>Get the value of the Parameter.</p>
 </dd></dl>
 

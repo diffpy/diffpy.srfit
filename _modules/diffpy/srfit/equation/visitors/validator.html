@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.visitors.validator &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.visitors.validator &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,7 +92,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Validator visitor for validating a tree of Literals.</span>
+<span class="sd">"""Validator visitor for validating a tree of Literals.</span>
 
 <span class="sd">The Validator walks an equation tree composed of Literals and checks the</span>
 <span class="sd">validity of each equation as much as possible without evaluating it. It</span>
@@ -101,52 +101,61 @@
 <span class="sd">The Validator checks that the input count of each Operator is equal to</span>
 <span class="sd">the output count of its arguments. It also checks that each object has</span>
 <span class="sd">the proper interface.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Validator&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Validator"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals.abcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArgumentABC</span><span class="p">,</span> <span class="n">OperatorABC</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors.visitor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Visitor</span>
 
-<span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; does not have the interface required by &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="s2">"'</span><span class="si">%s</span><span class="s2">' does not have the interface required by '</span><span class="si">%s</span><span class="s2">'"</span>
 
 
 <div class="viewcode-block" id="Validator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.validator.Validator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Validator</span><span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validator error for checking validity of an equation tree.</span>
+<span class="w">    </span><span class="sd">"""Validator error for checking validity of an equation tree.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    errors</span>
-<span class="sd">        List of strings describing errors.</span>
-<span class="sd">    _nin</span>
-<span class="sd">        Variable for counting the number input arguments for an</span>
-<span class="sd">        operator.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    errors : list of str</span>
+<span class="sd">        The descriptions of the errors found.</span>
+<span class="sd">    _nin : int</span>
+<span class="sd">        The number of outputs of the last node visited, used to count</span>
+<span class="sd">        the inputs of its parent operator.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
         <span class="k">return</span>
 
 <div class="viewcode-block" id="Validator.reset">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.validator.Validator.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Click the clicker and reset non-public data.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Clear the errors and the input count."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nin</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="Validator.onArgument">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.validator.Validator.onArgument">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">onArgument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Argument node.</span>
+<div class="viewcode-block" id="Validator.on_argument">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.validator.Validator.on_argument">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Check an Argument node.</span>
 
 <span class="sd">        The Argument must be an instance of ArgumentABC from</span>
-<span class="sd">        diffpy.srfit.equation.literals.abcs</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        diffpy.srfit.equation.literals.abcs.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        arg : Argument</span>
+<span class="sd">            The Argument to check.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of str</span>
+<span class="sd">            The errors found so far.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">ArgumentABC</span><span class="p">):</span>
             <span class="n">m</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">%</span> <span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">ArgumentABC</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
@@ -154,33 +163,45 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">errors</span></div>
 
 
-<div class="viewcode-block" id="Validator.onOperator">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.validator.Validator.onOperator">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">onOperator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Operator node.</span>
+<div class="viewcode-block" id="Validator.on_operator">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.validator.Validator.on_operator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Check an Operator node and its arguments.</span>
 
 <span class="sd">        The Operator must be an instance of OperatorABC from</span>
-<span class="sd">        diffpy.srfit.equation.literals.abcs</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        diffpy.srfit.equation.literals.abcs, be single-valued, have a</span>
+<span class="sd">        name, symbol and operation, and receive as many inputs as it</span>
+<span class="sd">        takes.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        op : Operator</span>
+<span class="sd">            The Operator to check.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of str</span>
+<span class="sd">            The errors found so far.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">OperatorABC</span><span class="p">):</span>
             <span class="n">m</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">%</span> <span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">OperatorABC</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 
         <span class="c1"># Can only process single-valued functions</span>
         <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">nout</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; is not single-valued (nout != 1)&quot;</span> <span class="o">%</span> <span class="n">op</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="s2">"'</span><span class="si">%s</span><span class="s2">' is not single-valued (nout != 1)"</span> <span class="o">%</span> <span class="n">op</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
         <span class="c1"># Check name</span>
         <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; does not have a name&quot;</span> <span class="o">%</span> <span class="n">op</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="s2">"'</span><span class="si">%s</span><span class="s2">' does not have a name"</span> <span class="o">%</span> <span class="n">op</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
         <span class="c1"># Check symbol</span>
         <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">symbol</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; does not have a symbol&quot;</span> <span class="o">%</span> <span class="n">op</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="s2">"'</span><span class="si">%s</span><span class="s2">' does not have a symbol"</span> <span class="o">%</span> <span class="n">op</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
         <span class="c1"># Check operation without evaluating it</span>
         <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">operation</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; does not define and operation&quot;</span> <span class="o">%</span> <span class="n">op</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="s2">"'</span><span class="si">%s</span><span class="s2">' does not define and operation"</span> <span class="o">%</span> <span class="n">op</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 
         <span class="n">localnin</span> <span class="o">=</span> <span class="mi">0</span>
@@ -191,7 +212,7 @@
 
         <span class="c1"># Check the input/output balance</span>
         <span class="k">if</span> <span class="n">op</span><span class="o">.</span><span class="n">nin</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">localnin</span> <span class="o">!=</span> <span class="n">op</span><span class="o">.</span><span class="n">nin</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; requires </span><span class="si">%i</span><span class="s2"> inputs but receives </span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="s2">"'</span><span class="si">%s</span><span class="s2">' requires </span><span class="si">%i</span><span class="s2"> inputs but receives </span><span class="si">%i</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span>
                 <span class="n">op</span><span class="p">,</span>
                 <span class="n">op</span><span class="o">.</span><span class="n">nin</span><span class="p">,</span>
                 <span class="n">localnin</span><span class="p">,</span>

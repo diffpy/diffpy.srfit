@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.structure.bvsrestraint &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.structure.bvsrestraint &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,13 +92,13 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Bond-valence sum calculator from SrReal wrapped as a Restraint.</span>
+<span class="sd">"""Bond-valence sum calculator from SrReal wrapped as a Restraint.</span>
 
 <span class="sd">This can be used as an addition to a cost function during a structure</span>
 <span class="sd">refinement to keep the bond-valence sum within tolerable limits.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BVSRestraint&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"BVSRestraint"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SrFitError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.restraint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Restraint</span>
@@ -107,7 +107,7 @@
 <div class="viewcode-block" id="BVSRestraint">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.bvsrestraint.BVSRestraint">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BVSRestraint</span><span class="p">(</span><span class="n">Restraint</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapping of BVSCalculator.bvmsdiff as a Restraint.</span>
+<span class="w">    </span><span class="sd">"""Wrapping of BVSCalculator.bvmsdiff as a Restraint.</span>
 
 <span class="sd">    The restraint penalty is the root-mean-square deviation of the theoretical</span>
 <span class="sd">    and calculated bond-valence sum of a structure.</span>
@@ -124,10 +124,10 @@
 <span class="sd">        A flag indicating if the restraint is scaled (multiplied)</span>
 <span class="sd">        by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
 <span class="sd">        (default False).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Restraint.</span>
+<span class="w">        </span><span class="sd">"""Initialize the Restraint.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -139,7 +139,7 @@
 <span class="sd">            A flag indicating if the restraint is scaled</span>
 <span class="sd">            (multiplied) by the unrestrained point-average chi^2</span>
 <span class="sd">            (chi^2/numpoints) (bool, default False).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srreal.bvscalculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BVSCalculator</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span> <span class="o">=</span> <span class="n">BVSCalculator</span><span class="p">()</span>
@@ -148,17 +148,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">scaled</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
         <span class="k">return</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the structure name with the restraint settings."""</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"BVS of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_parset</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: sig = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"scaled = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scaled</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
 <div class="viewcode-block" id="BVSRestraint.penalty">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.bvsrestraint.BVSRestraint.penalty">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">penalty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the penalty of the restraint.</span>
+<span class="w">        </span><span class="sd">"""Calculate the penalty of the restraint.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        w</span>
 <span class="sd">            The point-average chi^2 which is optionally used to scale the</span>
 <span class="sd">            penalty (float, default 1.0).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get the bvms from the BVSCalculator</span>
         <span class="n">stru</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parset</span><span class="o">.</span><span class="n">_get_srreal_structure</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span>
@@ -175,20 +182,20 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This evaluates the calculator.</span>
+<span class="w">        </span><span class="sd">"""This evaluates the calculator.</span>
 
 <span class="sd">        Raises SrFitError if validation fails.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">nan</span>
 
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">penalty</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">p</span> <span class="ow">is</span> <span class="n">nan</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;Cannot evaluate penalty&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"Cannot evaluate penalty"</span><span class="p">)</span>
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">emsg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;Bond valence sums are all zero.  Check atom symbols in &quot;</span>
-                <span class="s2">&quot;the structure or define custom bond-valence parameters.&quot;</span>
+                <span class="s2">"Bond valence sums are all zero.  Check atom symbols in "</span>
+                <span class="s2">"the structure or define custom bond-valence parameters."</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="n">emsg</span><span class="p">)</span>
         <span class="k">return</span></div>

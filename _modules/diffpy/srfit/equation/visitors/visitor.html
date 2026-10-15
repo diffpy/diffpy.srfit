@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.visitors.visitor &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.visitors.visitor &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,7 +92,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Base visitor class.</span>
+<span class="sd">"""Base visitor class.</span>
 
 <span class="sd">Visitors work with Literal trees to perform a specified action. They are</span>
 <span class="sd">designed according to the visitor pattern (</span>
@@ -104,48 +104,129 @@
 <span class="sd">Operator</span>
 
 <span class="sd">See the Visitor class for the required methods that each Visitor must overload.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Visitor&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Visitor"</span><span class="p">]</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">visitor_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.equation.visitors.visitor.Visitor"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
+<span class="n">onArgument_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">visitor_base</span><span class="p">,</span> <span class="s2">"onArgument"</span><span class="p">,</span> <span class="s2">"on_argument"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">onOperator_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">visitor_base</span><span class="p">,</span> <span class="s2">"onOperator"</span><span class="p">,</span> <span class="s2">"on_operator"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">onEquation_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">visitor_base</span><span class="p">,</span> <span class="s2">"onEquation"</span><span class="p">,</span> <span class="s2">"on_equation"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="Visitor">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Visitor</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class for all visitors to a Literal tree.</span>
+<span class="w">    </span><span class="sd">"""Abstract class for all visitors to a Literal tree.</span>
 
-<span class="sd">    See implemented visitors for examples of use.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Subclasses must override ``on_argument`` and ``on_operator``. See</span>
+<span class="sd">    implemented visitors for examples of use.</span>
+<span class="sd">    """</span>
 
-<div class="viewcode-block" id="Visitor.onArgument">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor.onArgument">[docs]</a>
+<div class="viewcode-block" id="Visitor.on_argument">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor.on_argument">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Process an Argument node.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        arg : Argument</span>
+<span class="sd">            The Argument to process.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            Always, because subclasses must override this method.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abstract</span><span class="p">(</span><span class="s2">"on_argument"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Visitor.on_operator">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor.on_operator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Process an Operator node.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        op : Operator</span>
+<span class="sd">            The Operator to process.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        NotImplementedError</span>
+<span class="sd">            Always, because subclasses must override this method.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abstract</span><span class="p">(</span><span class="s2">"on_operator"</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Visitor.on_equation">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor.on_equation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Process an Equation node.</span>
+
+<span class="sd">        Equations are specialized Operators. They don't need to be</span>
+<span class="sd">        specifically supported by a Visitor, so by default they are</span>
+<span class="sd">        passed to ``on_operator``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eq : Equation</span>
+<span class="sd">            The Equation to process.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            The result of ``on_operator(eq)``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_operator</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span></div>
+
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">onArgument_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">onArgument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Argument node.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abstract</span><span class="p">(</span><span class="s2">&quot;onArgument&quot;</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
 
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.visitors.visitor.Visitor.on_argument</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_argument</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Visitor.onOperator">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor.onOperator">[docs]</a>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">onOperator_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">onOperator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Operator node.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_abstract</span><span class="p">(</span><span class="s2">&quot;onOperator&quot;</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
 
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.visitors.visitor.Visitor.on_operator</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_operator</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Visitor.onEquation">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor.onEquation">[docs]</a>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">onEquation_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">onEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Equation node.</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
 
-<span class="sd">        Equations are specialized Operators. They don&#39;t need to be</span>
-<span class="sd">        specifically supported by a Visitor.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">onOperator</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span></div>
-
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.visitors.visitor.Visitor.on_equation</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_equation</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
 
     <span class="c1"># throw an exception</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_abstract</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
-            <span class="s2">&quot;class &#39;</span><span class="si">%s</span><span class="s2">&#39; should override method &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+            <span class="s2">"class '</span><span class="si">%s</span><span class="s2">' should override method '</span><span class="si">%s</span><span class="s2">'"</span>
             <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
         <span class="p">)</span></div>
 

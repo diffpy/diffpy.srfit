@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>crystalpdfall.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>crystalpdfall.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,16 +122,16 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of a PDF refinement of two-phase structure.</span>
+<span class="sd">"""Example of a PDF refinement of two-phase structure.</span>
 
 <span class="sd">This example uses PDFGenerator to refine a the two phase nickel-silicon</span>
 <span class="sd">structure to all the available data.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">gaussianrecipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">scipyOptimize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadCrystal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst.crystal</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_crystal_from_cif</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FitContribution</span><span class="p">,</span>
@@ -146,7 +146,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeProfile</span><span class="p">(</span><span class="n">datafile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an place data within a Profile.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Make an place data within a Profile."""</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">PDFParser</span><span class="p">()</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">datafile</span><span class="p">)</span>
@@ -156,17 +156,17 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeContribution</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a FitContribution and add a generator and profile.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Make a FitContribution and add a generator and profile."""</span>
     <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">contribution</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">(</span>
     <span class="n">ciffile_ni</span><span class="p">,</span> <span class="n">ciffile_si</span><span class="p">,</span> <span class="n">xdata_ni</span><span class="p">,</span> <span class="n">ndata_ni</span><span class="p">,</span> <span class="n">xdata_si</span><span class="p">,</span> <span class="n">xdata_sini</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a fitting recipe for crystalline PDF data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create a fitting recipe for crystalline PDF data."""</span>
     <span class="c1"># The Profiles</span>
     <span class="c1"># We need a profile for each data set.</span>
     <span class="n">xprofile_ni</span> <span class="o">=</span> <span class="n">makeProfile</span><span class="p">(</span><span class="n">xdata_ni</span><span class="p">)</span>
@@ -176,41 +176,41 @@
 
     <span class="c1"># The ProfileGenerators</span>
     <span class="c1"># We create one for each phase and share the phases.</span>
-    <span class="n">xgenerator_ni</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">&quot;xG_ni&quot;</span><span class="p">)</span>
-    <span class="n">stru</span> <span class="o">=</span> <span class="n">loadCrystal</span><span class="p">(</span><span class="n">ciffile_ni</span><span class="p">)</span>
+    <span class="n">xgenerator_ni</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">"xG_ni"</span><span class="p">)</span>
+    <span class="n">stru</span> <span class="o">=</span> <span class="n">create_crystal_from_cif</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ciffile_ni</span><span class="p">))</span>
     <span class="n">xgenerator_ni</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span>
     <span class="n">phase_ni</span> <span class="o">=</span> <span class="n">xgenerator_ni</span><span class="o">.</span><span class="n">phase</span>
 
-    <span class="n">xgenerator_si</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">&quot;xG_si&quot;</span><span class="p">)</span>
-    <span class="n">stru</span> <span class="o">=</span> <span class="n">loadCrystal</span><span class="p">(</span><span class="n">ciffile_si</span><span class="p">)</span>
+    <span class="n">xgenerator_si</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">"xG_si"</span><span class="p">)</span>
+    <span class="n">stru</span> <span class="o">=</span> <span class="n">create_crystal_from_cif</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ciffile_si</span><span class="p">))</span>
     <span class="n">xgenerator_si</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span>
     <span class="n">phase_si</span> <span class="o">=</span> <span class="n">xgenerator_si</span><span class="o">.</span><span class="n">phase</span>
 
-    <span class="n">ngenerator_ni</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">&quot;nG_ni&quot;</span><span class="p">)</span>
+    <span class="n">ngenerator_ni</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">"nG_ni"</span><span class="p">)</span>
     <span class="n">ngenerator_ni</span><span class="o">.</span><span class="n">setPhase</span><span class="p">(</span><span class="n">phase_ni</span><span class="p">)</span>
 
-    <span class="n">xgenerator_sini_ni</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">&quot;xG_sini_ni&quot;</span><span class="p">)</span>
+    <span class="n">xgenerator_sini_ni</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">"xG_sini_ni"</span><span class="p">)</span>
     <span class="n">xgenerator_sini_ni</span><span class="o">.</span><span class="n">setPhase</span><span class="p">(</span><span class="n">phase_ni</span><span class="p">)</span>
 
-    <span class="n">xgenerator_sini_si</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">&quot;xG_sini_si&quot;</span><span class="p">)</span>
+    <span class="n">xgenerator_sini_si</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">"xG_sini_si"</span><span class="p">)</span>
     <span class="n">xgenerator_sini_si</span><span class="o">.</span><span class="n">setPhase</span><span class="p">(</span><span class="n">phase_si</span><span class="p">)</span>
 
     <span class="c1"># The FitContributions</span>
     <span class="c1"># We one of these for each data set.</span>
-    <span class="n">xcontribution_ni</span> <span class="o">=</span> <span class="n">makeContribution</span><span class="p">(</span><span class="s2">&quot;xnickel&quot;</span><span class="p">,</span> <span class="n">xgenerator_ni</span><span class="p">,</span> <span class="n">xprofile_ni</span><span class="p">)</span>
-    <span class="n">xcontribution_si</span> <span class="o">=</span> <span class="n">makeContribution</span><span class="p">(</span><span class="s2">&quot;xsilicon&quot;</span><span class="p">,</span> <span class="n">xgenerator_si</span><span class="p">,</span> <span class="n">xprofile_si</span><span class="p">)</span>
-    <span class="n">ncontribution_ni</span> <span class="o">=</span> <span class="n">makeContribution</span><span class="p">(</span><span class="s2">&quot;nnickel&quot;</span><span class="p">,</span> <span class="n">ngenerator_ni</span><span class="p">,</span> <span class="n">nprofile_ni</span><span class="p">)</span>
+    <span class="n">xcontribution_ni</span> <span class="o">=</span> <span class="n">makeContribution</span><span class="p">(</span><span class="s2">"xnickel"</span><span class="p">,</span> <span class="n">xgenerator_ni</span><span class="p">,</span> <span class="n">xprofile_ni</span><span class="p">)</span>
+    <span class="n">xcontribution_si</span> <span class="o">=</span> <span class="n">makeContribution</span><span class="p">(</span><span class="s2">"xsilicon"</span><span class="p">,</span> <span class="n">xgenerator_si</span><span class="p">,</span> <span class="n">xprofile_si</span><span class="p">)</span>
+    <span class="n">ncontribution_ni</span> <span class="o">=</span> <span class="n">makeContribution</span><span class="p">(</span><span class="s2">"nnickel"</span><span class="p">,</span> <span class="n">ngenerator_ni</span><span class="p">,</span> <span class="n">nprofile_ni</span><span class="p">)</span>
     <span class="n">xcontribution_sini</span> <span class="o">=</span> <span class="n">makeContribution</span><span class="p">(</span>
-        <span class="s2">&quot;xsini&quot;</span><span class="p">,</span> <span class="n">xgenerator_sini_ni</span><span class="p">,</span> <span class="n">xprofile_sini</span>
+        <span class="s2">"xsini"</span><span class="p">,</span> <span class="n">xgenerator_sini_ni</span><span class="p">,</span> <span class="n">xprofile_sini</span>
     <span class="p">)</span>
     <span class="n">xcontribution_sini</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">xgenerator_sini_si</span><span class="p">)</span>
-    <span class="n">xcontribution_sini</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">&quot;scale * (xG_sini_ni +  xG_sini_si)&quot;</span><span class="p">)</span>
+    <span class="n">xcontribution_sini</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">"scale * (xG_sini_ni +  xG_sini_si)"</span><span class="p">)</span>
 
     <span class="c1"># As explained in another example, we want to minimize using Rw^2.</span>
-    <span class="n">xcontribution_ni</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;resv&quot;</span><span class="p">)</span>
-    <span class="n">xcontribution_si</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;resv&quot;</span><span class="p">)</span>
-    <span class="n">ncontribution_ni</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;resv&quot;</span><span class="p">)</span>
-    <span class="n">xcontribution_sini</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;resv&quot;</span><span class="p">)</span>
+    <span class="n">xcontribution_ni</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">"resv"</span><span class="p">)</span>
+    <span class="n">xcontribution_si</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">"resv"</span><span class="p">)</span>
+    <span class="n">ncontribution_ni</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">"resv"</span><span class="p">)</span>
+    <span class="n">xcontribution_sini</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">"resv"</span><span class="p">)</span>
 
     <span class="c1"># Make the FitRecipe and add the FitContributions.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
@@ -221,26 +221,26 @@
 
     <span class="c1"># Now we vary and constrain Parameters as before.</span>
     <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">phase_ni</span><span class="o">.</span><span class="n">sgpars</span><span class="p">:</span>
-        <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_ni&quot;</span><span class="p">)</span>
-    <span class="n">delta2_ni</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">&quot;delta2_ni&quot;</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+        <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_ni"</span><span class="p">)</span>
+    <span class="n">delta2_ni</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">"delta2_ni"</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator_ni</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2_ni</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">ngenerator_ni</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2_ni</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator_sini_ni</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2_ni</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">phase_si</span><span class="o">.</span><span class="n">sgpars</span><span class="p">:</span>
-        <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_si&quot;</span><span class="p">)</span>
-    <span class="n">delta2_si</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">&quot;delta2_si&quot;</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+        <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">par</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_si"</span><span class="p">)</span>
+    <span class="n">delta2_si</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">"delta2_si"</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator_si</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2_si</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator_sini_si</span><span class="o">.</span><span class="n">delta2</span><span class="p">,</span> <span class="n">delta2_si</span><span class="p">)</span>
 
     <span class="c1"># Now the experimental parameters</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">xgenerator_ni</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xscale_ni&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">xgenerator_si</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xscale_si&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">ngenerator_ni</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;nscale_ni&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">xcontribution_sini</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;xscale_sini&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">&quot;pscale_sini_ni&quot;</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator_sini_ni</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="s2">&quot;pscale_sini_ni&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator_sini_si</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="s2">&quot;1 - pscale_sini_ni&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">xgenerator_ni</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xscale_ni"</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">xgenerator_si</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xscale_si"</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">ngenerator_ni</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"nscale_ni"</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">xcontribution_sini</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"xscale_sini"</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">"pscale_sini_ni"</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator_sini_ni</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="s2">"pscale_sini_ni"</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">xgenerator_sini_si</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span> <span class="s2">"1 - pscale_sini_ni"</span><span class="p">)</span>
 
     <span class="c1"># The qdamp parameters are too correlated to vary so we fix them based on</span>
     <span class="c1"># previous measurements.</span>
@@ -255,19 +255,19 @@
 
 
 <span class="n">plot_styles</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$r (\AA)$&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$G (\AA^{-2})$&quot;</span><span class="p">,</span>
+    <span class="s2">"xlabel"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"$r (\AA)$"</span><span class="p">,</span>
+    <span class="s2">"ylabel"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"$G (\AA^{-2})$"</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="c1"># Make the data and the recipe</span>
-    <span class="n">ciffile_ni</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni.cif&quot;</span>
-    <span class="n">ciffile_si</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/si.cif&quot;</span>
-    <span class="n">xdata_ni</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni-q27r60-xray.gr&quot;</span>
-    <span class="n">ndata_ni</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni-q27r100-neutron.gr&quot;</span>
-    <span class="n">xdata_si</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/si-q27r60-xray.gr&quot;</span>
-    <span class="n">xdata_sini</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/si90ni10-q27r60-xray.gr&quot;</span>
+    <span class="n">ciffile_ni</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/ni.cif"</span>
+    <span class="n">ciffile_si</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/si.cif"</span>
+    <span class="n">xdata_ni</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/ni-q27r60-xray.gr"</span>
+    <span class="n">ndata_ni</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/ni-q27r100-neutron.gr"</span>
+    <span class="n">xdata_si</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/si-q27r60-xray.gr"</span>
+    <span class="n">xdata_sini</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/si90ni10-q27r60-xray.gr"</span>
 
     <span class="c1"># Make the recipe</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span>
@@ -281,8 +281,8 @@
     <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
 
-    <span class="c1"># Plot! The recipe has four contributions (&quot;xnickel&quot;, &quot;xsilicon&quot;,</span>
-    <span class="c1"># &quot;nnickel&quot;, &quot;xsini&quot;), so plot_recipe produces one figure per</span>
+    <span class="c1"># Plot! The recipe has four contributions ("xnickel", "xsilicon",</span>
+    <span class="c1"># "nnickel", "xsini"), so plot_recipe produces one figure per</span>
     <span class="c1"># contribution.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">plot_recipe</span><span class="p">(</span><span class="o">**</span><span class="n">plot_styles</span><span class="p">)</span>
 

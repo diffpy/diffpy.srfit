@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.fithook &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.fitbase.fithook &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,80 +91,88 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;The FitHook class for inspecting the progress of a FitRecipe</span>
+<span class="sd">"""The FitHook class for inspecting the progress of a FitRecipe</span>
 <span class="sd">refinement.</span>
 
-<span class="sd">FitHooks are called by a FitRecipe during various times of the residual</span>
-<span class="sd">is evaluation. The default FitHook simply counts the number of times the</span>
-<span class="sd">residual is called, and reports that number every time the residual is</span>
-<span class="sd">calculated. Depending on the verbosity, it will also report the residual</span>
-<span class="sd">and the current variable values.</span>
+<span class="sd">FitHooks are called by a FitRecipe at various stages of the residual</span>
+<span class="sd">evaluation. The default FitHook of a FitRecipe, PrintFitHook, counts the</span>
+<span class="sd">number of times the residual is called, and reports that number every</span>
+<span class="sd">time the residual is calculated. Depending on the verbosity, it will</span>
+<span class="sd">also report the residual and the current variable values.</span>
 
 <span class="sd">Custom FitHooks can be added to a FitRecipe with the</span>
 <span class="sd">FitRecipe.push_fit_hook method.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FitHook&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"FitHook"</span><span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">sortKeyForNumericString</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">sort_key_for_numeric_string</span>
 
 
 <div class="viewcode-block" id="FitHook">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitHook">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitHook">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FitHook</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for inspecting the progress of a FitRecipe refinement.</span>
+<span class="w">    </span><span class="sd">"""Base class for inspecting the progress of a FitRecipe refinement.</span>
 
-<span class="sd">    Can serve as a fithook for the FitRecipe class (see</span>
-<span class="sd">    FitRecipe.push_fit_hook method.) The methods in this class are</span>
+<span class="sd">    A FitHook can be added to a FitRecipe with the</span>
+<span class="sd">    ``FitRecipe.push_fit_hook`` method. The methods in this class are</span>
 <span class="sd">    called during the preparation of the FitRecipe for refinement, and</span>
-<span class="sd">    during the residual call. See the class methods for a description of</span>
-<span class="sd">    their purpose.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    during the residual call. The base implementations do nothing; derived</span>
+<span class="sd">    classes overload them as needed.</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="FitHook.reset">
-<a class="viewcode-back" href="../../../../extending.html#diffpy.srfit.fitbase.FitHook.reset">[docs]</a>
+<a class="viewcode-back" href="../../../../extending.html#diffpy.srfit.FitHook.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the hook data.</span>
+<span class="w">        </span><span class="sd">"""Reset the hook data.</span>
 
-<span class="sd">        This is called whenever FitRecipe._prepare is called, which is</span>
-<span class="sd">        whenever a configurational change to the fit hierarchy takes</span>
-<span class="sd">        place, such as adding a new ParameterSet, constraint or</span>
-<span class="sd">        restraint.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        This is called by ``FitRecipe._prepare`` whenever a</span>
+<span class="sd">        configurational change to the fit hierarchy takes place, such as</span>
+<span class="sd">        adding a new ParameterSet, constraint or restraint.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        recipe : FitRecipe</span>
+<span class="sd">            The FitRecipe that is being prepared.</span>
+<span class="sd">        """</span>
         <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="FitHook.precall">
-<a class="viewcode-back" href="../../../../extending.html#diffpy.srfit.fitbase.FitHook.precall">[docs]</a>
+<a class="viewcode-back" href="../../../../extending.html#diffpy.srfit.FitHook.precall">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">precall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is called within FitRecipe.residual, before the</span>
-<span class="sd">        calculation.</span>
+<span class="w">        </span><span class="sd">"""Inspect the recipe before the residual is calculated.</span>
+
+<span class="sd">        This is called within ``FitRecipe.residual``, before the</span>
+<span class="sd">        variable values are applied and the residual is calculated.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        recipe : FitRecipe</span>
-<span class="sd">            The FitRecipe instance.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            The FitRecipe whose residual is being calculated.</span>
+<span class="sd">        """</span>
         <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="FitHook.postcall">
-<a class="viewcode-back" href="../../../../extending.html#diffpy.srfit.fitbase.FitHook.postcall">[docs]</a>
+<a class="viewcode-back" href="../../../../extending.html#diffpy.srfit.FitHook.postcall">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">postcall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">chiv</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is called within FitRecipe.residual, after the</span>
-<span class="sd">        calculation.</span>
+<span class="w">        </span><span class="sd">"""Inspect the recipe after the residual is calculated.</span>
+
+<span class="sd">        This is called within ``FitRecipe.residual``, after the residual</span>
+<span class="sd">        is calculated.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        recipe : FitRecipe</span>
-<span class="sd">            The FitRecipe instance.</span>
+<span class="sd">            The FitRecipe whose residual was calculated.</span>
 <span class="sd">        chiv : ndarray</span>
-<span class="sd">            The residual vector.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            The residual vector, including the restraint penalties.</span>
+<span class="sd">        """</span>
         <span class="k">return</span></div>
 </div>
 
@@ -174,17 +182,18 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PrintFitHook</span><span class="p">(</span><span class="n">FitHook</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the progress of a FitRecipe refinement.</span>
+<span class="w">    </span><span class="sd">"""Print the progress of a FitRecipe refinement.</span>
 
 <span class="sd">    This FitHook prints out a running count of the number of times the residual</span>
 <span class="sd">    has been called, or other information, based on the verbosity.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    count</span>
+<span class="sd">    count : int</span>
 <span class="sd">        The number of times the residual has been called (default 0).</span>
-<span class="sd">    verbose</span>
-<span class="sd">        An integer telling how verbose to be (default 1).</span>
+<span class="sd">    verbose : int</span>
+<span class="sd">        The verbosity level (default 1). Each level also prints what the</span>
+<span class="sd">        lower levels print.</span>
 
 <span class="sd">        0</span>
 <span class="sd">            Print nothing.</span>
@@ -194,50 +203,58 @@
 <span class="sd">            Print the residual during the postcall.</span>
 <span class="sd">        &gt;=3</span>
 <span class="sd">            Print the variables during the postcall.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the attributes.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the hook data.</span>
+<span class="w">        </span><span class="sd">"""Reset the residual call count to 0.</span>
 
-<span class="sd">        This is called whenever FitRecipe._prepare is called, which is</span>
-<span class="sd">        whenever a configurational change to the fit hierarchy takes</span>
-<span class="sd">        place, such as adding a new ParameterSet, constraint or</span>
-<span class="sd">        restraint.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">return</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">precall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is called within FitRecipe.residual, before the</span>
-<span class="sd">        calculation.</span>
+<span class="sd">        This is called by ``FitRecipe._prepare`` whenever a</span>
+<span class="sd">        configurational change to the fit hierarchy takes place, such as</span>
+<span class="sd">        adding a new ParameterSet, constraint or restraint.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        recipe : FitRecipe</span>
-<span class="sd">            The FitRecipe instance.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            The FitRecipe that is being prepared.</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">precall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Increment the residual call count and print it.</span>
+
+<span class="sd">        The count is printed when ``verbose`` is at least 1.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        recipe : FitRecipe</span>
+<span class="sd">            The FitRecipe whose residual is being calculated.</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">postcall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">chiv</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is called within FitRecipe.residual, after the</span>
-<span class="sd">        calculation.</span>
+<span class="w">        </span><span class="sd">"""Print the residual and, optionally, the variable values.</span>
+
+<span class="sd">        When ``verbose`` is at least 2, print the total residual and, if</span>
+<span class="sd">        the recipe has restraints, its FitContribution and restraint</span>
+<span class="sd">        parts. When ``verbose`` is at least 3, also print the name and</span>
+<span class="sd">        value of each variable.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        recipe : FitRecipe</span>
-<span class="sd">            The FitRecipe instance.</span>
+<span class="sd">            The FitRecipe whose residual was calculated.</span>
 <span class="sd">        chiv : ndarray</span>
-<span class="sd">            The residual vector.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            The residual vector, including the restraint penalties.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -252,24 +269,24 @@
             <span class="n">chi2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">chi</span><span class="p">)</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">resv</span><span class="p">,</span> <span class="n">resv</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Residual:&quot;</span><span class="p">,</span> <span class="n">chi2tot</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"Residual:"</span><span class="p">,</span> <span class="n">chi2tot</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">numres</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FitContributions:&quot;</span><span class="p">,</span> <span class="n">chi2</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Restraints:&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"FitContributions:"</span><span class="p">,</span> <span class="n">chi2</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Restraints:"</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variables&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">"Variables"</span><span class="p">)</span>
             <span class="n">vnames</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get_names</span><span class="p">()</span>
             <span class="n">vals</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
             <span class="c1"># byname = _byname()</span>
             <span class="n">items</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">vnames</span><span class="p">,</span> <span class="n">vals</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="n">_byname</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> = </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">"  </span><span class="si">%s</span><span class="s2"> = </span><span class="si">%f</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">))</span>
         <span class="k">return</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_byname</span><span class="p">(</span><span class="n">nv</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">sortKeyForNumericString</span><span class="p">(</span><span class="n">nv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">sort_key_for_numeric_string</span><span class="p">(</span><span class="n">nv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
 
 <span class="c1"># End class PrintFitHook</span>
@@ -277,14 +294,34 @@
 
 <span class="c1"># TODO - Display the chi^2 on the plot during refinement.</span>
 <div class="viewcode-block" id="PlotFitHook">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.PlotFitHook">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.PlotFitHook">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PlotFitHook</span><span class="p">(</span><span class="n">FitHook</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Live-plot the progress of a FitRecipe refinement.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Live-plot the progress of a FitRecipe refinement.</span>
+
+<span class="sd">    Each FitContribution of the recipe gets a subplot showing the</span>
+<span class="sd">    observed profile and the calculated profile, which is updated after</span>
+<span class="sd">    every residual call. This requires matplotlib.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    _plots : list of tuple</span>
+<span class="sd">        The (observed, calculated) line pair for each FitContribution.</span>
+<span class="sd">        It is created by ``reset``.</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="PlotFitHook.reset">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.PlotFitHook.reset">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.PlotFitHook.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set up the plot.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set up the plot.</span>
+
+<span class="sd">        Clear the current figure, turn on interactive mode and draw one</span>
+<span class="sd">        subplot per FitContribution of the recipe.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        recipe : FitRecipe</span>
+<span class="sd">            The FitRecipe that is being prepared.</span>
+<span class="sd">        """</span>
         <span class="n">FitHook</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span> <span class="o">=</span> <span class="p">[]</span>
@@ -309,8 +346,8 @@
             <span class="c1"># Create a subplot</span>
             <span class="k">if</span> <span class="n">nc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">pylab</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">ncols</span><span class="p">,</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">pdata</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;bo&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">pfit</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;r-&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">pdata</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s2">"bo"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">pfit</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="s2">"r-"</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plots</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">pdata</span><span class="p">,</span> <span class="n">pfit</span><span class="p">))</span>
             <span class="n">pylab</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xname</span><span class="p">)</span>
             <span class="n">pylab</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">yname</span><span class="p">)</span>
@@ -321,26 +358,26 @@
         <span class="c1">#    canvas = event.canvas</span>
         <span class="c1">#    canvas.draw()</span>
         <span class="c1">#    return</span>
-        <span class="c1"># pylab.connect(&#39;resize_event&#39;, redraw)</span>
+        <span class="c1"># pylab.connect('resize_event', redraw)</span>
 
         <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="PlotFitHook.postcall">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.PlotFitHook.postcall">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.PlotFitHook.postcall">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">postcall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">chiv</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This is called within FitRecipe.residual, after the</span>
-<span class="sd">        calculation.</span>
+<span class="w">        </span><span class="sd">"""Update the plots with the latest profiles.</span>
 
-<span class="sd">        Find data and plot it.</span>
+<span class="sd">        This is called within ``FitRecipe.residual``, after the residual</span>
+<span class="sd">        is calculated.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        recipe : FitRecipe</span>
-<span class="sd">            The FitRecipe instance.</span>
+<span class="sd">            The FitRecipe whose residual was calculated.</span>
 <span class="sd">        chiv : ndarray</span>
-<span class="sd">            The residual vector.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            The residual vector, including the restraint penalties.</span>
+<span class="sd">        """</span>
         <span class="n">FitHook</span><span class="o">.</span><span class="n">postcall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recipe</span><span class="p">,</span> <span class="n">chiv</span><span class="p">)</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">pylab</span>
 

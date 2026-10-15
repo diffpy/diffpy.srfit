@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.pdf.pdfcontribution &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.pdf.pdfcontribution &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,13 +91,13 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;PDFContribution class.</span>
+<span class="sd">"""PDFContribution class.</span>
 
 <span class="sd">This is a custom FitContribution that simplifies the creation of PDF</span>
 <span class="sd">fits.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PDFContribution&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"PDFContribution"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="n">FitContribution</span><span class="p">,</span> <span class="n">Profile</span>
 
@@ -105,7 +105,7 @@
 <div class="viewcode-block" id="PDFContribution">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PDFContribution</span><span class="p">(</span><span class="n">FitContribution</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A FitContribution that is customized for PDF fits.</span>
+<span class="w">    </span><span class="sd">"""A FitContribution that is customized for PDF fits.</span>
 
 <span class="sd">    Data and phases can be added directly to the PDFContribution. Setup of</span>
 <span class="sd">    constraints and restraints requires direct interaction with the generator</span>
@@ -126,14 +126,14 @@
 <span class="sd">        A managed dictionary of Calculators, indexed by name.</span>
 <span class="sd">    _constraints</span>
 <span class="sd">        A set of constrained Parameters. Constraints can be</span>
-<span class="sd">        added using the &#39;constrain&#39; methods.</span>
+<span class="sd">        added using the 'constrain' methods.</span>
 <span class="sd">    _generators</span>
 <span class="sd">        A managed dictionary of ProfileGenerators.</span>
 <span class="sd">    _parameters</span>
 <span class="sd">        A managed OrderedDict of parameters.</span>
 <span class="sd">    _restraints</span>
 <span class="sd">        A set of Restraints. Restraints can be added using the</span>
-<span class="sd">        &#39;restrain&#39; or &#39;confine&#39; methods.</span>
+<span class="sd">        'restrain' or 'confine' methods.</span>
 <span class="sd">    _parsets</span>
 <span class="sd">        A managed dictionary of ParameterSets.</span>
 <span class="sd">    _eqfactory</span>
@@ -159,28 +159,28 @@
 <span class="sd">        Resolution peak broadening term</span>
 <span class="sd">    qdamp</span>
 <span class="sd">        Resolution peak dampening term</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the PDFContribution.</span>
+<span class="w">        </span><span class="sd">"""Create the PDFContribution.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str</span>
 <span class="sd">            The name of the contribution.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">FitContribution</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="c1"># Add the profile</span>
         <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
 
         <span class="c1"># Need a parameter for the overall scale, in the case that this is a</span>
         <span class="c1"># multi-phase fit.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">newParameter</span><span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_parameter</span><span class="p">(</span><span class="s2">"scale"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
         <span class="c1"># Profile-related parameters that will be shared between the generators</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">newParameter</span><span class="p">(</span><span class="s2">&quot;qdamp&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">newParameter</span><span class="p">(</span><span class="s2">&quot;qbroad&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_parameter</span><span class="p">(</span><span class="s2">"qdamp"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_parameter</span><span class="p">(</span><span class="s2">"qbroad"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="c1"># Data methods</span>
@@ -188,7 +188,7 @@
 <div class="viewcode-block" id="PDFContribution.loadData">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.loadData">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">loadData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datafile</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the data from a data file.</span>
+<span class="w">        </span><span class="sd">"""Load the data from a data file.</span>
 
 <span class="sd">        This uses the PDFParser to load the data and then passes it to</span>
 <span class="sd">        the built-in profile with load_parsed_data.</span>
@@ -197,7 +197,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        datafile : str or Path</span>
 <span class="sd">            The path to the file that contains the data.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.pdf.pdfparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">PDFParser</span>
 
         <span class="n">parser</span> <span class="o">=</span> <span class="n">PDFParser</span><span class="p">()</span>
@@ -211,7 +211,7 @@
 <div class="viewcode-block" id="PDFContribution.setCalculationRange">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.setCalculationRange">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setCalculationRange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set epsilon-inclusive calculation range.</span>
+<span class="w">        </span><span class="sd">"""Set epsilon-inclusive calculation range.</span>
 
 <span class="sd">        Adhere to the observed ``xobs`` points when ``dx`` is the same</span>
 <span class="sd">        as in the data.  ``xmin`` and ``xmax`` are clipped at the bounds</span>
@@ -221,11 +221,11 @@
 <span class="sd">        ----------</span>
 <span class="sd">        xmin : float or ``obs``, optional</span>
 <span class="sd">            The minimum value of the independent variable.  Keep the</span>
-<span class="sd">            current minimum when not specified.  If specified as &quot;obs&quot;</span>
+<span class="sd">            current minimum when not specified.  If specified as "obs"</span>
 <span class="sd">            reset to the minimum observed value.</span>
 <span class="sd">        xmax : float or ``obs``, optional</span>
 <span class="sd">            The maximum value of the independent variable.  Keep the</span>
-<span class="sd">            current maximum when not specified.  If specified as &quot;obs&quot;</span>
+<span class="sd">            current maximum when not specified.  If specified as "obs"</span>
 <span class="sd">            reset to the maximum observed value.</span>
 <span class="sd">        dx : float or ``obs``, optional</span>
 <span class="sd">            The sample spacing in the independent variable.  When different</span>
@@ -240,14 +240,14 @@
 <span class="sd">            If there is no observed data.</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PDFContribution.savetxt">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.savetxt">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">savetxt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call numpy.savetxt with x, ycalc, y, dy.</span>
+<span class="w">        </span><span class="sd">"""Call numpy.savetxt with x, ycalc, y, dy.</span>
 
 <span class="sd">        This calls on the built-in Profile.</span>
 
@@ -257,7 +257,7 @@
 <span class="sd">            The file or filename to which the data is saved.</span>
 <span class="sd">        **kwargs</span>
 <span class="sd">            Additional arguments passed to numpy.savetxt.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -266,18 +266,18 @@
 <div class="viewcode-block" id="PDFContribution.addStructure">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.addStructure">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">addStructure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">stru</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a phase that goes into the PDF calculation.</span>
+<span class="w">        </span><span class="sd">"""Add a phase that goes into the PDF calculation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str</span>
 <span class="sd">            A name to give the generator that will manage the PDF</span>
 <span class="sd">            calculation from the passed structure. The adapted</span>
-<span class="sd">            structure will be accessible via the name &quot;phase&quot; as an</span>
+<span class="sd">            structure will be accessible via the name "phase" as an</span>
 <span class="sd">            attribute of the generator, e.g.</span>
-<span class="sd">            contribution.name.phase, where &#39;contribution&#39; is this</span>
-<span class="sd">            contribution and &#39;name&#39; is passed name.</span>
-<span class="sd">            (default), then the name will be set as &quot;phase&quot;.</span>
+<span class="sd">            contribution.name.phase, where 'contribution' is this</span>
+<span class="sd">            contribution and 'name' is passed name.</span>
+<span class="sd">            (default), then the name will be set as "phase".</span>
 <span class="sd">        stru</span>
 <span class="sd">            The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or</span>
 <span class="sd">            pyobjcryst.molecule.Molecule instance to adapt (default None).</span>
@@ -294,7 +294,7 @@
 <span class="sd">        ParameterSet</span>
 <span class="sd">            The new phase, of the type appropriate for what was passed</span>
 <span class="sd">            in stru.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Based on periodic, create the proper generator.</span>
         <span class="k">if</span> <span class="n">periodic</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.pdf.pdfgenerator</span><span class="w"> </span><span class="kn">import</span> <span class="n">PDFGenerator</span>
@@ -306,7 +306,7 @@
             <span class="n">gen</span> <span class="o">=</span> <span class="n">DebyePDFGenerator</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># Set up the generator</span>
-        <span class="n">gen</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">stru</span><span class="p">,</span> <span class="s2">&quot;phase&quot;</span><span class="p">,</span> <span class="n">periodic</span><span class="p">)</span>
+        <span class="n">gen</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">stru</span><span class="p">,</span> <span class="s2">"phase"</span><span class="p">,</span> <span class="n">periodic</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_setup_generator</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">gen</span><span class="o">.</span><span class="n">phase</span></div>
@@ -315,16 +315,16 @@
 <div class="viewcode-block" id="PDFContribution.addPhase">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.addPhase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">addPhase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">parset</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a phase that goes into the PDF calculation.</span>
+<span class="w">        </span><span class="sd">"""Add a phase that goes into the PDF calculation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str</span>
 <span class="sd">            A name to give the generator that will manage the PDF</span>
 <span class="sd">            calculation from the passed parameter phase. The parset</span>
-<span class="sd">            will be accessible via the name &quot;phase&quot; as an attribute</span>
+<span class="sd">            will be accessible via the name "phase" as an attribute</span>
 <span class="sd">            of the generator, e.g., contribution.name.phase, where</span>
-<span class="sd">            &#39;contribution&#39; is this contribution and &#39;name&#39; is passed</span>
+<span class="sd">            'contribution' is this contribution and 'name' is passed</span>
 <span class="sd">            name.</span>
 <span class="sd">        parset</span>
 <span class="sd">            The SrRealParSet that holds the structural information.</span>
@@ -344,7 +344,7 @@
 <span class="sd">        ParameterSet</span>
 <span class="sd">            The new phase, of the type appropriate for what was passed</span>
 <span class="sd">            in parset.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Based on periodic, create the proper generator.</span>
         <span class="k">if</span> <span class="n">periodic</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.pdf.pdfgenerator</span><span class="w"> </span><span class="kn">import</span> <span class="n">PDFGenerator</span>
@@ -363,19 +363,19 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_setup_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setup a generator.</span>
+<span class="w">        </span><span class="sd">"""Setup a generator.</span>
 
 <span class="sd">        The generator must already have a managed SrRealParSet, added</span>
 <span class="sd">        with setStructure or setPhase.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Add the generator to this FitContribution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">gen</span><span class="p">)</span>
 
         <span class="c1"># Set the proper equation for the fit, depending on the number of</span>
         <span class="c1"># phases we have.</span>
         <span class="n">gnames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generators</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-        <span class="n">eqstr</span> <span class="o">=</span> <span class="s2">&quot; + &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gnames</span><span class="p">)</span>
-        <span class="n">eqstr</span> <span class="o">=</span> <span class="s2">&quot;scale * (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">eqstr</span>
+        <span class="n">eqstr</span> <span class="o">=</span> <span class="s2">" + "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gnames</span><span class="p">)</span>
+        <span class="n">eqstr</span> <span class="o">=</span> <span class="s2">"scale * (</span><span class="si">%s</span><span class="s2">)"</span> <span class="o">%</span> <span class="n">eqstr</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="n">eqstr</span><span class="p">)</span>
 
         <span class="c1"># Update with our metadata</span>
@@ -390,7 +390,7 @@
     <span class="c1"># Calculation setup methods</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_meta_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwd</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get metadata according to object hierarchy.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Get metadata according to object hierarchy."""</span>
         <span class="c1"># Check self, then generators then profile</span>
         <span class="k">if</span> <span class="n">kwd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="n">kwd</span><span class="p">]</span>
@@ -402,20 +402,20 @@
 
 <div class="viewcode-block" id="PDFContribution.setScatteringType">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.setScatteringType">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setScatteringType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;X&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the scattering type.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setScatteringType</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">"X"</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Set the scattering type.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        type : str, optional</span>
-<span class="sd">            &quot;X&quot; for x-ray or &quot;N&quot; for neutron (default &quot;X&quot;).</span>
+<span class="sd">            "X" for x-ray or "N" for neutron (default "X").</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
-<span class="sd">            If type is not &quot;X&quot; or &quot;N&quot;.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;stype&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">type</span>
+<span class="sd">            If type is not "X" or "N".</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">"stype"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">type</span>
         <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generators</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">gen</span><span class="o">.</span><span class="n">setScatteringType</span><span class="p">(</span><span class="nb">type</span><span class="p">)</span>
         <span class="k">return</span></div>
@@ -424,7 +424,7 @@
 <div class="viewcode-block" id="PDFContribution.getScatteringType">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.getScatteringType">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getScatteringType</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the scattering type.</span>
+<span class="w">        </span><span class="sd">"""Get the scattering type.</span>
 
 <span class="sd">        See ``setScatteringType``.</span>
 
@@ -432,21 +432,21 @@
 <span class="sd">        -------</span>
 <span class="sd">        str</span>
 <span class="sd">            The scattering type used to calculate the PDF.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_meta_value</span><span class="p">(</span><span class="s2">&quot;stype&quot;</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_meta_value</span><span class="p">(</span><span class="s2">"stype"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PDFContribution.setQmax">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.setQmax">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setQmax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qmax</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the qmax value.</span>
+<span class="w">        </span><span class="sd">"""Set the qmax value.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        qmax : float</span>
 <span class="sd">            The maximum scattering vector used to generate the PDF.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;qmax&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qmax</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">"qmax"</span><span class="p">]</span> <span class="o">=</span> <span class="n">qmax</span>
         <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generators</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">gen</span><span class="o">.</span><span class="n">setQmax</span><span class="p">(</span><span class="n">qmax</span><span class="p">)</span>
         <span class="k">return</span></div>
@@ -455,27 +455,27 @@
 <div class="viewcode-block" id="PDFContribution.getQmax">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.getQmax">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getQmax</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the qmax value.</span>
+<span class="w">        </span><span class="sd">"""Get the qmax value.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        float</span>
 <span class="sd">            The maximum scattering vector used to generate the PDF.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_meta_value</span><span class="p">(</span><span class="s2">&quot;qmax&quot;</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_meta_value</span><span class="p">(</span><span class="s2">"qmax"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PDFContribution.setQmin">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.setQmin">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setQmin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qmin</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the qmin value.</span>
+<span class="w">        </span><span class="sd">"""Set the qmin value.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        qmin : float</span>
 <span class="sd">            The minimum scattering vector used to generate the PDF.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;qmin&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">qmin</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">"qmin"</span><span class="p">]</span> <span class="o">=</span> <span class="n">qmin</span>
         <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generators</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">gen</span><span class="o">.</span><span class="n">setQmin</span><span class="p">(</span><span class="n">qmin</span><span class="p">)</span>
         <span class="k">return</span></div>
@@ -484,14 +484,14 @@
 <div class="viewcode-block" id="PDFContribution.getQmin">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.PDFContribution.getQmin">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getQmin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the qmin value.</span>
+<span class="w">        </span><span class="sd">"""Get the qmin value.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        float</span>
 <span class="sd">            The minimum scattering vector used to generate the PDF.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_meta_value</span><span class="p">(</span><span class="s2">&quot;qmin&quot;</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_meta_value</span><span class="p">(</span><span class="s2">"qmin"</span><span class="p">)</span></div>
 </div>
 
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.profileparser &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.fitbase.profileparser &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,15 +91,15 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;This module contains classes for parsing profiles from files.</span>
+<span class="sd">"""This module contains classes for parsing profiles from files.</span>
 
 <span class="sd">ProfileParser is a base class for parsing data. It can interact with a</span>
-<span class="sd">Profile object to automatically set the Profile&#39;s data and metadata.</span>
+<span class="sd">Profile object to automatically set the Profile's data and metadata.</span>
 <span class="sd">Each specific file format must be encapsulated in a ProfileParser</span>
 <span class="sd">subclass.</span>
 
 <span class="sd">See the class documentation for more information.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
@@ -109,67 +109,67 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils.parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_data</span>
 
-<span class="n">removal_verison</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
-<span class="n">pp_base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.fitbase.profileparser.ProfileParser&quot;</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
+<span class="n">pp_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.fitbase.profileparser.ProfileParser"</span>
 
 <span class="n">parseFile_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">pp_base</span><span class="p">,</span>
-    <span class="s2">&quot;parseFile&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;parse_file&quot;</span><span class="p">,</span>
-    <span class="n">removal_verison</span><span class="p">,</span>
+    <span class="s2">"parseFile"</span><span class="p">,</span>
+    <span class="s2">"parse_file"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">getFormat_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">pp_base</span><span class="p">,</span>
-    <span class="s2">&quot;getFormat&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_format&quot;</span><span class="p">,</span>
-    <span class="n">removal_verison</span><span class="p">,</span>
+    <span class="s2">"getFormat"</span><span class="p">,</span>
+    <span class="s2">"get_format"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">getNumBanks_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">pp_base</span><span class="p">,</span>
-    <span class="s2">&quot;getNumBanks&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_num_banks&quot;</span><span class="p">,</span>
-    <span class="n">removal_verison</span><span class="p">,</span>
+    <span class="s2">"getNumBanks"</span><span class="p">,</span>
+    <span class="s2">"get_num_banks"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">selectBank_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">pp_base</span><span class="p">,</span>
-    <span class="s2">&quot;selectBank&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;select_bank&quot;</span><span class="p">,</span>
-    <span class="n">removal_verison</span><span class="p">,</span>
+    <span class="s2">"selectBank"</span><span class="p">,</span>
+    <span class="s2">"select_bank"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">getData_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">pp_base</span><span class="p">,</span>
-    <span class="s2">&quot;getData&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_data&quot;</span><span class="p">,</span>
-    <span class="n">removal_verison</span><span class="p">,</span>
+    <span class="s2">"getData"</span><span class="p">,</span>
+    <span class="s2">"get_data"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">getMetaData_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">pp_base</span><span class="p">,</span>
-    <span class="s2">&quot;getMetaData&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_metadata&quot;</span><span class="p">,</span>
-    <span class="n">removal_verison</span><span class="p">,</span>
+    <span class="s2">"getMetaData"</span><span class="p">,</span>
+    <span class="s2">"get_metadata"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="ProfileParser">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileParser">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProfileParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for parsing profile data from a file.</span>
+<span class="w">    </span><span class="sd">"""Base class for parsing profile data from a file.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    _format : str, optional</span>
 <span class="sd">        The name of the data format that this parses (string, default</span>
-<span class="sd">        ``&quot;&quot;``). The format string is a unique identifier for the data</span>
+<span class="sd">        ``""``). The format string is a unique identifier for the data</span>
 <span class="sd">        format handled by the parser.</span>
 <span class="sd">    _banks : list of tuples</span>
-<span class="sd">        The data from each bank. Each bank contains a (x, y, dx,</span>
-<span class="sd">        dy)</span>
+<span class="sd">        The data from each bank. Each bank contains a (x, y, dx, dy)</span>
 <span class="sd">        tuple:</span>
+
 <span class="sd">        x : np.ndarray</span>
 <span class="sd">            The independent variable read from the file.</span>
 <span class="sd">        y : np.ndarray</span>
@@ -204,12 +204,12 @@
 <span class="sd">        The number of banks parsed.</span>
 <span class="sd">    bank : int</span>
 <span class="sd">        The chosen bank number.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">_format</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">_format</span> <span class="o">=</span> <span class="s2">""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the attributes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Initialize the attributes."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_banks</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="kc">None</span>
@@ -219,53 +219,47 @@
         <span class="k">return</span>
 
 <div class="viewcode-block" id="ProfileParser.get_format">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.get_format">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileParser.get_format">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the format string.</span>
+<span class="w">        </span><span class="sd">"""Get the format string.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        str</span>
 <span class="sd">            The unique identifier for the data format handled by this</span>
 <span class="sd">            parser.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_format</span></div>
 
 
-<div class="viewcode-block" id="ProfileParser.getFormat">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.getFormat">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">getFormat_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getFormat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function is deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.ProfileParser.get_format</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_format</span><span class="p">()</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_format</span><span class="p">()</span>
 
-
-<div class="viewcode-block" id="ProfileParser.parseFile">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.parseFile">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">parseFile_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parseFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function is deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.ProfileParser.parse_file</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_file</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
-
-    <span class="n">_reserved_metadata_keys</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;filename&quot;</span><span class="p">,</span> <span class="s2">&quot;bank&quot;</span><span class="p">,</span> <span class="s2">&quot;nbanks&quot;</span><span class="p">}</span>
+    <span class="n">_reserved_metadata_keys</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"filename"</span><span class="p">,</span> <span class="s2">"bank"</span><span class="p">,</span> <span class="s2">"nbanks"</span><span class="p">}</span>
 
 <div class="viewcode-block" id="ProfileParser.parse_file">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.parse_file">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileParser.parse_file">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">parse_file</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">column_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse a data file to extract data and metadata, with</span>
+<span class="w">        </span><span class="sd">"""Parse a data file to extract data and metadata, with</span>
 <span class="sd">        automatic handling of uncertainties.</span>
 
 <span class="sd">        This is a template method. Subclasses customize a format by</span>
@@ -293,21 +287,21 @@
 <span class="sd">            If None, the format is auto-detected based on the</span>
 <span class="sd">            number of columns.</span>
 
-<span class="sd">            Valid labels: ``&quot;x&quot;``, ``&quot;y&quot;``, ``&quot;dx&quot;``, ``&quot;dy&quot;``</span>
+<span class="sd">            Valid labels: ``"x"``, ``"y"``, ``"dx"``, ``"dy"``</span>
 
 <span class="sd">            Examples:</span>
 
-<span class="sd">            - ``(&quot;x&quot;, &quot;y&quot;)``</span>
-<span class="sd">            - ``(&quot;x&quot;, &quot;y&quot;, &quot;dy&quot;)``</span>
-<span class="sd">            - ``(&quot;x&quot;, &quot;y&quot;, &quot;dx&quot;, &quot;dy&quot;)``</span>
-<span class="sd">            - ``(&quot;x&quot;, &quot;dx&quot;, &quot;y&quot;, &quot;dy&quot;)``</span>
+<span class="sd">            - ``("x", "y")``</span>
+<span class="sd">            - ``("x", "y", "dy")``</span>
+<span class="sd">            - ``("x", "y", "dx", "dy")``</span>
+<span class="sd">            - ``("x", "dx", "y", "dy")``</span>
 
 <span class="sd">        metadata : dict, optional</span>
 <span class="sd">            Additional metadata to merge into the metadata parsed from</span>
 <span class="sd">            the file. Keys must be strings. A key that collides with</span>
 <span class="sd">            one already present in the parsed metadata overrides the</span>
-<span class="sd">            parsed value. A key that collides with ``&quot;filename&quot;``,</span>
-<span class="sd">            ``&quot;bank&quot;``, or ``&quot;nbanks&quot;``, which ``parse_file`` sets itself,</span>
+<span class="sd">            parsed value. A key that collides with ``"filename"``,</span>
+<span class="sd">            ``"bank"``, or ``"nbanks"``, which ``parse_file`` sets itself,</span>
 <span class="sd">            also overrides the automatically set value, but raises a</span>
 <span class="sd">            ``UserWarning`` since it may affect other code that relies</span>
 <span class="sd">            on the automatically set value.</span>
@@ -323,162 +317,159 @@
 <span class="sd">        ------</span>
 <span class="sd">        ParseError</span>
 <span class="sd">            If parsing fails or ambiguity detected.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_banks</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_metadata</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parse_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">column_format</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">"filename"</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_banks</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">&quot;There are no data in the banks&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">"There are no data in the banks"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">select_bank</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_apply_extra_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span></div>
 
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate and copy a user-supplied metadata dict.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Validate and copy a user-supplied metadata dict."""</span>
         <span class="k">if</span> <span class="n">metadata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">metadata</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
-                <span class="s2">&quot;The metadata argument must be a dictionary. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Received type &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; instead.&quot;</span>
+                <span class="s2">"The metadata argument must be a dictionary. "</span>
+                <span class="sa">f</span><span class="s2">"Received type '</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">' instead."</span>
             <span class="p">)</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; in the metadata dictionary is not a &quot;</span>
-                    <span class="s2">&quot;string. All keys in the metadata dictionary must &quot;</span>
-                    <span class="s2">&quot;be strings.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Key '</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">' in the metadata dictionary is not a "</span>
+                    <span class="s2">"string. All keys in the metadata dictionary must "</span>
+                    <span class="s2">"be strings."</span>
                 <span class="p">)</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_apply_extra_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Merge validated user-supplied metadata into</span>
-<span class="sd">        ``self._meta``.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Merge validated user-supplied metadata into</span>
+<span class="sd">        ``self._meta``."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">metadata</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reserved_metadata_keys</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39; is a reserved metadata key normally set &quot;</span>
-                    <span class="s2">&quot;by parse_file. The supplied value will override &quot;</span>
-                    <span class="s2">&quot;it.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">' is a reserved metadata key normally set "</span>
+                    <span class="s2">"by parse_file. The supplied value will override "</span>
+                    <span class="s2">"it."</span>
                 <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the metadata read from the header of a file.</span>
+<span class="w">        </span><span class="sd">"""Return the metadata read from the header of a file.</span>
 
 <span class="sd">        Override this hook to parse a format whose header is not a plain</span>
 <span class="sd">        list of ``name = value`` pairs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">load_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_parse_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">column_format</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Append the banks read from the data block of a file.</span>
+<span class="w">        </span><span class="sd">"""Append the banks read from the data block of a file.</span>
 
 <span class="sd">        Override this hook to parse a format whose data block is not a</span>
 <span class="sd">        plain matrix of columns, or one that holds several banks.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">data</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
-                <span class="s2">&quot;Data block must have at least two columns (x, y).&quot;</span>
+                <span class="s2">"Data block must have at least two columns (x, y)."</span>
             <span class="p">)</span>
         <span class="n">column_format</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_column_format</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column_format</span><span class="p">)</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_map_column_labels_to_data</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">column_format</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_banks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">[</span>
-                <span class="n">columns</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">],</span>
-                <span class="n">columns</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">],</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_validate_uncertainty</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dx&quot;</span><span class="p">)),</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_validate_uncertainty</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dy&quot;</span><span class="p">)),</span>
+                <span class="n">columns</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span>
+                <span class="n">columns</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_validate_uncertainty</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dx"</span><span class="p">)),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_validate_uncertainty</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dy"</span><span class="p">)),</span>
             <span class="p">]</span>
         <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_detect_column_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">column_format</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Auto-detect or validate column format.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Auto-detect or validate column format."""</span>
         <span class="n">num_cols</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">column_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">column_format</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span>
+                <span class="n">column_format</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-                <span class="n">column_format</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;dy&quot;</span><span class="p">)</span>
+                <span class="n">column_format</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"dy"</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">num_cols</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-                <span class="n">column_format</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;dx&quot;</span><span class="p">,</span> <span class="s2">&quot;dy&quot;</span><span class="p">)</span>
+                <span class="n">column_format</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"dx"</span><span class="p">,</span> <span class="s2">"dy"</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Expected 2 to 4 columns but found </span><span class="si">{</span><span class="n">num_cols</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"Expected 2 to 4 columns but found </span><span class="si">{</span><span class="n">num_cols</span><span class="si">}</span><span class="s2">."</span>
                 <span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_format</span><span class="p">)</span> <span class="o">!=</span> <span class="n">num_cols</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;column_format has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">column_format</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;labels but file contains </span><span class="si">{</span><span class="n">num_cols</span><span class="si">}</span><span class="s2"> columns.&quot;</span>
+                <span class="sa">f</span><span class="s2">"column_format has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">column_format</span><span class="p">)</span><span class="si">}</span><span class="s2"> "</span>
+                <span class="sa">f</span><span class="s2">"labels but file contains </span><span class="si">{</span><span class="n">num_cols</span><span class="si">}</span><span class="s2"> columns."</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">column_format</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">column_format</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">&quot;column_format cannot contain duplicate labels.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">"column_format cannot contain duplicate labels."</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">column_format</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;dx&quot;</span><span class="p">,</span> <span class="s2">&quot;dy&quot;</span><span class="p">}:</span>
+            <span class="k">if</span> <span class="n">label</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"dx"</span><span class="p">,</span> <span class="s2">"dy"</span><span class="p">}:</span>
                 <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;column_format contains invalid label &#39;</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">&#39;. &quot;</span>
-                    <span class="s2">&quot;Valid labels are &#39;x&#39;, &#39;y&#39;, &#39;dx&#39;, and &#39;dy&#39;.&quot;</span>
+                    <span class="sa">f</span><span class="s2">"column_format contains invalid label '</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">'. "</span>
+                    <span class="s2">"Valid labels are 'x', 'y', 'dx', and 'dy'."</span>
                 <span class="p">)</span>
         <span class="k">return</span> <span class="n">column_format</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_map_column_labels_to_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">column_format</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Map numeric data to columns by label.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Map numeric data to columns by label."""</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">column_format</span><span class="p">):</span>
             <span class="n">columns</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">or</span> <span class="s2">&quot;y&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">"x"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span> <span class="ow">or</span> <span class="s2">"y"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span>
-                <span class="s2">&quot;Both &#39;x&#39; and &#39;y&#39; columns must be present in the data.&quot;</span>
+                <span class="s2">"Both 'x' and 'y' columns must be present in the data."</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">columns</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_uncertainty</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the uncertainty data if valid, otherwise None.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return the uncertainty data if valid, otherwise None."""</span>
         <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">data</span><span class="p">))</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">data</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">data</span>
 
 <div class="viewcode-block" id="ProfileParser.get_num_banks">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.get_num_banks">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileParser.get_num_banks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_num_banks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the number of banks read by the parser.</span>
+<span class="w">        </span><span class="sd">"""Get the number of banks read by the parser.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
 <span class="sd">            The number of banks read by the parser.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_banks</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ProfileParser.getNumBanks">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.getNumBanks">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">getNumBanks_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getNumBanks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function is deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.ProfileParser.get_num_banks</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_banks</span><span class="p">()</span></div>
-
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_banks</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ProfileParser.select_bank">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.select_bank">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileParser.select_bank">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">select_bank</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Select which bank to use.</span>
+<span class="w">        </span><span class="sd">"""Select which bank to use.</span>
 
 <span class="sd">        This method should only be called after the data has been parsed.  The</span>
 <span class="sd">        chosen bank number is not persistent, and so must be re-selected if the</span>
@@ -494,44 +485,41 @@
 <span class="sd">        ------</span>
 <span class="sd">        IndexError</span>
 <span class="sd">            If requesting a bank that does not exist.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bank&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"bank"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
         <span class="n">numbanks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_num_banks</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">index</span> <span class="o">&gt;</span> <span class="n">numbanks</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;Bank index out of range&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">"Bank index out of range"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">index</span> <span class="o">+=</span> <span class="n">numbanks</span>
 
         <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;Bank index out of range&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">"Bank index out of range"</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;bank&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">&quot;nbanks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">numbanks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">"bank"</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span><span class="p">[</span><span class="s2">"nbanks"</span><span class="p">]</span> <span class="o">=</span> <span class="n">numbanks</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_banks</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="ProfileParser.selectBank">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.selectBank">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">selectBank_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">selectBank</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function is deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.ProfileParser.select_bank</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">select_bank</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-        <span class="k">return</span></div>
-
+        <span class="k">return</span>
 
 <div class="viewcode-block" id="ProfileParser.get_data">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.get_data">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileParser.get_data">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the data.</span>
+<span class="w">        </span><span class="sd">"""Get the data.</span>
 
 <span class="sd">        This method should only be called after the data has been parsed.  The</span>
 <span class="sd">        chosen bank number is not persistent, and so must be re-selected if the</span>
@@ -549,49 +537,43 @@
 <span class="sd">        tuple</span>
 <span class="sd">            The ``(x, y, dx, dy)`` tuple for the bank. ``dx`` and ``dy``</span>
 <span class="sd">            are None if they cannot be determined from the data format.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">select_bank</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dy</span></div>
 
 
-<div class="viewcode-block" id="ProfileParser.getData">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.getData">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">getData_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function is deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.ProfileParser.get_data instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></div>
-
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ProfileParser.get_metadata">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.get_metadata">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileParser.get_metadata">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the parsed metadata.</span>
+<span class="w">        </span><span class="sd">"""Get the parsed metadata.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        dict</span>
 <span class="sd">            A dictionary containing metadata read from the file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span></div>
 
 
-<div class="viewcode-block" id="ProfileParser.getMetaData">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileParser.getMetaData">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">getMetaData_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getMetaData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function is deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.ProfileParser.get_metadata</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_meta</span></div>
-</div>
 
 
 

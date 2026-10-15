@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.structure.srrealparset &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.structure.srrealparset &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,9 +92,9 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Structure wrapper class for structures compatible with SrReal.&quot;&quot;&quot;</span>
+<span class="sd">"""Structure wrapper class for structures compatible with SrReal."""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SrRealParSet&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SrRealParSet"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.basestructureparset</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseStructureParSet</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.bvsrestraint</span><span class="w"> </span><span class="kn">import</span> <span class="n">BVSRestraint</span>
@@ -103,7 +103,7 @@
 <div class="viewcode-block" id="SrRealParSet">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.srrealparset.SrRealParSet">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SrRealParSet</span><span class="p">(</span><span class="n">BaseStructureParSet</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for SrReal-compatible structure adapters.</span>
+<span class="w">    </span><span class="sd">"""Base class for SrReal-compatible structure adapters.</span>
 
 <span class="sd">    This derives from BaseStructureParSet and provides some extended</span>
 <span class="sd">    functionality provided by SrReal.</span>
@@ -116,7 +116,7 @@
 <span class="sd">        A flag indicating if SrReal calculators that operate on</span>
 <span class="sd">        this object should use symmetry. By default this is</span>
 <span class="sd">        True.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
         <span class="n">BaseStructureParSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
@@ -127,7 +127,7 @@
 <div class="viewcode-block" id="SrRealParSet.restrainBVS">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.srrealparset.SrRealParSet.restrainBVS">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">restrainBVS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Restrain the bond-valence sum to zero.</span>
+<span class="w">        </span><span class="sd">"""Restrain the bond-valence sum to zero.</span>
 
 <span class="sd">        This adds a penalty to the cost function equal to</span>
 <span class="sd">        bvmsdiff / sig**2</span>
@@ -145,8 +145,8 @@
 <span class="sd">            (multiplied) by the unrestrained point-average chi^2</span>
 <span class="sd">            (chi^2/numpoints) (default False).</span>
 
-<span class="sd">        Returns the BVSRestraint object for use with the &#39;unrestrain&#39; method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Returns the BVSRestraint object for use with the 'unrestrain' method.</span>
+<span class="sd">        """</span>
         <span class="c1"># Create the Restraint object</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">BVSRestraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
         <span class="c1"># Add it to the _restraints set</span>
@@ -160,11 +160,11 @@
 <div class="viewcode-block" id="SrRealParSet.useSymmetry">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.srrealparset.SrRealParSet.useSymmetry">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">useSymmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set this structure to use symmetry.</span>
+<span class="w">        </span><span class="sd">"""Set this structure to use symmetry.</span>
 
 <span class="sd">        This determines how the structure is treated by SrReal</span>
 <span class="sd">        calculators.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_usesymmetry</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">use</span><span class="p">)</span>
         <span class="k">return</span></div>
 
@@ -172,16 +172,16 @@
 <div class="viewcode-block" id="SrRealParSet.usingSymmetry">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.srrealparset.SrRealParSet.usingSymmetry">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">usingSymmetry</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if symmetry is being used.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Check if symmetry is being used."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_usesymmetry</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_srreal_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the structure object for use with SrReal calculators.</span>
+<span class="w">        </span><span class="sd">"""Get the structure object for use with SrReal calculators.</span>
 
 <span class="sd">        If this is periodic, then return the structure, otherwise, pass</span>
 <span class="sd">        it inside of a nosymmetry wrapper.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srreal.structureadapter</span><span class="w"> </span><span class="kn">import</span> <span class="n">nosymmetry</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_usesymmetry</span><span class="p">:</span>

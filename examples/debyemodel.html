@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>debyemodel.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>debyemodel.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,7 +122,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of fitting the Debye model to experimental Debye-Waller</span>
+<span class="sd">"""Example of fitting the Debye model to experimental Debye-Waller</span>
 <span class="sd">factors.</span>
 
 <span class="sd">In this example, we build a fit recipe that uses an external function that can</span>
@@ -133,20 +133,20 @@
 
 <span class="sd">Instructions</span>
 
-<span class="sd">Run the example and then read the &#39;makeRecipe&#39; code to see how to use a python</span>
+<span class="sd">Run the example and then read the 'makeRecipe' code to see how to use a python</span>
 <span class="sd">function as a profile generator.</span>
 
 <span class="sd">Extensions</span>
 
-<span class="sd">- Don&#39;t hardcode the mass of lead in the fitting equation. Turn it into a</span>
+<span class="sd">- Don't hardcode the mass of lead in the fitting equation. Turn it into a</span>
 <span class="sd">  Parameter and refine it. There are two ways to do this. Try to figure out</span>
 <span class="sd">  both.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">gaussianrecipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">scipyOptimize</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FitContribution</span><span class="p">,</span>
     <span class="n">FitRecipe</span><span class="p">,</span>
     <span class="n">FitResults</span><span class="p">,</span>
@@ -154,7 +154,7 @@
 <span class="p">)</span>
 
 <span class="c1"># The data</span>
-<span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="n">data</span> <span class="o">=</span> <span class="s2">"""</span><span class="se">\</span>
 <span class="s2">015.0 0.00334 0.00013</span>
 <span class="s2">050.0 0.00508 0.00022</span>
 <span class="s2">100.0 0.00830 0.00040</span>
@@ -166,14 +166,14 @@
 <span class="s2">400.0 0.03484 0.00190</span>
 <span class="s2">450.0 0.03774 0.00220</span>
 <span class="s2">500.0 0.03946 0.00250</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 <span class="c1">######</span>
 <span class="c1">#  Example Code</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make the recipe for the fit.</span>
+<span class="w">    </span><span class="sd">"""Make the recipe for the fit.</span>
 
 <span class="sd">    The instructions for what we want to refine, and how to refine it</span>
 <span class="sd">    will be defined within a FitRecipe instance. The job of a FitRecipe</span>
@@ -188,13 +188,13 @@
 <span class="sd">    Data is associated with a fitting equation within a FitContribution.</span>
 <span class="sd">    The FitContribution defines the equation and parameters that will be</span>
 <span class="sd">    adjusted to fit the data. The fitting equation can be defined within</span>
-<span class="sd">    a function or optionally within the ProfileGenerator class. We won&#39;t</span>
+<span class="sd">    a function or optionally within the ProfileGenerator class. We won't</span>
 <span class="sd">    need the ProfileGenerator class in this example since the signature</span>
-<span class="sd">    of the fitting equation (the &#39;debye&#39; function defined below) is so</span>
+<span class="sd">    of the fitting equation (the 'debye' function defined below) is so</span>
 <span class="sd">    simple. The FitContribution also defines the residual function to</span>
 <span class="sd">    optimize for the data/equation pair. This can be modified, but we</span>
-<span class="sd">    won&#39;t do that here.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    won't do that here.</span>
+<span class="sd">    """</span>
     <span class="c1"># The Profile</span>
     <span class="c1"># Create a Profile to hold the experimental and calculated signal.</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
@@ -207,36 +207,36 @@
 
     <span class="c1"># The FitContribution</span>
     <span class="c1"># The FitContribution associates the profile with the Debye function.</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;pb&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">"pb"</span><span class="p">)</span>
     <span class="c1"># Tell the contribution about the Profile. We will need to use the</span>
     <span class="c1"># independent variable (the temperature) from the data to calculate the</span>
-    <span class="c1"># theoretical signal, so give it an informative name (&#39;T&#39;) that we can use</span>
+    <span class="c1"># theoretical signal, so give it an informative name ('T') that we can use</span>
     <span class="c1"># later.</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">"T"</span><span class="p">)</span>
 
     <span class="c1"># We now need to create the fitting equation.  We tell the FitContribution</span>
-    <span class="c1"># to use the &#39;debye&#39; function defined below. The &#39;register_function&#39; method</span>
-    <span class="c1"># will let us do this. Since we haven&#39;t told it otherwise,</span>
-    <span class="c1"># &#39;register_function&#39; will extract the name of the function (&#39;debye&#39;) and</span>
-    <span class="c1"># the names of the arguments (&#39;T&#39;, &#39;m&#39;, &#39;thetaD&#39;). These arguments will</span>
+    <span class="c1"># to use the 'debye' function defined below. The 'register_function' method</span>
+    <span class="c1"># will let us do this. Since we haven't told it otherwise,</span>
+    <span class="c1"># 'register_function' will extract the name of the function ('debye') and</span>
+    <span class="c1"># the names of the arguments ('T', 'm', 'thetaD'). These arguments will</span>
     <span class="c1"># become Parameters of the FitContribution. Since we named the x-variable</span>
-    <span class="c1"># &#39;T&#39; above, the &#39;T&#39; in the &#39;debye&#39; equation will refer to this x-variable</span>
+    <span class="c1"># 'T' above, the 'T' in the 'debye' equation will refer to this x-variable</span>
     <span class="c1"># whenever it is used.</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="n">debye</span><span class="p">)</span>
 
-    <span class="c1"># Now we can create the fitting equation. We want to extend the &#39;debye&#39;</span>
-    <span class="c1"># equation by adding a vertical offset. We could wrap &#39;debye&#39; in a new</span>
-    <span class="c1"># function with an offset, and register that instead of &#39;debye&#39;, but what</span>
+    <span class="c1"># Now we can create the fitting equation. We want to extend the 'debye'</span>
+    <span class="c1"># equation by adding a vertical offset. We could wrap 'debye' in a new</span>
+    <span class="c1"># function with an offset, and register that instead of 'debye', but what</span>
     <span class="c1"># we do here is easier.</span>
     <span class="c1">#</span>
     <span class="c1"># When we set the fitting equation, we do not need to specify the</span>
-    <span class="c1"># Parameters to the &#39;debye&#39; function since the FitContribution already</span>
+    <span class="c1"># Parameters to the 'debye' function since the FitContribution already</span>
     <span class="c1"># knows what they are. If we choose to specify the arguments, we can make</span>
     <span class="c1"># adjustments to their input values.  We wish to have the thetaD value in</span>
     <span class="c1"># the debye equation to be positive, so we specify the input as abs(thetaD)</span>
-    <span class="c1"># in the equation below.  Furthermore, we know &#39;m&#39;, the mass of lead, so we</span>
+    <span class="c1"># in the equation below.  Furthermore, we know 'm', the mass of lead, so we</span>
     <span class="c1"># can specify that as well.</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">&quot;debye(T, 207.2, abs(thetaD)) + offset&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">"debye(T, 207.2, abs(thetaD)) + offset"</span><span class="p">)</span>
 
     <span class="c1"># The FitRecipe</span>
     <span class="c1"># The FitRecipe lets us define what we want to fit. It is where we can</span>
@@ -253,7 +253,7 @@
     <span class="c1"># We also vary the Debye temperature.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 
-    <span class="c1"># We would like to &#39;suggest&#39; that the offset should remain positive. This</span>
+    <span class="c1"># We would like to 'suggest' that the offset should remain positive. This</span>
     <span class="c1"># is somethine that we know about the system that might help the refinement</span>
     <span class="c1"># converge to a physically reasonable result.  We will do this with a soft</span>
     <span class="c1"># constraint, or restraint. Here we restrain the offset variable to between</span>
@@ -263,28 +263,28 @@
     <span class="c1"># the fit.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_soft_bounds</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># We&#39;re done setting up the recipe. We can now do other things with it.</span>
+    <span class="c1"># We're done setting up the recipe. We can now do other things with it.</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_results</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
-    <span class="c1"># Note that since the contribution was given the name &quot;pb&quot;, it is</span>
+<span class="w">    </span><span class="sd">"""Plot the results contained within a refined FitRecipe."""</span>
+    <span class="c1"># Note that since the contribution was given the name "pb", it is</span>
     <span class="c1"># accessible from the recipe with this name. This is a useful way to</span>
     <span class="c1"># organize multiple contributions to a fit.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">plot_recipe</span><span class="p">(</span>
         <span class="n">show_diff</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">data_label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Pb $U_</span><span class="si">{iso}</span><span class="s2">$ Data&quot;</span><span class="p">,</span>
-        <span class="n">fit_label</span><span class="o">=</span><span class="s2">&quot;Calculated&quot;</span><span class="p">,</span>
-        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;T (K)&quot;</span><span class="p">,</span>
-        <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$U_</span><span class="si">{iso}</span><span class="s2"> (\AA^2)$&quot;</span><span class="p">,</span>
+        <span class="n">data_label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"Pb $U_</span><span class="si">{iso}</span><span class="s2">$ Data"</span><span class="p">,</span>
+        <span class="n">fit_label</span><span class="o">=</span><span class="s2">"Calculated"</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">"T (K)"</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$U_</span><span class="si">{iso}</span><span class="s2"> (\AA^2)$"</span><span class="p">,</span>
         <span class="n">legend_loc</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="k">return</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The workflow of creating, running and inspecting a fit.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""The workflow of creating, running and inspecting a fit."""</span>
     <span class="c1"># Create the recipe</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">()</span>
 
@@ -309,14 +309,14 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">debye</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">thetaD</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A wrapped version of &#39;adps&#39; that can handle an array of</span>
-<span class="sd">    T-values.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A wrapped version of 'adps' that can handle an array of</span>
+<span class="sd">    T-values."""</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">adps</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">thetaD</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">T</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">y</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">adps</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">thetaD</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates atomic displacement factors within the Debye model.</span>
+<span class="w">    </span><span class="sd">"""Calculates atomic displacement factors within the Debye model.</span>
 
 <span class="sd">    &lt;u^2&gt; = (3h^2/4 pi^2 m kB thetaD)(phi(thetaD/T)/(ThetaD/T) + 1/4)</span>
 
@@ -327,13 +327,13 @@
 
 <span class="sd">    return:</span>
 <span class="sd">    Uiso -- float -- the thermal factor from the Debye recipe at temp T</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="mf">6.6260755e-34</span>  <span class="c1"># Planck&#39;s constant. J.s of m^2.kg/s</span>
-    <span class="n">kB</span> <span class="o">=</span> <span class="mf">1.3806503e-23</span>  <span class="c1"># Boltzmann&#39;s constant. J/K</span>
+<span class="sd">    """</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mf">6.6260755e-34</span>  <span class="c1"># Planck's constant. J.s of m^2.kg/s</span>
+    <span class="n">kB</span> <span class="o">=</span> <span class="mf">1.3806503e-23</span>  <span class="c1"># Boltzmann's constant. J/K</span>
     <span class="n">amu</span> <span class="o">=</span> <span class="mf">1.66053886e-27</span>  <span class="c1"># Atomic mass unit. kg</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__phi</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluates the phi integral needed in Debye calculation.</span>
+<span class="w">        </span><span class="sd">"""Evaluates the phi integral needed in Debye calculation.</span>
 
 <span class="sd">        phi(x) = (1/x) int_0^x xi/(exp(xi)-1) dxi</span>
 
@@ -342,10 +342,10 @@
 
 <span class="sd">        returns:</span>
 <span class="sd">        phi -- float -- value of the phi function</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">__debyeKernel</span><span class="p">(</span><span class="n">xi</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Function needed by debye calculators.&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">"""Function needed by debye calculators."""</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">xi</span> <span class="o">/</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">xi</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">y</span>
 
@@ -364,7 +364,7 @@
     <span class="k">return</span> <span class="n">u2</span> <span class="o">*</span> <span class="mf">1e20</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 

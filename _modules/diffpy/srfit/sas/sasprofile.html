@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.sas.sasprofile &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.sas.sasprofile &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,10 +91,10 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Class for adapting a sas DataInfo objects to the Profile</span>
-<span class="sd">interface.&quot;&quot;&quot;</span>
+<span class="sd">"""Class for adapting a sas DataInfo objects to the Profile</span>
+<span class="sd">interface."""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;SASProfile&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"SASProfile"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ones_like</span>
 
@@ -104,7 +104,7 @@
 <div class="viewcode-block" id="SASProfile">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.SASProfile">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SASProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Observed and calculated profile container for SAS data.</span>
+<span class="w">    </span><span class="sd">"""Observed and calculated profile container for SAS data.</span>
 
 <span class="sd">    This wraps a sas DataInfo object as a Profile object. Use this when you</span>
 <span class="sd">    want to use and manipulate a DataProfile before using it with SrFit.</span>
@@ -139,11 +139,11 @@
 <span class="sd">    ycalc</span>
 <span class="sd">        A numpy array of the calculated signal (default None).</span>
 <span class="sd">    xpar</span>
-<span class="sd">        A ProfileParameter that stores x (named &quot;x&quot;).</span>
+<span class="sd">        A ProfileParameter that stores x (named "x").</span>
 <span class="sd">    ypar</span>
-<span class="sd">        A ProfileParameter that stores y (named &quot;y&quot;).</span>
+<span class="sd">        A ProfileParameter that stores y (named "y").</span>
 <span class="sd">    dypar</span>
-<span class="sd">        A ProfileParameter that stores dy (named &quot;dy&quot;).</span>
+<span class="sd">        A ProfileParameter that stores dy (named "dy").</span>
 <span class="sd">    meta</span>
 <span class="sd">        A dictionary of metadata. This is only set if provided by a</span>
 <span class="sd">        parser.</span>
@@ -152,16 +152,16 @@
 <span class="sd">    ----------</span>
 <span class="sd">    _datainfo</span>
 <span class="sd">        The DataInfo object this wraps.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datainfo</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the attributes.</span>
+<span class="w">        </span><span class="sd">"""Initialize the attributes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        datainfo</span>
 <span class="sd">            The DataInfo object this wraps.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span> <span class="o">=</span> <span class="n">datainfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">Profile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -173,10 +173,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">dy</span>
         <span class="k">return</span>
 
-<div class="viewcode-block" id="SASProfile.setObservedProfile">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.SASProfile.setObservedProfile">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setObservedProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the observed profile.</span>
+<div class="viewcode-block" id="SASProfile.set_observed_profile">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.SASProfile.set_observed_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_observed_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Set the observed profile.</span>
 
 <span class="sd">        This is overloaded to change the value within the datainfo object.</span>
 
@@ -188,8 +188,8 @@
 <span class="sd">            Numpy array of the observed signal.</span>
 <span class="sd">        dyobs</span>
 <span class="sd">            Numpy array of the uncertainty in the observed signal. If</span>
-<span class="sd">            ``dyobs`` is ``None`` (default), it will be set to 1 at each</span>
-<span class="sd">            observed ``xobs``.</span>
+<span class="sd">            ``dyobs`` is ``None`` (default), it stays ``None`` to indicate</span>
+<span class="sd">            no uncertainty was observed.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -197,8 +197,8 @@
 <span class="sd">            If ``len(yobs) != len(xobs)``.</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If ``dyobs is not None`` and ``len(dyobs) != len(xobs)``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Profile</span><span class="o">.</span><span class="n">setObservedProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">Profile</span><span class="o">.</span><span class="n">set_observed_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="p">)</span>
         <span class="c1"># Copy the arrays to the _datainfo attribute.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xobs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yobs</span>

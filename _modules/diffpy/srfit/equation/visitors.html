@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.visitors &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.visitors &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,7 +91,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Visitors that perform on Literal networks.</span>
+<span class="sd">"""Visitors that perform on Literal networks.</span>
 
 <span class="sd">Visitors are designed to traverse and extract information from Literal</span>
 <span class="sd">networks (diffpy.srfit.equation.literals). Visitors are used to</span>
@@ -101,48 +101,69 @@
 <span class="sd">pattern (</span>
 
 <span class="sd">http://en.wikipedia.org/wiki/Visitor_pattern).</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors.argfinder</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArgFinder</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors.printer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Printer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors.swapper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Swapper</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors.validator</span><span class="w"> </span><span class="kn">import</span> <span class="n">Validator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">visitors_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.equation.visitors"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
+<span class="n">getArgs_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">visitors_base</span><span class="p">,</span> <span class="s2">"getArgs"</span><span class="p">,</span> <span class="s2">"get_args"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">getExpression_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">visitors_base</span><span class="p">,</span> <span class="s2">"getExpression"</span><span class="p">,</span> <span class="s2">"get_expression"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">prettyPrint_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">visitors_base</span><span class="p">,</span> <span class="s2">"prettyPrint"</span><span class="p">,</span> <span class="s2">"pretty_print"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="getArgs">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.getArgs">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">getArgs</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">getconsts</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Arguments of a Literal tree.</span>
+<div class="viewcode-block" id="get_args">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.get_args">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_args</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">getconsts</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Get the Arguments of a Literal tree.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    getconsts</span>
-<span class="sd">        If True (default), then Arguments designated as constant</span>
-<span class="sd">        are also retrieved.</span>
+<span class="sd">    literal : Literal</span>
+<span class="sd">        The root of the Literal tree.</span>
+<span class="sd">    getconsts : bool, optional</span>
+<span class="sd">        The flag that is True (default) to also get the Arguments that</span>
+<span class="sd">        are constant.</span>
 
-<span class="sd">    Returns a list of Arguments searched for depth-first.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of Argument</span>
+<span class="sd">        The Arguments, found depth-first.</span>
+<span class="sd">    """</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">ArgFinder</span><span class="p">(</span><span class="n">getconsts</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">literal</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
 
 
 
-<div class="viewcode-block" id="getExpression">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.getExpression">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">getExpression</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">eqskip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get math expression string from the Literal tree object.</span>
+<div class="viewcode-block" id="get_expression">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.get_expression">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_expression</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">eqskip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Get the math expression string of a Literal tree.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    eqskip</span>
-<span class="sd">        regular expression pattern for Equation objects that should</span>
-<span class="sd">        be printed under their own name.  Expand all Equation objects</span>
-<span class="sd">        when None.</span>
+<span class="sd">    literal : Literal</span>
+<span class="sd">        The root of the Literal tree.</span>
+<span class="sd">    eqskip : str, optional</span>
+<span class="sd">        The regular expression pattern for Equation objects that should</span>
+<span class="sd">        be written under their own name. If None (default), all</span>
+<span class="sd">        Equation objects are expanded.</span>
 
-<span class="sd">    Return string.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The expression of the Literal tree.</span>
+<span class="sd">    """</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">Printer</span><span class="p">()</span>
     <span class="n">v</span><span class="o">.</span><span class="n">eqskip</span> <span class="o">=</span> <span class="n">eqskip</span>
     <span class="n">rv</span> <span class="o">=</span> <span class="n">literal</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
@@ -150,11 +171,17 @@
 
 
 
-<div class="viewcode-block" id="prettyPrint">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.prettyPrint">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">prettyPrint</span><span class="p">(</span><span class="n">literal</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print a Literal tree.&quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">getExpression</span><span class="p">(</span><span class="n">literal</span><span class="p">))</span>
+<div class="viewcode-block" id="pretty_print">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.pretty_print">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pretty_print</span><span class="p">(</span><span class="n">literal</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Print the math expression of a Literal tree.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    literal : Literal</span>
+<span class="sd">        The root of the Literal tree.</span>
+<span class="sd">    """</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">get_expression</span><span class="p">(</span><span class="n">literal</span><span class="p">))</span>
     <span class="k">return</span></div>
 
 
@@ -162,15 +189,23 @@
 <div class="viewcode-block" id="validate">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.validate">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="n">literal</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate a Literal tree.</span>
+<span class="w">    </span><span class="sd">"""Validate a Literal tree.</span>
 
-<span class="sd">    Raises ValueError if the tree contains errors.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    literal : Literal</span>
+<span class="sd">        The root of the Literal tree.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If the tree contains errors.</span>
+<span class="sd">    """</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">Validator</span><span class="p">()</span>
     <span class="n">errors</span> <span class="o">=</span> <span class="n">literal</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">errors</span><span class="p">:</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;Errors found in Literal tree &#39;</span><span class="si">%s</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">literal</span>
-        <span class="n">m</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="s2">"Errors found in Literal tree '</span><span class="si">%s</span><span class="s2">'</span><span class="se">\n</span><span class="s2">"</span> <span class="o">%</span> <span class="n">literal</span>
+        <span class="n">m</span> <span class="o">+=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
     <span class="k">return</span></div>
 
@@ -179,19 +214,61 @@
 <div class="viewcode-block" id="swap">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.swap">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">swap</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">oldlit</span><span class="p">,</span> <span class="n">newlit</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Swap one literal for another in a Literal tree.</span>
+<span class="w">    </span><span class="sd">"""Swap one literal for another in a Literal tree.</span>
 
 <span class="sd">    Corrections are done in-place unless literal is oldlit, in which</span>
 <span class="sd">    case the return value is newlit.</span>
 
-<span class="sd">    Returns the literal tree with oldlit swapped for newlit.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    literal : Literal</span>
+<span class="sd">        The root of the Literal tree.</span>
+<span class="sd">    oldlit : Literal</span>
+<span class="sd">        The literal to replace.</span>
+<span class="sd">    newlit : Literal</span>
+<span class="sd">        The literal to put in its place.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Literal</span>
+<span class="sd">        The Literal tree with ``oldlit`` swapped for ``newlit``.</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">literal</span> <span class="ow">is</span> <span class="n">oldlit</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">newlit</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">Swapper</span><span class="p">(</span><span class="n">oldlit</span><span class="p">,</span> <span class="n">newlit</span><span class="p">)</span>
     <span class="n">literal</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">literal</span></div>
 
+
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">getArgs_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getArgs</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">getconsts</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.equation.visitors.get_args instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">get_args</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">getconsts</span><span class="p">)</span>
+
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">getExpression_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getExpression</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">eqskip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.equation.visitors.get_expression instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">get_expression</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="n">eqskip</span><span class="p">)</span>
+
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">prettyPrint_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">prettyPrint</span><span class="p">(</span><span class="n">literal</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.equation.visitors.pretty_print instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">pretty_print</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span>
 </pre></div>
 
            </div>

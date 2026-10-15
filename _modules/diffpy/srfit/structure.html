@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.structure &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.structure &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,9 +91,9 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Modules and classes that adapt structure representations to the</span>
+<span class="sd">"""Modules and classes that adapt structure representations to the</span>
 <span class="sd">ParameterSet interface and automatic structure constraint generation</span>
-<span class="sd">from space group information.&quot;&quot;&quot;</span>
+<span class="sd">from space group information."""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.sgconstraints</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">constrain_as_space_group</span><span class="p">,</span>
@@ -104,7 +104,7 @@
 <div class="viewcode-block" id="struToParameterSet">
 <a class="viewcode-back" href="../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.struToParameterSet">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">struToParameterSet</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">stru</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a ParameterSet from an structure.</span>
+<span class="w">    </span><span class="sd">"""Creates a ParameterSet from an structure.</span>
 
 <span class="sd">    This returns a ParameterSet adapted for the structure depending on its</span>
 <span class="sd">    type.</span>
@@ -117,7 +117,7 @@
 <span class="sd">        A name to give the structure.</span>
 
 <span class="sd">    Raises TypeError if stru cannot be adapted</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure.diffpyparset</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiffpyStructureParSet</span>
 
     <span class="k">if</span> <span class="n">DiffpyStructureParSet</span><span class="o">.</span><span class="n">canAdapt</span><span class="p">(</span><span class="n">stru</span><span class="p">):</span>
@@ -138,7 +138,7 @@
     <span class="k">if</span> <span class="n">CCTBXCrystalParSet</span><span class="o">.</span><span class="n">canAdapt</span><span class="p">(</span><span class="n">stru</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">CCTBXCrystalParSet</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">stru</span><span class="p">)</span>
 
-    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Unadaptable structure format&quot;</span><span class="p">)</span></div>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Unadaptable structure format"</span><span class="p">)</span></div>
 
 
 

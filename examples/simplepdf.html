@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>simplepdf.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>simplepdf.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,11 +122,11 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of a PDF using the PDFContribution helper class.</span>
+<span class="sd">"""Example of a PDF using the PDFContribution helper class.</span>
 
 <span class="sd">This is example of fitting the fcc nickel structure to measured PDF</span>
 <span class="sd">data. It uses the PDFContribution class to simplify fit setup.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
@@ -141,16 +141,16 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">datname</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a fitting recipe for crystalline PDF data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create a fitting recipe for crystalline PDF data."""</span>
     <span class="c1"># Work directly with a custom PDFContribution to load the data</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">PDFContribution</span><span class="p">(</span><span class="s2">&quot;nickel&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">PDFContribution</span><span class="p">(</span><span class="s2">"nickel"</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">loadData</span><span class="p">(</span><span class="n">datname</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 
     <span class="c1"># and the phase</span>
     <span class="n">stru</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
     <span class="n">stru</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ciffile</span><span class="p">))</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">addStructure</span><span class="p">(</span><span class="s2">&quot;nickel&quot;</span><span class="p">,</span> <span class="n">stru</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">addStructure</span><span class="p">(</span><span class="s2">"nickel"</span><span class="p">,</span> <span class="n">stru</span><span class="p">)</span>
 
     <span class="c1"># Make the FitRecipe and add the FitContribution.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
@@ -161,7 +161,7 @@
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">constrain_as_space_group</span>
 
-    <span class="n">sgpars</span> <span class="o">=</span> <span class="n">constrain_as_space_group</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="s2">&quot;Fm-3m&quot;</span><span class="p">)</span>
+    <span class="n">sgpars</span> <span class="o">=</span> <span class="n">constrain_as_space_group</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="s2">"Fm-3m"</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">sgpars</span><span class="o">.</span><span class="n">latpars</span><span class="p">:</span>
         <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
@@ -177,16 +177,16 @@
 
 
 <span class="n">plot_styles</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$r (\AA)$&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$G (\AA^{-2})$&quot;</span><span class="p">,</span>
+    <span class="s2">"xlabel"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"$r (\AA)$"</span><span class="p">,</span>
+    <span class="s2">"ylabel"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"$G (\AA^{-2})$"</span><span class="p">,</span>
 <span class="p">}</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="c1"># Make the data and the recipe</span>
-    <span class="n">ciffile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni.cif&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni-q27r100-neutron.gr&quot;</span>
+    <span class="n">ciffile</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/ni.cif"</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/ni-q27r100-neutron.gr"</span>
 
     <span class="c1"># Make the recipe</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
@@ -194,12 +194,12 @@
     <span class="c1"># Optimize</span>
     <span class="n">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
     <span class="c1"># Save the file</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">nickel</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;nickel_example.fit&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">nickel</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">"nickel_example.fit"</span><span class="p">)</span>
 
     <span class="c1"># Generate, print and save the FitResults</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
     <span class="n">res</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
-    <span class="n">res</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="s2">&quot;nickel_example.res&quot;</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">save_results</span><span class="p">(</span><span class="s2">"nickel_example.res"</span><span class="p">)</span>
 
     <span class="c1"># Plot!</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">plot_recipe</span><span class="p">(</span><span class="o">**</span><span class="n">plot_styles</span><span class="p">)</span>

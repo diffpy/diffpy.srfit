@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.structure.sgconstraints &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.structure.sgconstraints &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,7 +92,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Code to set space group constraints for a crystal structure.&quot;&quot;&quot;</span>
+<span class="sd">"""Code to set space group constraints for a crystal structure."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
@@ -102,15 +102,15 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.recipeorganizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecipeContainer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;constrain_as_space_group&quot;</span><span class="p">,</span> <span class="s2">&quot;constrainAsSpaceGroup&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"constrain_as_space_group"</span><span class="p">,</span> <span class="s2">"constrainAsSpaceGroup"</span><span class="p">]</span>
 
-<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
-<span class="n">sgconstraints_base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.structure.sgconstraints&quot;</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
+<span class="n">sgconstraints_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.structure.sgconstraints"</span>
 
 <span class="n">constrainAsSpaceGroup_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">sgconstraints_base</span><span class="p">,</span>
-    <span class="s2">&quot;constrainAsSpaceGroup&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;constrain_as_space_group&quot;</span><span class="p">,</span>
+    <span class="s2">"constrainAsSpaceGroup"</span><span class="p">,</span>
+    <span class="s2">"constrain_as_space_group"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -125,9 +125,9 @@
     <span class="n">constrainlat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">constrainadps</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">adpsymbols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">isosymbol</span><span class="o">=</span><span class="s2">&quot;Uiso&quot;</span><span class="p">,</span>
+    <span class="n">isosymbol</span><span class="o">=</span><span class="s2">"Uiso"</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constrain the structure to the space group.</span>
+<span class="w">    </span><span class="sd">"""Constrain the structure to the space group.</span>
 
 <span class="sd">    This applies space group constraints to a StructureParSet with P1</span>
 <span class="sd">    symmetry.  Passed scatterers are explicitly constrained to the</span>
@@ -158,7 +158,7 @@
 <span class="sd">        U22, etc.). The names must be given in the same order</span>
 <span class="sd">        as stdUsymbols.</span>
 <span class="sd">    isosymbol</span>
-<span class="sd">        Symbol for isotropic ADP (default &quot;Uiso&quot;). If None,</span>
+<span class="sd">        Symbol for isotropic ADP (default "Uiso"). If None,</span>
 <span class="sd">        isotropic ADPs will be constrained via the anisotropic ADPs.</span>
 
 
@@ -193,12 +193,12 @@
 <span class="sd">        Cubic</span>
 <span class="sd">            b and c are constrained to a, and alpha, beta and</span>
 <span class="sd">            gamma are fixed to 90.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure.spacegroups</span><span class="w"> </span><span class="kn">import</span> <span class="n">GetSpaceGroup</span><span class="p">,</span> <span class="n">SpaceGroup</span>
+<span class="sd">    """</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure.spacegroups</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpaceGroup</span><span class="p">,</span> <span class="n">get_space_group</span>
 
     <span class="n">sg</span> <span class="o">=</span> <span class="n">spacegroup</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spacegroup</span><span class="p">,</span> <span class="n">SpaceGroup</span><span class="p">):</span>
-        <span class="n">sg</span> <span class="o">=</span> <span class="n">GetSpaceGroup</span><span class="p">(</span><span class="n">spacegroup</span><span class="p">)</span>
+        <span class="n">sg</span> <span class="o">=</span> <span class="n">get_space_group</span><span class="p">(</span><span class="n">spacegroup</span><span class="p">)</span>
     <span class="n">sgp</span> <span class="o">=</span> <span class="n">_constrain_as_space_group</span><span class="p">(</span>
         <span class="n">phase</span><span class="p">,</span>
         <span class="n">sg</span><span class="p">,</span>
@@ -225,15 +225,15 @@
     <span class="n">constrainlat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">constrainadps</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">adpsymbols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">isosymbol</span><span class="o">=</span><span class="s2">&quot;Uiso&quot;</span><span class="p">,</span>
+    <span class="n">isosymbol</span><span class="o">=</span><span class="s2">"Uiso"</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This function is deprecated and will be removed in version</span>
+<span class="w">    </span><span class="sd">"""This function is deprecated and will be removed in version</span>
 <span class="sd">    4.0.0.</span>
 
 <span class="sd">    Please use</span>
 <span class="sd">    diffpy.srfit.structure.sgconstraints.constrain_as_space_group</span>
 <span class="sd">    instead.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">constrain_as_space_group</span><span class="p">(</span>
         <span class="n">phase</span><span class="p">,</span>
         <span class="n">spacegroup</span><span class="p">,</span>
@@ -255,15 +255,15 @@
     <span class="n">constrainlat</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">constrainadps</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">adpsymbols</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">isosymbol</span><span class="o">=</span><span class="s2">&quot;Uiso&quot;</span><span class="p">,</span>
+    <span class="n">isosymbol</span><span class="o">=</span><span class="s2">"Uiso"</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Restricted interface to constrain_as_space_group.</span>
+<span class="w">    </span><span class="sd">"""Restricted interface to constrain_as_space_group.</span>
 
 <span class="sd">    Arguments: As constrain_as_space_group, except</span>
 <span class="sd">    -----------------------------------------------</span>
 <span class="sd">    sg</span>
 <span class="sd">        diffpy.structure.spacegroups.SpaceGroup instance</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure.symmetryutilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">stdUsymbols</span>
 
     <span class="k">if</span> <span class="n">scatterers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -289,7 +289,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseSpaceGroupParameters</span><span class="p">(</span><span class="n">RecipeContainer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for holding space group Parameters.</span>
+<span class="w">    </span><span class="sd">"""Base class for holding space group Parameters.</span>
 
 <span class="sd">    This class is used to store the variable Parameters of a structure, leaving</span>
 <span class="sd">    out those that constrained or fixed due to space group.  This class has the</span>
@@ -300,19 +300,19 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name</span>
-<span class="sd">        &quot;sgpars&quot;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        "sgpars"</span>
+<span class="sd">    """</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sgpars&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the BaseSpaceGroupParameters object.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"sgpars"</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Create the BaseSpaceGroupParameters object.</span>
 
 <span class="sd">        This initializes the attributes.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">RecipeContainer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">addParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a Parameter.</span>
+<span class="w">        </span><span class="sd">"""Store a Parameter.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -323,7 +323,7 @@
 <span class="sd">            the specified name has already been inserted.</span>
 
 <span class="sd">        Raises ValueError if the Parameter has no name.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Store the Parameter</span>
         <span class="n">RecipeContainer</span><span class="o">.</span><span class="n">_add_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">par</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span><span class="p">,</span> <span class="n">check</span><span class="p">)</span>
         <span class="k">return</span>
@@ -333,7 +333,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">SpaceGroupParameters</span><span class="p">(</span><span class="n">BaseSpaceGroupParameters</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for holding and creating space group Parameters.</span>
+<span class="w">    </span><span class="sd">"""Class for holding and creating space group Parameters.</span>
 
 <span class="sd">    This class is used to store the variable Parameters of a structure, leaving</span>
 <span class="sd">    out those that constrained or fixed due to space group.  This does the work</span>
@@ -343,7 +343,7 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    name</span>
-<span class="sd">        &quot;sgpars&quot;</span>
+<span class="sd">        "sgpars"</span>
 <span class="sd">    phase</span>
 <span class="sd">        The constrained BaseStructure object.</span>
 <span class="sd">    sg</span>
@@ -374,7 +374,7 @@
 <span class="sd">        to.</span>
 <span class="sd">    adppars</span>
 <span class="sd">        Property that populates _adppars.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -387,7 +387,7 @@
         <span class="n">adpsymbols</span><span class="p">,</span>
         <span class="n">isosymbol</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the SpaceGroupParameters object.</span>
+<span class="w">        </span><span class="sd">"""Create the SpaceGroupParameters object.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -395,7 +395,7 @@
 <span class="sd">            A BaseStructure object to be constrained.</span>
 <span class="sd">        sg</span>
 <span class="sd">            The space group number or symbol (compatible with</span>
-<span class="sd">            diffpy.structure.spacegroups.GetSpaceGroup.</span>
+<span class="sd">            diffpy.structure.spacegroups.get_space_group.</span>
 <span class="sd">        sgoffset</span>
 <span class="sd">            Optional offset for sg origin.</span>
 <span class="sd">        scatterers</span>
@@ -411,10 +411,10 @@
 <span class="sd">            same order as</span>
 <span class="sd">            diffpy.structure.symmetryutilities.stdUsymbols.</span>
 <span class="sd">        isosymbol</span>
-<span class="sd">            Symbol for isotropic ADP (default &quot;Uiso&quot;). If None,</span>
+<span class="sd">            Symbol for isotropic ADP (default "Uiso"). If None,</span>
 <span class="sd">            isotropic ADPs will be constrained via the anisotropic</span>
 <span class="sd">            ADPs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">BaseSpaceGroupParameters</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_latpars</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_xyzpars</span> <span class="o">=</span> <span class="kc">None</span>
@@ -435,7 +435,7 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterate over top-level parameters.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Iterate over top-level parameters."""</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_latpars</span> <span class="ow">is</span> <span class="kc">None</span>
             <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xyzpars</span> <span class="ow">is</span> <span class="kc">None</span>
@@ -447,7 +447,7 @@
     <span class="n">latpars</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_lat_pars</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_lat_pars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for _latpars.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Accessor for _latpars."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latpars</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_constrain_lattice</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_latpars</span>
@@ -455,7 +455,7 @@
     <span class="n">xyzpars</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_xyz_pars</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_xyz_pars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for _xyzpars.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Accessor for _xyzpars."""</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">scatterer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatterers</span><span class="p">:</span>
             <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">scatterer</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">scatterer</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">scatterer</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
@@ -467,7 +467,7 @@
     <span class="n">adppars</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_adp_pars</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_adp_pars</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for _adppars.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Accessor for _adppars."""</span>
         <span class="n">positions</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">scatterer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatterers</span><span class="p">:</span>
             <span class="n">xyz</span> <span class="o">=</span> <span class="p">[</span><span class="n">scatterer</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">scatterer</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">scatterer</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
@@ -477,10 +477,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adppars</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_make_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain the structure to the space group.</span>
+<span class="w">        </span><span class="sd">"""Constrain the structure to the space group.</span>
 
 <span class="sd">        This works as described by the constrain_as_space_group method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Start by clearing the constraints</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_clear_constraints</span><span class="p">()</span>
 
@@ -499,11 +499,11 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_clear_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear old constraints.</span>
+<span class="w">        </span><span class="sd">"""Clear old constraints.</span>
 
 <span class="sd">        This only clears constraints where new ones are going to be</span>
 <span class="sd">        applied.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">phase</span>
         <span class="n">scatterers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatterers</span>
         <span class="n">isosymbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">isosymbol</span>
@@ -554,7 +554,7 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_lattice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain the lattice parameters.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Constrain the lattice parameters."""</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">constrainlat</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -564,14 +564,14 @@
         <span class="n">lattice</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">getLattice</span><span class="p">()</span>
         <span class="n">system</span> <span class="o">=</span> <span class="n">sg</span><span class="o">.</span><span class="n">crystal_system</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">system</span><span class="p">:</span>
-            <span class="n">system</span> <span class="o">=</span> <span class="s2">&quot;Triclinic&quot;</span>
+            <span class="n">system</span> <span class="o">=</span> <span class="s2">"Triclinic"</span>
         <span class="n">system</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
         <span class="c1"># This makes the constraints</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">_constraintMap</span><span class="p">[</span><span class="n">system</span><span class="p">]</span>
         <span class="n">f</span><span class="p">(</span><span class="n">lattice</span><span class="p">)</span>
 
         <span class="c1"># Now get the unconstrained, non-constant lattice pars and store them.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_latpars</span> <span class="o">=</span> <span class="n">BaseSpaceGroupParameters</span><span class="p">(</span><span class="s2">&quot;latpars&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_latpars</span> <span class="o">=</span> <span class="n">BaseSpaceGroupParameters</span><span class="p">(</span><span class="s2">"latpars"</span><span class="p">)</span>
         <span class="n">latpars</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">lattice</span><span class="o">.</span><span class="n">a</span><span class="p">,</span>
             <span class="n">lattice</span><span class="o">.</span><span class="n">b</span><span class="p">,</span>
@@ -590,13 +590,13 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_xyzs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain the positions.</span>
+<span class="w">        </span><span class="sd">"""Constrain the positions.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        positions</span>
 <span class="sd">            The coordinates of the scatterers.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure.symmetryutilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">SymmetryConstraints</span>
 
         <span class="n">sg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg</span>
@@ -607,19 +607,19 @@
         <span class="n">g</span> <span class="o">=</span> <span class="n">SymmetryConstraints</span><span class="p">(</span><span class="n">sg</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">sgoffset</span><span class="o">=</span><span class="n">sgoffset</span><span class="p">)</span>
 
         <span class="n">scatterers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scatterers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_xyzpars</span> <span class="o">=</span> <span class="n">BaseSpaceGroupParameters</span><span class="p">(</span><span class="s2">&quot;xyzpars&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_xyzpars</span> <span class="o">=</span> <span class="n">BaseSpaceGroupParameters</span><span class="p">(</span><span class="s2">"xyzpars"</span><span class="p">)</span>
 
         <span class="c1"># Make proxies to the free xyz parameters</span>
-        <span class="n">xyznames</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">pospars</span><span class="p">]</span>
+        <span class="n">xyznames</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">"_"</span> <span class="o">+</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">pospars</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">xyznames</span><span class="p">:</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">pname</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">pname</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="n">par</span> <span class="o">=</span> <span class="n">scatterers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="n">newpar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add_par</span><span class="p">(</span><span class="n">pname</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_xyzpars</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">newpar</span><span class="p">)</span>
 
         <span class="c1"># Constrain non-free xyz parameters</span>
-        <span class="n">fpos</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">positionFormulas</span><span class="p">(</span><span class="n">xyznames</span><span class="p">)</span>
+        <span class="n">fpos</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">position_formulas</span><span class="p">(</span><span class="n">xyznames</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">tmp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">scatterers</span><span class="p">,</span> <span class="n">fpos</span><span class="p">)):</span>
             <span class="n">scatterer</span><span class="p">,</span> <span class="n">fp</span> <span class="o">=</span> <span class="n">tmp</span>
 
@@ -632,13 +632,13 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_adps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain the ADPs.</span>
+<span class="w">        </span><span class="sd">"""Constrain the ADPs.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        positions</span>
 <span class="sd">            The coordinates of the scatterers.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.structure.symmetryutilities</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
             <span class="n">SymmetryConstraints</span><span class="p">,</span>
             <span class="n">stdUsymbols</span><span class="p">,</span>
@@ -653,7 +653,7 @@
         <span class="n">isosymbol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">isosymbol</span>
         <span class="n">adpsymbols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">adpsymbols</span>
         <span class="n">adpmap</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">stdUsymbols</span><span class="p">,</span> <span class="n">adpsymbols</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_adppars</span> <span class="o">=</span> <span class="n">BaseSpaceGroupParameters</span><span class="p">(</span><span class="s2">&quot;adppars&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adppars</span> <span class="o">=</span> <span class="n">BaseSpaceGroupParameters</span><span class="p">(</span><span class="s2">"adppars"</span><span class="p">)</span>
 
         <span class="c1"># Prepare ADPs. Note that not all scatterers have constrainable ADPs.</span>
         <span class="c1"># For example, MoleculeParSet from objcryststructure does not. We</span>
@@ -671,7 +671,7 @@
             <span class="n">Uij</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">par</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pars</span><span class="p">):</span>
                 <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">_idxtoij</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-                <span class="n">Uij</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uij</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+                <span class="n">Uij</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uij</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">par</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
 
             <span class="n">Uijs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Uij</span><span class="p">)</span>
 
@@ -684,14 +684,14 @@
         <span class="c1"># the nonadps</span>
         <span class="n">g</span> <span class="o">=</span> <span class="n">SymmetryConstraints</span><span class="p">(</span><span class="n">sg</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">Uijs</span><span class="p">,</span> <span class="n">sgoffset</span><span class="o">=</span><span class="n">sgoffset</span><span class="p">)</span>
 
-        <span class="n">adpnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">adpmap</span><span class="p">[</span><span class="n">name</span><span class="p">[:</span><span class="mi">3</span><span class="p">]]</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">Upars</span><span class="p">]</span>
+        <span class="n">adpnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">adpmap</span><span class="p">[</span><span class="n">name</span><span class="p">[:</span><span class="mi">3</span><span class="p">]]</span> <span class="o">+</span> <span class="s2">"_"</span> <span class="o">+</span> <span class="n">name</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">Upars</span><span class="p">]</span>
 
         <span class="c1"># Make proxies to the free adp parameters. We start by filtering out</span>
         <span class="c1"># the isotropic ones so we can use the isotropic parameter.</span>
         <span class="n">isoidx</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">isonames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">pname</span> <span class="ow">in</span> <span class="n">adpnames</span><span class="p">:</span>
-            <span class="n">name</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">pname</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">pname</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="c1"># Check for isotropic ADPs</span>
             <span class="n">scatterer</span> <span class="o">=</span> <span class="n">scatterers</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
@@ -699,7 +699,7 @@
                 <span class="n">isoidx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
                 <span class="n">par</span> <span class="o">=</span> <span class="n">scatterer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">isosymbol</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">par</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">parname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">isosymbol</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+                    <span class="n">parname</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">_</span><span class="si">%i</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">isosymbol</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
                     <span class="n">newpar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__add_par</span><span class="p">(</span><span class="n">parname</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_adppars</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">newpar</span><span class="p">)</span>
                     <span class="n">isonames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">newpar</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -720,7 +720,7 @@
                     <span class="n">isosymbol</span><span class="p">,</span> <span class="n">isoname</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_parameters</span>
                 <span class="p">)</span>
 
-        <span class="n">fadp</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">UFormulas</span><span class="p">(</span><span class="n">adpnames</span><span class="p">)</span>
+        <span class="n">fadp</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">u_formulas</span><span class="p">(</span><span class="n">adpnames</span><span class="p">)</span>
 
         <span class="c1"># Constrain dependent anisotropics. We use the fact that an</span>
         <span class="c1"># anisotropic cannot be dependent on an isotropic.</span>
@@ -736,7 +736,7 @@
                 <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__add_par</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parname</span><span class="p">,</span> <span class="n">par</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain a parameter via proxy with a specified name.</span>
+<span class="w">        </span><span class="sd">"""Constrain a parameter via proxy with a specified name.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -744,7 +744,7 @@
 <span class="sd">            Parameter to constrain</span>
 <span class="sd">        idx</span>
 <span class="sd">            Index to identify scatterer from which par comes</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">newpar</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="n">parname</span><span class="p">,</span> <span class="n">par</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">newpar</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">newpar</span>
@@ -758,23 +758,23 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_triclinic</span><span class="p">(</span><span class="n">lattice</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make constraints for Triclinic systems.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Make constraints for Triclinic systems."""</span>
     <span class="k">return</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_monoclinic</span><span class="p">(</span><span class="n">lattice</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make constraints for Monoclinic systems.</span>
+<span class="w">    </span><span class="sd">"""Make constraints for Monoclinic systems.</span>
 
 <span class="sd">    alpha and beta are fixed to 90 unless alpha != beta and alpha ==</span>
 <span class="sd">    gamma, in which case alpha and gamma are constrained to 90.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">afactor</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">&quot;rad&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">"rad"</span><span class="p">:</span>
         <span class="n">afactor</span> <span class="o">=</span> <span class="n">deg2rad</span>
     <span class="n">ang90</span> <span class="o">=</span> <span class="mf">90.0</span> <span class="o">*</span> <span class="n">afactor</span>
     <span class="n">lattice</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">ang90</span><span class="p">)</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
-    <span class="n">gamma</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">ang90</span> <span class="o">!=</span> <span class="n">beta</span> <span class="ow">and</span> <span class="n">ang90</span> <span class="o">==</span> <span class="n">gamma</span><span class="p">:</span>
         <span class="n">lattice</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">ang90</span><span class="p">)</span>
@@ -784,12 +784,12 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_orthorhombic</span><span class="p">(</span><span class="n">lattice</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make constraints for Orthorhombic systems.</span>
+<span class="w">    </span><span class="sd">"""Make constraints for Orthorhombic systems.</span>
 
 <span class="sd">    alpha, beta and gamma are constrained to 90</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">afactor</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">&quot;rad&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">"rad"</span><span class="p">:</span>
         <span class="n">afactor</span> <span class="o">=</span> <span class="n">deg2rad</span>
     <span class="n">ang90</span> <span class="o">=</span> <span class="mf">90.0</span> <span class="o">*</span> <span class="n">afactor</span>
     <span class="n">lattice</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">ang90</span><span class="p">)</span>
@@ -799,13 +799,13 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_tetragonal</span><span class="p">(</span><span class="n">lattice</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make constraints for Tetragonal systems.</span>
+<span class="w">    </span><span class="sd">"""Make constraints for Tetragonal systems.</span>
 
 <span class="sd">    b is constrained to a and alpha, beta and gamma are constrained to</span>
 <span class="sd">    90.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">afactor</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">&quot;rad&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">"rad"</span><span class="p">:</span>
         <span class="n">afactor</span> <span class="o">=</span> <span class="n">deg2rad</span>
     <span class="n">ang90</span> <span class="o">=</span> <span class="mf">90.0</span> <span class="o">*</span> <span class="n">afactor</span>
     <span class="n">lattice</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">ang90</span><span class="p">)</span>
@@ -816,18 +816,18 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_trigonal</span><span class="p">(</span><span class="n">lattice</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make constraints for Trigonal systems.</span>
+<span class="w">    </span><span class="sd">"""Make constraints for Trigonal systems.</span>
 
 <span class="sd">    If gamma == 120, then b is constrained to a, alpha and beta are</span>
 <span class="sd">    constrained to 90 and gamma is constrained to 120. Otherwise, b and</span>
 <span class="sd">    c are constrained to a, beta and gamma are constrained to alpha.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">afactor</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">&quot;rad&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">"rad"</span><span class="p">:</span>
         <span class="n">afactor</span> <span class="o">=</span> <span class="n">deg2rad</span>
     <span class="n">ang90</span> <span class="o">=</span> <span class="mf">90.0</span> <span class="o">*</span> <span class="n">afactor</span>
     <span class="n">ang120</span> <span class="o">=</span> <span class="mf">120.0</span> <span class="o">*</span> <span class="n">afactor</span>
-    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span> <span class="o">==</span> <span class="n">ang120</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">gamma</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span> <span class="o">==</span> <span class="n">ang120</span><span class="p">:</span>
         <span class="n">lattice</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">lattice</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">lattice</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
         <span class="n">lattice</span><span class="o">.</span><span class="n">alpha</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">ang90</span><span class="p">)</span>
         <span class="n">lattice</span><span class="o">.</span><span class="n">beta</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">ang90</span><span class="p">)</span>
@@ -841,13 +841,13 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_hexagonal</span><span class="p">(</span><span class="n">lattice</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make constraints for Hexagonal systems.</span>
+<span class="w">    </span><span class="sd">"""Make constraints for Hexagonal systems.</span>
 
 <span class="sd">    b is constrained to a, alpha and beta are constrained to 90 and</span>
 <span class="sd">    gamma is constrained to 120.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">afactor</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">&quot;rad&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">"rad"</span><span class="p">:</span>
         <span class="n">afactor</span> <span class="o">=</span> <span class="n">deg2rad</span>
     <span class="n">ang90</span> <span class="o">=</span> <span class="mf">90.0</span> <span class="o">*</span> <span class="n">afactor</span>
     <span class="n">ang120</span> <span class="o">=</span> <span class="mf">120.0</span> <span class="o">*</span> <span class="n">afactor</span>
@@ -859,13 +859,13 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_constrain_cubic</span><span class="p">(</span><span class="n">lattice</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make constraints for Cubic systems.</span>
+<span class="w">    </span><span class="sd">"""Make constraints for Cubic systems.</span>
 
 <span class="sd">    b and c are constrained to a, alpha, beta and gamma are constrained</span>
 <span class="sd">    to 90.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">afactor</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">&quot;rad&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">lattice</span><span class="o">.</span><span class="n">angunits</span> <span class="o">==</span> <span class="s2">"rad"</span><span class="p">:</span>
         <span class="n">afactor</span> <span class="o">=</span> <span class="n">deg2rad</span>
     <span class="n">ang90</span> <span class="o">=</span> <span class="mf">90.0</span> <span class="o">*</span> <span class="n">afactor</span>
     <span class="n">lattice</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">lattice</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">lattice</span><span class="o">.</span><span class="n">a</span><span class="p">)</span>
@@ -879,18 +879,18 @@
 <span class="c1"># This is used to map the correct crystal system to the proper constraint</span>
 <span class="c1"># function.</span>
 <span class="n">_constraintMap</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;Triclinic&quot;</span><span class="p">:</span> <span class="n">_constrain_triclinic</span><span class="p">,</span>
-    <span class="s2">&quot;Monoclinic&quot;</span><span class="p">:</span> <span class="n">_constrain_monoclinic</span><span class="p">,</span>
-    <span class="s2">&quot;Orthorhombic&quot;</span><span class="p">:</span> <span class="n">_constrain_orthorhombic</span><span class="p">,</span>
-    <span class="s2">&quot;Tetragonal&quot;</span><span class="p">:</span> <span class="n">_constrain_tetragonal</span><span class="p">,</span>
-    <span class="s2">&quot;Trigonal&quot;</span><span class="p">:</span> <span class="n">_constrain_trigonal</span><span class="p">,</span>
-    <span class="s2">&quot;Hexagonal&quot;</span><span class="p">:</span> <span class="n">_constrain_hexagonal</span><span class="p">,</span>
-    <span class="s2">&quot;Cubic&quot;</span><span class="p">:</span> <span class="n">_constrain_cubic</span><span class="p">,</span>
+    <span class="s2">"Triclinic"</span><span class="p">:</span> <span class="n">_constrain_triclinic</span><span class="p">,</span>
+    <span class="s2">"Monoclinic"</span><span class="p">:</span> <span class="n">_constrain_monoclinic</span><span class="p">,</span>
+    <span class="s2">"Orthorhombic"</span><span class="p">:</span> <span class="n">_constrain_orthorhombic</span><span class="p">,</span>
+    <span class="s2">"Tetragonal"</span><span class="p">:</span> <span class="n">_constrain_tetragonal</span><span class="p">,</span>
+    <span class="s2">"Trigonal"</span><span class="p">:</span> <span class="n">_constrain_trigonal</span><span class="p">,</span>
+    <span class="s2">"Hexagonal"</span><span class="p">:</span> <span class="n">_constrain_hexagonal</span><span class="p">,</span>
+    <span class="s2">"Cubic"</span><span class="p">:</span> <span class="n">_constrain_cubic</span><span class="p">,</span>
 <span class="p">}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_makeconstraint</span><span class="p">(</span><span class="n">parname</span><span class="p">,</span> <span class="n">formula</span><span class="p">,</span> <span class="n">scatterer</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{}):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constrain a parameter according to a formula.</span>
+<span class="w">    </span><span class="sd">"""Constrain a parameter according to a formula.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -909,16 +909,16 @@
 <span class="sd">    -------</span>
 <span class="sd">    par</span>
 <span class="sd">        Returns the parameter if it is free.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">par</span> <span class="o">=</span> <span class="n">scatterer</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">parname</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">par</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span>
 
-    <span class="n">compname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">parname</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
+    <span class="n">compname</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2">_</span><span class="si">%i</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">parname</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
 
     <span class="c1"># Check to see if this parameter is free</span>
-    <span class="n">pat</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> *([+-] *\d+)?$&quot;</span> <span class="o">%</span> <span class="n">compname</span>
+    <span class="n">pat</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"</span><span class="si">%s</span><span class="s2"> *([+-] *\d+)?$"</span> <span class="o">%</span> <span class="n">compname</span>
     <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pat</span><span class="p">,</span> <span class="n">formula</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">par</span>
 
@@ -930,14 +930,14 @@
 
     <span class="c1"># If we got here, then we have a constraint equation</span>
     <span class="c1"># Fix any division issues</span>
-    <span class="n">formula</span> <span class="o">=</span> <span class="n">formula</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;*1.0/&quot;</span><span class="p">)</span>
+    <span class="n">formula</span> <span class="o">=</span> <span class="n">formula</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"/"</span><span class="p">,</span> <span class="s2">"*1.0/"</span><span class="p">)</span>
     <span class="n">scatterer</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">formula</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">ns</span><span class="p">)</span>
     <span class="k">return</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_float</span><span class="p">(</span><span class="n">formula</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a float from a formula string, or None if this is not</span>
-<span class="sd">    possible.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Get a float from a formula string, or None if this is not</span>
+<span class="sd">    possible."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">formula</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>

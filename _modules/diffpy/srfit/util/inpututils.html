@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.util.inpututils &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.util.inpututils &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,41 +92,56 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Input utilities.&quot;&quot;&quot;</span>
+<span class="sd">"""Input utilities."""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;inputToString&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"convert_input_to_string"</span><span class="p">,</span> <span class="s2">"inputToString"</span><span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
 
-<div class="viewcode-block" id="inputToString">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.inpututils.inputToString">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">inputToString</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert input from various modes to a string.</span>
+<span class="n">inputToString_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="s2">"diffpy.srfit.util.inpututils"</span><span class="p">,</span>
+    <span class="s2">"inputToString"</span><span class="p">,</span>
+    <span class="s2">"convert_input_to_string"</span><span class="p">,</span>
+    <span class="s2">"4.0.0"</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="sd">    This is useful when you want a method to accept a string, open file object</span>
-<span class="sd">    or file name.</span>
+
+<div class="viewcode-block" id="convert_input_to_string">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.inpututils.convert_input_to_string">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_input_to_string</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the contents of an open file, a file name, or a string.</span>
+
+<span class="sd">    This lets a method accept its input in any of those forms. A string</span>
+<span class="sd">    that is an existing file, or that is a single line shorter than 80</span>
+<span class="sd">    characters, is treated as a file name. Any other string is returned</span>
+<span class="sd">    unchanged.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    input</span>
-<span class="sd">        An open file-like object, name of a file</span>
-<span class="sd">        or a string containing the input.</span>
+<span class="sd">    input : file-like or str</span>
+<span class="sd">        The open file-like object, the name of a file, or the text itself.</span>
 
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The contents of the input as a string.</span>
 
-<span class="sd">    Returns the input in a string</span>
-<span class="sd">    Raises IOError if the input is supected to be a file name, but the file</span>
-<span class="sd">    cannot be found.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    FileNotFoundError</span>
+<span class="sd">        If ``input`` looks like a file name but the file does not exist.</span>
+<span class="sd">    """</span>
     <span class="c1"># Get the input into a string</span>
-    <span class="n">inptstr</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">):</span>
+    <span class="n">inptstr</span> <span class="o">=</span> <span class="s2">""</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s2">"read"</span><span class="p">):</span>
         <span class="n">inptstr</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="c1"># TODO remove handling of string input accept only file or filename</span>
     <span class="c1"># FIXME check for typos in the file name</span>
-    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">80</span> <span class="ow">and</span> <span class="nb">input</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">80</span> <span class="ow">and</span> <span class="nb">input</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">:</span>
             <span class="n">inptstr</span> <span class="o">=</span> <span class="n">infile</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">inptstr</span> <span class="o">=</span> <span class="nb">input</span>
@@ -135,14 +150,25 @@
 
 
 
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">inputToString_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">inputToString</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.util.inpututils.convert_input_to_string</span>
+<span class="sd">    instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">convert_input_to_string</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">get_dict_from_results_file</span><span class="p">(</span>
     <span class="n">results_filepath</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a dictionary of parameter names and values from a results</span>
+<span class="w">    </span><span class="sd">"""Get a dictionary of parameter names and values from a results</span>
 <span class="sd">    file.</span>
 
 <span class="sd">    The file should have lines in the format:</span>
-<span class="sd">    &quot;parameter_name value +/- uncertainty&quot;. Lines that do not match this</span>
+<span class="sd">    "parameter_name value +/- uncertainty". Lines that do not match this</span>
 <span class="sd">    format will be ignored.</span>
 
 <span class="sd">    Parameters</span>
@@ -155,19 +181,19 @@
 <span class="sd">    parsed_results_dict : dict</span>
 <span class="sd">        The dictionary where keys are parameter names and values are the</span>
 <span class="sd">        corresponding parameter values as floats.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">results_filepath</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="sd">    """</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">results_filepath</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">results_string</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
     <span class="n">parsed_results_dict</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">raw_line</span> <span class="ow">in</span> <span class="n">results_string</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
         <span class="n">line</span> <span class="o">=</span> <span class="n">raw_line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="c1"># skip blank lines and lines that are just dashes</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s2">&quot;-&quot;</span><span class="p">}:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span> <span class="ow">or</span> <span class="nb">set</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="p">{</span><span class="s2">"-"</span><span class="p">}:</span>
             <span class="k">continue</span>
         <span class="n">line_items</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line_items</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line_items</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">line_items</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;+/-&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line_items</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">line_items</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"+/-"</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">parsed_results_dict</span><span class="p">[</span><span class="n">line_items</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line_items</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>

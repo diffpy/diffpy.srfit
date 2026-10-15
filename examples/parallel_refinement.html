@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>parallel_refinement.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>parallel_refinement.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -108,7 +108,7 @@
              
   <section id="parallel-refinement-py">
 <span id="id1"></span><h1>parallel_refinement.py<a class="headerlink" href="#parallel-refinement-py" title="Link to this heading"></a></h1>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;Example of a PDF refinement using diffpy.structure and PDFGenerator.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="sd">"""Example of a PDF refinement using diffpy.structure and PDFGenerator.</span>
 
 <span class="sd">This is example of fitting the fcc nickel structure to measured PDF</span>
 <span class="sd">data. The purpose of this example is to demonstrate and describe the</span>
@@ -118,7 +118,7 @@
 <span class="sd">adding restraints to a fit and the ability to simultaneously refine a</span>
 <span class="sd">structure to PDF data and data from other sources. This example</span>
 <span class="sd">demonstrates only the basic configuration.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mp</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
@@ -136,7 +136,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">make_recipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">datname</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a fitting recipe for crystalline PDF data.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create a fitting recipe for crystalline PDF data."""</span>
     <span class="c1"># The Profile</span>
     <span class="c1"># This will be used to store the observed and calculated PDF profile.</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
@@ -155,11 +155,11 @@
     <span class="c1"># The ProfileGenerator</span>
     <span class="c1"># The PDFGenerator is for configuring and calculating a PDF profile. Here,</span>
     <span class="c1"># we want to refine a Structure object from diffpy.structure. We tell the</span>
-    <span class="c1"># PDFGenerator that with the &#39;setStructure&#39; method. All other configuration</span>
+    <span class="c1"># PDFGenerator that with the 'setStructure' method. All other configuration</span>
     <span class="c1"># options will be inferred from the metadata that is read by the PDFParser.</span>
     <span class="c1"># In particular, this will set the scattering type (x-ray or neutron), the</span>
     <span class="c1"># Qmax value, as well as initial values for the non-structural Parameters.</span>
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">PDFGenerator</span><span class="p">(</span><span class="s2">"G"</span><span class="p">)</span>
     <span class="n">stru</span> <span class="o">=</span> <span class="n">Structure</span><span class="p">()</span>
     <span class="n">stru</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ciffile</span><span class="p">)</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span>
@@ -167,9 +167,9 @@
     <span class="c1"># The FitContribution</span>
     <span class="c1"># Here we associate the Profile and ProfileGenerator, as has been done</span>
     <span class="c1"># before.</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;nickel&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">"nickel"</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
 
     <span class="c1"># Make the FitRecipe and add the FitContribution.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
@@ -178,8 +178,8 @@
     <span class="c1"># Configure the fit variables</span>
 
     <span class="c1"># The PDFGenerator class holds the ParameterSet associated with the</span>
-    <span class="c1"># Structure passed above in a data member named &quot;phase&quot;. (We could have</span>
-    <span class="c1"># given the ParameterSet a name other than &quot;phase&quot; when we added it to the</span>
+    <span class="c1"># Structure passed above in a data member named "phase". (We could have</span>
+    <span class="c1"># given the ParameterSet a name other than "phase" when we added it to the</span>
     <span class="c1"># PDFGenerator.) The ParameterSet in this case is a StructureParameterSet,</span>
     <span class="c1"># the documentation for which is found in the</span>
     <span class="c1"># diffpy.srfit.structure.diffpystructure module.</span>
@@ -187,17 +187,17 @@
 
     <span class="c1"># We start by constraining the phase to the known space group. We could do</span>
     <span class="c1"># this by hand, but there is a method in diffpy.srfit.structure named</span>
-    <span class="c1"># &#39;constrain_as_space_group&#39; for this purpose. The constraints will by</span>
+    <span class="c1"># 'constrain_as_space_group' for this purpose. The constraints will by</span>
     <span class="c1"># default be applied to the sites, the lattice and to the ADPs.</span>
     <span class="c1"># See the method documentation for more details.</span>
-    <span class="c1"># The &#39;constrain_as_space_group&#39; method may create new</span>
+    <span class="c1"># The 'constrain_as_space_group' method may create new</span>
     <span class="c1"># Parameters, which it returns in a SpaceGroupParameters object.</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.structure</span><span class="w"> </span><span class="kn">import</span> <span class="n">constrain_as_space_group</span>
 
-    <span class="n">sgpars</span> <span class="o">=</span> <span class="n">constrain_as_space_group</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="s2">&quot;Fm-3m&quot;</span><span class="p">)</span>
+    <span class="n">sgpars</span> <span class="o">=</span> <span class="n">constrain_as_space_group</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="s2">"Fm-3m"</span><span class="p">)</span>
 
     <span class="c1"># The SpaceGroupParameters object returned by</span>
-    <span class="c1"># &#39;constrain_as_space_group&#39; holds the free Parameters allowed by</span>
+    <span class="c1"># 'constrain_as_space_group' holds the free Parameters allowed by</span>
     <span class="c1"># the space group constraints. Once a structure is constrained,</span>
     <span class="c1"># we need (should) only use the Parameters</span>
     <span class="c1"># provided in the SpaceGroupParameters, as the relevant structure</span>
@@ -226,19 +226,19 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">refine_recipe</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Helper function."""</span>
     <span class="n">leastsq</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">residual</span><span class="p">,</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get_values</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="c1"># Make the data and the recipe</span>
-    <span class="n">ciffile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni.cif&quot;</span><span class="p">)</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/ni-q27r100-neutron.gr&quot;</span>
+    <span class="n">ciffile</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/ni.cif"</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/ni-q27r100-neutron.gr"</span>
 
     <span class="c1"># sanity check</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;==== Rw before refinements ====&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"==== Rw before refinements ===="</span><span class="p">)</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">make_recipe</span><span class="p">(</span><span class="n">ciffile</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">clear_fit_hooks</span><span class="p">()</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
@@ -251,7 +251,7 @@
         <span class="n">recipe_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
     <span class="c1"># Optimize</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;==== Rw: Sequential refinements ====&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"==== Rw: Sequential refinements ===="</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">recipe</span> <span class="ow">in</span> <span class="n">recipe_list</span><span class="p">:</span>
         <span class="n">recipe</span> <span class="o">=</span> <span class="n">refine_recipe</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">FitResults</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
@@ -265,7 +265,7 @@
         <span class="n">recipe_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
 
     <span class="c1"># Optimize</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;==== Rw: Parallel refinements ====&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"==== Rw: Parallel refinements ===="</span><span class="p">)</span>
     <span class="n">n_process</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">n_process</span><span class="p">)</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
         <span class="n">rv</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">refine_recipe</span><span class="p">,</span> <span class="n">recipe_list</span><span class="p">)</span>

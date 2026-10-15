@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.structure.basestructureparset &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.structure.basestructureparset &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,13 +92,13 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Base class for adapting structures to a ParameterSet interface.</span>
+<span class="sd">"""Base class for adapting structures to a ParameterSet interface.</span>
 
 <span class="sd">The BaseStructureParSet is a ParameterSet with functionality required by</span>
 <span class="sd">all structure adapters.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;BaseStructureParSet&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"BaseStructureParSet"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameterset</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParameterSet</span>
 
@@ -106,7 +106,7 @@
 <div class="viewcode-block" id="BaseStructureParSet">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.basestructureparset.BaseStructureParSet">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseStructureParSet</span><span class="p">(</span><span class="n">ParameterSet</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for structure adapters.</span>
+<span class="w">    </span><span class="sd">"""Base class for structure adapters.</span>
 
 <span class="sd">    BaseStructureParSet derives from ParameterSet and provides methods that</span>
 <span class="sd">    help interface the ParameterSet with the space group constraint methods in</span>
@@ -116,42 +116,42 @@
 <span class="sd">    ----------</span>
 <span class="sd">    stru</span>
 <span class="sd">        The adapted object</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="BaseStructureParSet.canAdapt">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.basestructureparset.BaseStructureParSet.canAdapt">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">canAdapt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stru</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return whether the structure can be adapted by this class.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return whether the structure can be adapted by this class."""</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="BaseStructureParSet.getLattice">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.basestructureparset.BaseStructureParSet.getLattice">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getLattice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a ParameterSet containing the lattice Parameters.</span>
+<span class="w">        </span><span class="sd">"""Get a ParameterSet containing the lattice Parameters.</span>
 
 <span class="sd">        The returned ParameterSet may contain other Parameters than the</span>
 <span class="sd">        lattice Parameters. It is assumed that the lattice parameters</span>
-<span class="sd">        are named &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;alpha&quot;, &quot;beta&quot;, &quot;gamma&quot;.</span>
+<span class="sd">        are named "a", "b", "c", "alpha", "beta", "gamma".</span>
 
-<span class="sd">        Lattice must also have the &quot;angunits&quot; attribute, which is either</span>
-<span class="sd">        &quot;deg&quot; or &quot;rad&quot;, to signify degrees or radians.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The must be overloaded&quot;</span><span class="p">)</span></div>
+<span class="sd">        Lattice must also have the "angunits" attribute, which is either</span>
+<span class="sd">        "deg" or "rad", to signify degrees or radians.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"The must be overloaded"</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="BaseStructureParSet.getScatterers">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.structure.html#diffpy.srfit.structure.basestructureparset.BaseStructureParSet.getScatterers">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getScatterers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of ParameterSets that represents the scatterers.</span>
+<span class="w">        </span><span class="sd">"""Get a list of ParameterSets that represents the scatterers.</span>
 
 <span class="sd">        The site positions must be accessible from the list entries via</span>
-<span class="sd">        the names &quot;x&quot;, &quot;y&quot;, and &quot;z&quot;. The ADPs must be accessible as</span>
+<span class="sd">        the names "x", "y", and "z". The ADPs must be accessible as</span>
 <span class="sd">        well, but the name and nature of the ADPs (U-factors, B-factors,</span>
 <span class="sd">        isotropic, anisotropic) depends on the adapted structure.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;The must be overloaded&quot;</span><span class="p">)</span></div>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"The must be overloaded"</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>interface.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>interface.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,15 +122,15 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of fitting a Gaussian to simulated data.</span>
+<span class="sd">"""Example of fitting a Gaussian to simulated data.</span>
 
 <span class="sd">This is like gaussianrecipe.py, but it uses a shorthand interface</span>
 <span class="sd">defined in the diffpy.srfit.interface.interface.py module.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FitContribution</span><span class="p">,</span>
     <span class="n">FitRecipe</span><span class="p">,</span>
     <span class="n">FitResults</span><span class="p">,</span>
@@ -144,29 +144,29 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 
     <span class="n">p</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
-    <span class="n">p</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/gaussian.dat&quot;</span><span class="p">)</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/gaussian.dat"</span><span class="p">)</span>
 
     <span class="c1"># FitContribution operations</span>
-    <span class="c1"># &quot;&lt;&lt;&quot;  -   Inject a parameter value</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;g1&quot;</span><span class="p">)</span>
+    <span class="c1"># "&lt;&lt;"  -   Inject a parameter value</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">"g1"</span><span class="p">)</span>
     <span class="n">c</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">&quot;A * exp(-0.5*(x-x0)**2/sigma**2)&quot;</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">"A * exp(-0.5*(x-x0)**2/sigma**2)"</span><span class="p">)</span>
     <span class="n">c</span><span class="o">.</span><span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="mf">0.5</span>
     <span class="n">c</span><span class="o">.</span><span class="n">x0</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span>
     <span class="n">c</span><span class="o">.</span><span class="n">sigma</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span>
 
     <span class="c1"># FitRecipe operations</span>
-    <span class="c1"># &quot;|=&quot;  -   Union of necessary components.</span>
-    <span class="c1"># &quot;+=&quot;  -   Add Parameter or create a new one. Each tuple is a set of</span>
+    <span class="c1"># "|="  -   Union of necessary components.</span>
+    <span class="c1"># "+="  -   Add Parameter or create a new one. Each tuple is a set of</span>
     <span class="c1">#           arguments for either setVar or add_variable.</span>
-    <span class="c1"># &quot;*=&quot;  -   Constrain a parameter. Think of &quot;*&quot; as a push-pin holding one</span>
-    <span class="c1">#           parameter&#39;s value to that of another.</span>
-    <span class="c1"># &quot;%=&quot;  -   Restrain a parameter or equation. Think of &quot;%&quot; as a rope</span>
+    <span class="c1"># "*="  -   Constrain a parameter. Think of "*" as a push-pin holding one</span>
+    <span class="c1">#           parameter's value to that of another.</span>
+    <span class="c1"># "%="  -   Restrain a parameter or equation. Think of "%" as a rope</span>
     <span class="c1">#           loosely tying parameters to a value.</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
     <span class="n">r</span> <span class="o">|=</span> <span class="n">c</span>
-    <span class="n">r</span> <span class="o">+=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;sig&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">r</span> <span class="o">*=</span> <span class="n">c</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="s2">&quot;sig&quot;</span>
+    <span class="n">r</span> <span class="o">+=</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="s2">"sig"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">*=</span> <span class="n">c</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="s2">"sig"</span>
     <span class="n">r</span> <span class="o">%=</span> <span class="n">c</span><span class="o">.</span><span class="n">A</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">gaussianrecipe</span><span class="w"> </span><span class="kn">import</span> <span class="n">scipyOptimize</span>
@@ -178,15 +178,15 @@
     <span class="n">res</span><span class="o">.</span><span class="n">print_results</span><span class="p">()</span>
     <span class="c1"># Plot the results.</span>
     <span class="n">plot_styles</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+        <span class="s2">"xlabel"</span><span class="p">:</span> <span class="s2">"x"</span><span class="p">,</span>
+        <span class="s2">"ylabel"</span><span class="p">:</span> <span class="s2">"y"</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="n">r</span><span class="o">.</span><span class="n">plot_recipe</span><span class="p">(</span><span class="o">**</span><span class="n">plot_styles</span><span class="p">)</span>
 
     <span class="k">return</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
 
 <span class="c1"># End of file</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Extending SrFit &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>Extending SrFit &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="_static/documentation_options.js?v=1c984258"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -49,7 +49,13 @@
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Extending SrFit</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#plugging-other-objects-into-srfit">Plugging Other Objects into SrFit</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter"><code class="docutils literal notranslate"><span class="pre">ParameterAdapter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter"><code class="docutils literal notranslate"><span class="pre">ParameterAdapter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.obj"><code class="docutils literal notranslate"><span class="pre">ParameterAdapter.obj</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.getter"><code class="docutils literal notranslate"><span class="pre">ParameterAdapter.getter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.setter"><code class="docutils literal notranslate"><span class="pre">ParameterAdapter.setter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.attr"><code class="docutils literal notranslate"><span class="pre">ParameterAdapter.attr</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#extending-profile-parsers">Extending Profile Parsers</a></li>
@@ -127,8 +133,59 @@ to another object when setting or retrieving its value.</p>
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.parameter.ParameterAdapter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.fitbase.parameter.</span></span><span class="sig-name descname"><span class="pre">ParameterAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/diffpy/srfit/fitbase/parameter.html#ParameterAdapter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter" title="Link to this definition"></a></dt>
 <dd><p>An adapter for parameter-like objects.</p>
-<p>This class wraps an object as a Parameter. The getValue and
-set_value methods defer to the data of the wrapped object.</p>
+<p>This class wraps an object as a Parameter. The <code class="docutils literal notranslate"><span class="pre">get_value</span></code> and
+<code class="docutils literal notranslate"><span class="pre">set_value</span></code> methods defer to the data of the wrapped object.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.srfit.fitbase.parameter.ParameterAdapter.obj">
+<span class="sig-name descname"><span class="pre">obj</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.obj" title="Link to this definition"></a></dt>
+<dd><p>The wrapped object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.srfit.fitbase.parameter.ParameterAdapter.getter">
+<span class="sig-name descname"><span class="pre">getter</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.getter" title="Link to this definition"></a></dt>
+<dd><p>The function that takes <code class="docutils literal notranslate"><span class="pre">obj</span></code> and returns the parameter value.
+When <code class="docutils literal notranslate"><span class="pre">attr</span></code> is given, this is the <code class="docutils literal notranslate"><span class="pre">getter</span></code> passed to the
+constructor (or <code class="docutils literal notranslate"><span class="pre">getattr</span></code>) with <code class="docutils literal notranslate"><span class="pre">attr</span></code> bound as its second
+argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.srfit.fitbase.parameter.ParameterAdapter.setter">
+<span class="sig-name descname"><span class="pre">setter</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.setter" title="Link to this definition"></a></dt>
+<dd><p>The function that takes <code class="docutils literal notranslate"><span class="pre">obj</span></code> and a value and sets the parameter
+value. When <code class="docutils literal notranslate"><span class="pre">attr</span></code> is given, this is the <code class="docutils literal notranslate"><span class="pre">setter</span></code> passed to the
+constructor (or <code class="docutils literal notranslate"><span class="pre">setattr</span></code>) with <code class="docutils literal notranslate"><span class="pre">attr</span></code> bound as its second
+argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="diffpy.srfit.fitbase.parameter.ParameterAdapter.attr">
+<span class="sig-name descname"><span class="pre">attr</span></span><a class="headerlink" href="#diffpy.srfit.fitbase.parameter.ParameterAdapter.attr" title="Link to this definition"></a></dt>
+<dd><p>The name of the attribute that contains the parameter value, or
+None if <code class="docutils literal notranslate"><span class="pre">getter</span></code> and <code class="docutils literal notranslate"><span class="pre">setter</span></code> access the value directly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a> or None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p>The <cite>name</cite> argument is used to give attribute access to the
 ParameterAdapter instance when it is added to a ParameterSet or similar
 object. The <cite>obj</cite> argument is the parameter-like object to be adapted. It
@@ -142,7 +199,7 @@ name of this attribute can be passed in the <cite>attr</cite> argument.</p>
 <p>Here is a simple example of using <code class="docutils literal notranslate"><span class="pre">ParameterAdapter</span></code> to adapt a hypothetical
 atom object called <code class="docutils literal notranslate"><span class="pre">SimpleAtom</span></code> that has attributes <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SimpleAtom</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple class holding x, y and z coordinates of an atom.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Simple class holding x, y and z coordinates of an atom."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
@@ -153,7 +210,7 @@ atom object called <code class="docutils literal notranslate"><span class="pre">
 <span class="c1"># End class SimpleAtom</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">SimpleAtomParSet</span><span class="p">(</span><span class="n">ParameterSet</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class adapting the x, y and z attributes of SimpleAtom as Parameters.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Class adapting the x, y and z attributes of SimpleAtom as Parameters."""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="n">ParameterSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -161,14 +218,14 @@ atom object called <code class="docutils literal notranslate"><span class="pre">
         <span class="bp">self</span><span class="o">.</span><span class="n">atom</span> <span class="o">=</span> <span class="n">atom</span>
 
         <span class="c1"># Create a ParameterAdapter for the x, y and z attributes of atom</span>
-        <span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
-        <span class="n">ypar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s2">&quot;y&quot;</span><span class="p">)</span>
-        <span class="n">zpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s2">&quot;z&quot;</span><span class="p">)</span>
+        <span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s2">"x"</span><span class="p">)</span>
+        <span class="n">ypar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s2">"y"</span><span class="p">)</span>
+        <span class="n">zpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">"z"</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s2">"z"</span><span class="p">)</span>
 
         <span class="c1"># Add these to the parameter set</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">xpar</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ypar</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">zpar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">xpar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">ypar</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">zpar</span><span class="p">)</span>
 
         <span class="k">return</span>
 
@@ -178,27 +235,27 @@ atom object called <code class="docutils literal notranslate"><span class="pre">
 <p>The <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> attributes (specified by the <code class="docutils literal notranslate"><span class="pre">attr</span></code> keyword
 argument of <code class="docutils literal notranslate"><span class="pre">ParameterAdapter</span></code>) of a <code class="docutils literal notranslate"><span class="pre">SimpleAtom</span></code> are wrapped as
 <code class="docutils literal notranslate"><span class="pre">ParameterAdapter</span></code> objects named <cite>x</cite>, <cite>y</cite>, and <cite>z</cite>.  They are then added to
-the <code class="docutils literal notranslate"><span class="pre">SimpleAtomParSet</span></code> using the <code class="docutils literal notranslate"><span class="pre">addParameter</span></code> method, which makes them
+the <code class="docutils literal notranslate"><span class="pre">SimpleAtomParSet</span></code> using the <code class="docutils literal notranslate"><span class="pre">add_parameter</span></code> method, which makes them
 accessible as attributes.</p>
 <p>If SimpleAtom did not have an attribute named <code class="docutils literal notranslate"><span class="pre">x</span></code>, but rather accessor
 methods named <code class="docutils literal notranslate"><span class="pre">getX</span></code> and <code class="docutils literal notranslate"><span class="pre">setX</span></code>, then the <code class="docutils literal notranslate"><span class="pre">ParameterAdapter</span></code> would be
 used as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">getX</span><span class="p">,</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">getX</span><span class="p">,</span>
     <span class="n">setter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">setX</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Note that the <em>unbound</em> methods are used. The names <code class="docutils literal notranslate"><span class="pre">getter</span></code> and <code class="docutils literal notranslate"><span class="pre">setter</span></code>
 describe how the accessor attributes are used to access the value of the
-parameter. When <code class="docutils literal notranslate"><span class="pre">xpar.getValue()</span></code> is called, it redirects to
+parameter. When <code class="docutils literal notranslate"><span class="pre">xpar.get_value()</span></code> is called, it redirects to
 <code class="docutils literal notranslate"><span class="pre">SimpleAtom.getX(atom)</span></code>.</p>
 <p>If instead <code class="docutils literal notranslate"><span class="pre">SimpleAtom</span></code> had methods called <code class="docutils literal notranslate"><span class="pre">get</span></code> and <code class="docutils literal notranslate"><span class="pre">set</span></code> that take as
 the second argument the name of the attribute to retrieve or modify, then this
 can be adapted as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">get</span><span class="p">,</span>
-        <span class="n">setter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">set</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterAdapter</span><span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="n">atom</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">get</span><span class="p">,</span>
+        <span class="n">setter</span> <span class="o">=</span> <span class="n">SimpleAtom</span><span class="o">.</span><span class="n">set</span><span class="p">,</span> <span class="n">attr</span> <span class="o">=</span> <span class="s2">"x"</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Thus, when <code class="docutils literal notranslate"><span class="pre">xpar.getValue()</span></code> is called, it in turn calls
+<p>Thus, when <code class="docutils literal notranslate"><span class="pre">xpar.get_value()</span></code> is called, it in turn calls
 <code class="docutils literal notranslate"><span class="pre">SimpleAtom.get(atom,</span> <span class="pre">&quot;x&quot;)</span></code>. <code class="docutils literal notranslate"><span class="pre">xpar.set_value(value)</span></code> calls
 <code class="docutils literal notranslate"><span class="pre">SimpleAtom.set(atom,</span> <span class="pre">&quot;x&quot;,</span> <span class="pre">value)</span></code>.</p>
 <p>If the attributes of an object cannot be accessed in one of these three ways,
@@ -242,9 +299,9 @@ both <code class="docutils literal notranslate"><span class="pre">_parse_metadat
     <span class="n">meta</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"#"</span><span class="p">):</span>
             <span class="k">break</span>
-        <span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;# &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">value</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">"# "</span><span class="p">)</span><span class="o">.</span><span class="n">partition</span><span class="p">(</span><span class="s2">":"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">sep</span><span class="p">:</span>
             <span class="n">meta</span><span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
@@ -295,7 +352,7 @@ external program before or after interfacing with SrFit. An example of a
 customized Profile is the <code class="docutils literal notranslate"><span class="pre">SASProfile</span></code> class in the
 <code class="docutils literal notranslate"><span class="pre">diffpy.srfit.sas.sasprofile</span></code> module:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">SASProfile</span><span class="p">(</span><span class="n">Profile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Observed and calculated profile container for SAS data.</span>
+<span class="w">    </span><span class="sd">"""Observed and calculated profile container for SAS data.</span>
 
 <span class="sd">    This wraps a sas DataInfo object as a Profile object. Use this when you</span>
 <span class="sd">    want to use and manipulate a DataProfile before using it with SrFit.</span>
@@ -330,11 +387,11 @@ customized Profile is the <code class="docutils literal notranslate"><span class
 <span class="sd">    ycalc</span>
 <span class="sd">        A numpy array of the calculated signal (default None).</span>
 <span class="sd">    xpar</span>
-<span class="sd">        A ProfileParameter that stores x (named &quot;x&quot;).</span>
+<span class="sd">        A ProfileParameter that stores x (named "x").</span>
 <span class="sd">    ypar</span>
-<span class="sd">        A ProfileParameter that stores y (named &quot;y&quot;).</span>
+<span class="sd">        A ProfileParameter that stores y (named "y").</span>
 <span class="sd">    dypar</span>
-<span class="sd">        A ProfileParameter that stores dy (named &quot;dy&quot;).</span>
+<span class="sd">        A ProfileParameter that stores dy (named "dy").</span>
 <span class="sd">    meta</span>
 <span class="sd">        A dictionary of metadata. This is only set if provided by a</span>
 <span class="sd">        parser.</span>
@@ -343,16 +400,16 @@ customized Profile is the <code class="docutils literal notranslate"><span class
 <span class="sd">    ----------</span>
 <span class="sd">    _datainfo</span>
 <span class="sd">        The DataInfo object this wraps.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datainfo</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the attributes.</span>
+<span class="w">        </span><span class="sd">"""Initialize the attributes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        datainfo</span>
 <span class="sd">            The DataInfo object this wraps.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span> <span class="o">=</span> <span class="n">datainfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">Profile</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -364,8 +421,8 @@ customized Profile is the <code class="docutils literal notranslate"><span class
             <span class="bp">self</span><span class="o">.</span><span class="n">_dyobs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">dy</span>
         <span class="k">return</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">setObservedProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the observed profile.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_observed_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Set the observed profile.</span>
 
 <span class="sd">        This is overloaded to change the value within the datainfo object.</span>
 
@@ -377,8 +434,8 @@ customized Profile is the <code class="docutils literal notranslate"><span class
 <span class="sd">            Numpy array of the observed signal.</span>
 <span class="sd">        dyobs</span>
 <span class="sd">            Numpy array of the uncertainty in the observed signal. If</span>
-<span class="sd">            ``dyobs`` is ``None`` (default), it will be set to 1 at each</span>
-<span class="sd">            observed ``xobs``.</span>
+<span class="sd">            ``dyobs`` is ``None`` (default), it stays ``None`` to indicate</span>
+<span class="sd">            no uncertainty was observed.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -386,8 +443,8 @@ customized Profile is the <code class="docutils literal notranslate"><span class
 <span class="sd">            If ``len(yobs) != len(xobs)``.</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If ``dyobs is not None`` and ``len(dyobs) != len(xobs)``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Profile</span><span class="o">.</span><span class="n">setObservedProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">Profile</span><span class="o">.</span><span class="n">set_observed_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xobs</span><span class="p">,</span> <span class="n">yobs</span><span class="p">,</span> <span class="n">dyobs</span><span class="p">)</span>
         <span class="c1"># Copy the arrays to the _datainfo attribute.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xobs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_datainfo</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yobs</span>
@@ -422,14 +479,14 @@ This method has the following signature</p>
 <dd><p>Calculate the penalty of the restraint.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – The point-average chi^2 which is optionally used to scale
+<dd class="field-odd"><p><strong>w</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em>, </em><em>optional</em>) – The point-average chi^2 which is optionally used to scale
 the penalty (default 1.0).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The penalty for breaking the restraint.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -440,7 +497,7 @@ to keep the restraint cost comparable to the residual of a single data point.</p
 <code class="docutils literal notranslate"><span class="pre">Restraint</span></code> whose penalty is the root-mean-square deviation from the expected
 and calculated BVS of a structure.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">BVSRestraint</span><span class="p">(</span><span class="n">Restraint</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapping of BVSCalculator.bvmsdiff as a Restraint.</span>
+<span class="w">    </span><span class="sd">"""Wrapping of BVSCalculator.bvmsdiff as a Restraint.</span>
 
 <span class="sd">    The restraint penalty is the root-mean-square deviation of the theoretical</span>
 <span class="sd">    and calculated bond-valence sum of a structure.</span>
@@ -457,10 +514,10 @@ and calculated BVS of a structure.</p>
 <span class="sd">        A flag indicating if the restraint is scaled (multiplied)</span>
 <span class="sd">        by the unrestrained point-average chi^2 (chi^2/numpoints)</span>
 <span class="sd">        (default False).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Restraint.</span>
+<span class="w">        </span><span class="sd">"""Initialize the Restraint.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -472,7 +529,7 @@ and calculated BVS of a structure.</p>
 <span class="sd">            A flag indicating if the restraint is scaled</span>
 <span class="sd">            (multiplied) by the unrestrained point-average chi^2</span>
 <span class="sd">            (chi^2/numpoints) (bool, default False).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srreal.bvscalculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BVSCalculator</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span> <span class="o">=</span> <span class="n">BVSCalculator</span><span class="p">()</span>
@@ -481,15 +538,22 @@ and calculated BVS of a structure.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">scaled</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">scaled</span><span class="p">)</span>
         <span class="k">return</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the structure name with the restraint settings."""</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"BVS of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_parset</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: sig = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="si">:</span><span class="s2">f</span><span class="si">}</span><span class="s2">, "</span>
+            <span class="sa">f</span><span class="s2">"scaled = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">scaled</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">penalty</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the penalty of the restraint.</span>
+<span class="w">        </span><span class="sd">"""Calculate the penalty of the restraint.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        w</span>
 <span class="sd">            The point-average chi^2 which is optionally used to scale the</span>
 <span class="sd">            penalty (float, default 1.0).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Get the bvms from the BVSCalculator</span>
         <span class="n">stru</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parset</span><span class="o">.</span><span class="n">_get_srreal_structure</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">stru</span><span class="p">)</span>
@@ -505,20 +569,20 @@ and calculated BVS of a structure.</p>
         <span class="k">return</span> <span class="n">penalty</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This evaluates the calculator.</span>
+<span class="w">        </span><span class="sd">"""This evaluates the calculator.</span>
 
 <span class="sd">        Raises SrFitError if validation fails.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">nan</span>
 
         <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">penalty</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">p</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">p</span> <span class="ow">is</span> <span class="n">nan</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;Cannot evaluate penalty&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"Cannot evaluate penalty"</span><span class="p">)</span>
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calc</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
             <span class="n">emsg</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;Bond valence sums are all zero.  Check atom symbols in &quot;</span>
-                <span class="s2">&quot;the structure or define custom bond-valence parameters.&quot;</span>
+                <span class="s2">"Bond valence sums are all zero.  Check atom symbols in "</span>
+                <span class="s2">"the structure or define custom bond-valence parameters."</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="n">emsg</span><span class="p">)</span>
         <span class="k">return</span>
@@ -532,7 +596,7 @@ restrainable object. A <code class="docutils literal notranslate"><span class="p
 which is a <code class="docutils literal notranslate"><span class="pre">ParameterSet</span></code> wrapper base class for SrReal-compatible
 structures.  The restraint is applied with the <code class="docutils literal notranslate"><span class="pre">restrainBVS</span></code> method.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span><span class="w"> </span><span class="nf">restrainBVS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Restrain the bond-valence sum to zero.</span>
+<span class="w">        </span><span class="sd">"""Restrain the bond-valence sum to zero.</span>
 
 <span class="sd">        This adds a penalty to the cost function equal to</span>
 <span class="sd">        bvmsdiff / sig**2</span>
@@ -550,8 +614,8 @@ structures.  The restraint is applied with the <code class="docutils literal not
 <span class="sd">            (multiplied) by the unrestrained point-average chi^2</span>
 <span class="sd">            (chi^2/numpoints) (default False).</span>
 
-<span class="sd">        Returns the BVSRestraint object for use with the &#39;unrestrain&#39; method.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Returns the BVSRestraint object for use with the 'unrestrain' method.</span>
+<span class="sd">        """</span>
         <span class="c1"># Create the Restraint object</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">BVSRestraint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">scaled</span><span class="p">)</span>
         <span class="c1"># Add it to the _restraints set</span>
@@ -586,21 +650,26 @@ overload.</p>
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.fithook.FitHook.reset">
 <span class="sig-prename descclassname"><span class="pre">FitHook.</span></span><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/diffpy/srfit/fitbase/fithook.html#FitHook.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.reset" title="Link to this definition"></a></dt>
 <dd><p>Reset the hook data.</p>
-<p>This is called whenever FitRecipe._prepare is called, which is
-whenever a configurational change to the fit hierarchy takes
-place, such as adding a new ParameterSet, constraint or
-restraint.</p>
+<p>This is called by <code class="docutils literal notranslate"><span class="pre">FitRecipe._prepare</span></code> whenever a
+configurational change to the fit hierarchy takes place, such as
+adding a new ParameterSet, constraint or restraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>recipe</strong> (<a class="reference internal" href="api/diffpy.srfit.html#diffpy.srfit.FitRecipe" title="diffpy.srfit.FitRecipe"><em>FitRecipe</em></a>) – The FitRecipe that is being prepared.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </li>
 <li><dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.fithook.FitHook.precall">
 <span class="sig-prename descclassname"><span class="pre">FitHook.</span></span><span class="sig-name descname"><span class="pre">precall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/diffpy/srfit/fitbase/fithook.html#FitHook.precall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.precall" title="Link to this definition"></a></dt>
-<dd><p>This is called within FitRecipe.residual, before the
-calculation.</p>
+<dd><p>Inspect the recipe before the residual is calculated.</p>
+<p>This is called within <code class="docutils literal notranslate"><span class="pre">FitRecipe.residual</span></code>, before the
+variable values are applied and the residual is calculated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>recipe</strong> (<a class="reference internal" href="api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitRecipe" title="diffpy.srfit.fitbase.FitRecipe"><em>FitRecipe</em></a>) – The FitRecipe instance.</p>
+<dd class="field-odd"><p><strong>recipe</strong> (<a class="reference internal" href="api/diffpy.srfit.html#diffpy.srfit.FitRecipe" title="diffpy.srfit.FitRecipe"><em>FitRecipe</em></a>) – The FitRecipe whose residual is being calculated.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -609,13 +678,14 @@ calculation.</p>
 <li><dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.fitbase.fithook.FitHook.postcall">
 <span class="sig-prename descclassname"><span class="pre">FitHook.</span></span><span class="sig-name descname"><span class="pre">postcall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chiv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/diffpy/srfit/fitbase/fithook.html#FitHook.postcall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.fitbase.fithook.FitHook.postcall" title="Link to this definition"></a></dt>
-<dd><p>This is called within FitRecipe.residual, after the
-calculation.</p>
+<dd><p>Inspect the recipe after the residual is calculated.</p>
+<p>This is called within <code class="docutils literal notranslate"><span class="pre">FitRecipe.residual</span></code>, after the residual
+is calculated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>recipe</strong> (<a class="reference internal" href="api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitRecipe" title="diffpy.srfit.fitbase.FitRecipe"><em>FitRecipe</em></a>) – The FitRecipe instance.</p></li>
-<li><p><strong>chiv</strong> (<em>ndarray</em>) – The residual vector.</p></li>
+<li><p><strong>recipe</strong> (<a class="reference internal" href="api/diffpy.srfit.html#diffpy.srfit.FitRecipe" title="diffpy.srfit.FitRecipe"><em>FitRecipe</em></a>) – The FitRecipe whose residual was calculated.</p></li>
+<li><p><strong>chiv</strong> (<em>ndarray</em>) – The residual vector, including the restraint penalties.</p></li>
 </ul>
 </dd>
 </dl>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.util.nameutils &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.util.nameutils &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,40 +92,91 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Name utilities.&quot;&quot;&quot;</span>
+<span class="sd">"""Name utilities."""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;isIdentifier&quot;</span><span class="p">,</span> <span class="s2">&quot;validateName&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"is_identifier"</span><span class="p">,</span> <span class="s2">"validate_name"</span><span class="p">,</span> <span class="s2">"isIdentifier"</span><span class="p">,</span> <span class="s2">"validateName"</span><span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 
-<span class="n">reident</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[a-zA-Z_]\w*$&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">reident</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^[a-zA-Z_]\w*$"</span><span class="p">)</span>
+
+<span class="n">nameutils_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.util.nameutils"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
+<span class="n">isIdentifier_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">nameutils_base</span><span class="p">,</span> <span class="s2">"isIdentifier"</span><span class="p">,</span> <span class="s2">"is_identifier"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">validateName_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">nameutils_base</span><span class="p">,</span> <span class="s2">"validateName"</span><span class="p">,</span> <span class="s2">"validate_name"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
 
 
-<div class="viewcode-block" id="isIdentifier">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.nameutils.isIdentifier">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">isIdentifier</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check to see if a python string is a valid identifier.</span>
+<div class="viewcode-block" id="is_identifier">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.nameutils.is_identifier">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_identifier</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Check whether a string is a valid name.</span>
 
-<span class="sd">    From http://code.activestate.com/recipes/413487/</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">reident</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">return</span> <span class="kc">True</span></div>
+<span class="sd">    A valid name starts with a letter or underscore and contains only</span>
+<span class="sd">    letters, digits and underscores.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The string to check.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    bool</span>
+<span class="sd">        The flag that is True if ``name`` is a valid name.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">reident</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
 
 
-<div class="viewcode-block" id="validateName">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.nameutils.validateName">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">validateName</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate that a name is a valid identifier.</span>
+<div class="viewcode-block" id="validate_name">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.nameutils.validate_name">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_name</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Raise an error if a string is not a valid name.</span>
 
-<span class="sd">    Raises ValueError if the name is invalid.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Check that the name is valid</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">isIdentifier</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Name </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not a valid identifier&quot;</span><span class="p">)</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The string to check.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ``name`` is not a valid name, as defined by ``is_identifier``.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_identifier</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Name '</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">' is not a valid identifier. "</span>
+            <span class="s2">"Please use only letters, digits and underscores, "</span>
+            <span class="s2">"and do not start the name with a digit."</span>
+        <span class="p">)</span>
     <span class="k">return</span></div>
 
+
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">isIdentifier_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">isIdentifier</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.util.nameutils.is_identifier instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">is_identifier</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">validateName_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validateName</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.util.nameutils.validate_name instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">validate_name</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
 
 
 <span class="c1"># End of file</span>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.util package &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.util package &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -94,22 +94,30 @@
 <p>Utilities and constants used throughout SrFit.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="diffpy.srfit.util.sortKeyForNumericString">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.</span></span><span class="sig-name descname"><span class="pre">sortKeyForNumericString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util.html#sortKeyForNumericString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.sortKeyForNumericString" title="Link to this definition"></a></dt>
-<dd><p>Compute key for sorting strings according to their integer
-numeric value.</p>
-<p>Each string gets split to string and integer segments to create keys
-for comparison.  Signs, decimal points and exponents are ignored.
-This function is intended as the <code class="docutils literal notranslate"><span class="pre">key</span></code> argument for the <code class="docutils literal notranslate"><span class="pre">sorted</span></code>
-or <code class="docutils literal notranslate"><span class="pre">list.sort</span></code> function.</p>
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.</span></span><span class="sig-name descname"><span class="pre">sortKeyForNumericString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.sortKeyForNumericString" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.util.sort_key_for_numeric_string instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.util.sort_key_for_numeric_string">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.</span></span><span class="sig-name descname"><span class="pre">sort_key_for_numeric_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util.html#sort_key_for_numeric_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.sort_key_for_numeric_string" title="Link to this definition"></a></dt>
+<dd><p>Return a sort key that orders the numbers in a string by value.</p>
+<p>The string is split into text and integer segments, so <code class="docutils literal notranslate"><span class="pre">&quot;a2&quot;</span></code> sorts
+before <code class="docutils literal notranslate"><span class="pre">&quot;a10&quot;</span></code>. Signs, decimal points and exponents are ignored. Use it
+as the <code class="docutils literal notranslate"><span class="pre">key</span></code> argument of <code class="docutils literal notranslate"><span class="pre">sorted</span></code> or <code class="docutils literal notranslate"><span class="pre">list.sort</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>s</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – String which may have numeric components, e.g., “a12b”.</p>
+<dd class="field-odd"><p><strong>string</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The string to build a key for, which may contain numbers, e.g.
+<code class="docutils literal notranslate"><span class="pre">&quot;a12b&quot;</span></code>.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Tuple of non-numeric segments intermixed with integer values.</p>
+<dd class="field-even"><p>The text segments of <code class="docutils literal notranslate"><span class="pre">string</span></code> with integer values in between,
+e.g. <code class="docutils literal notranslate"><span class="pre">(&quot;a&quot;,</span> <span class="pre">12,</span> <span class="pre">&quot;b&quot;)</span></code>.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -120,20 +128,36 @@ or <code class="docutils literal notranslate"><span class="pre">list.sort</span>
 <span id="diffpy-srfit-util-inpututils-module"></span><h3>diffpy.srfit.util.inpututils module<a class="headerlink" href="#module-diffpy.srfit.util.inpututils" title="Link to this heading"></a></h3>
 <p>Input utilities.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="diffpy.srfit.util.inpututils.inputToString">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.inpututils.</span></span><span class="sig-name descname"><span class="pre">inputToString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/inpututils.html#inputToString"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.inpututils.inputToString" title="Link to this definition"></a></dt>
-<dd><p>Convert input from various modes to a string.</p>
-<p>This is useful when you want a method to accept a string, open file object
-or file name.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.util.inpututils.convert_input_to_string">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.inpututils.</span></span><span class="sig-name descname"><span class="pre">convert_input_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/inpututils.html#convert_input_to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.inpututils.convert_input_to_string" title="Link to this definition"></a></dt>
+<dd><p>Return the contents of an open file, a file name, or a string.</p>
+<p>This lets a method accept its input in any of those forms. A string
+that is an existing file, or that is a single line shorter than 80
+characters, is treated as a file name. Any other string is returned
+unchanged.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>input</strong> – An open file-like object, name of a file
-or a string containing the input.</p>
+<dd class="field-odd"><p><strong>input</strong> (<em>file-like</em><em> or </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The open file-like object, the name of a file, or the text itself.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The contents of the input as a string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#FileNotFoundError" title="(in Python v3.15)"><strong>FileNotFoundError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">input</span></code> looks like a file name but the file does not exist.</p>
 </dd>
 </dl>
-<p>Returns the input in a string
-Raises IOError if the input is supected to be a file name, but the file
-cannot be found.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.util.inpututils.inputToString">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.inpututils.</span></span><span class="sig-name descname"><span class="pre">inputToString</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.inpututils.inputToString" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.util.inpututils.convert_input_to_string
+instead.</p>
 </dd></dl>
 
 </section>
@@ -142,7 +166,7 @@ cannot be found.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.observable.</span></span><span class="sig-name descname"><span class="pre">Observable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Provide notification support for classes that maintain dynamic
 associations with multiple clients.</p>
 <p>Observers, i.e. clients of the observable, register event handlers
@@ -152,37 +176,91 @@ defined by Observable descendants and their managers. For example,
 instances of pyre.calc.Node are observable by other nodes whose
 value depends on them so that the dependents can be notified about
 value changes and forced to recompute their own value.</p>
-<p>The event handlers are callables that take the observable instance
-as their single argument.</p>
-<dl class="simple">
-<dt>interface:</dt><dd><p>addObserver: registers its callable argument with the list of
-handlers to invoke removeObserver: remove an event handler from
-the list of handlers to invoke notify: invoke the registered
-handlers in the order in which they were registered</p>
-</dd>
-</dl>
+<p>The event handlers are callables that take a tuple starting with the
+observable instance as their single argument. Register them with
+<code class="docutils literal notranslate"><span class="pre">add_observer</span></code>, remove them with <code class="docutils literal notranslate"><span class="pre">remove_observer</span></code>, and invoke
+them all with <code class="docutils literal notranslate"><span class="pre">notify</span></code>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.addObserver">
-<span class="sig-name descname"><span class="pre">addObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.addObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.addObserver" title="Link to this definition"></a></dt>
-<dd><p>Add callable to the set of observers.</p>
+<span class="sig-name descname"><span class="pre">addObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.addObserver" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use diffpy.srfit.util.observable.Observable.add_observer
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.add_observer">
+<span class="sig-name descname"><span class="pre">add_observer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.add_observer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.add_observer" title="Link to this definition"></a></dt>
+<dd><p>Add a callable to the set of observers.</p>
+<p>Bound methods are held by weak reference, and are removed
+automatically once their object is deleted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callable</strong> (<em>callable</em>) – The observer to call when this observable notifies.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.hasObserver">
-<span class="sig-name descname"><span class="pre">hasObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.hasObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.hasObserver" title="Link to this definition"></a></dt>
-<dd><p>True if <cite>callable</cite> is present in the set of observers.</p>
+<span class="sig-name descname"><span class="pre">hasObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.hasObserver" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use diffpy.srfit.util.observable.Observable.has_observer
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.has_observer">
+<span class="sig-name descname"><span class="pre">has_observer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.has_observer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.has_observer" title="Link to this definition"></a></dt>
+<dd><p>Check whether a callable is in the set of observers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callable</strong> (<em>callable</em>) – The observer to look for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The flag that is True if <code class="docutils literal notranslate"><span class="pre">callable</span></code> is an observer.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.notify">
 <span class="sig-name descname"><span class="pre">notify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.notify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.notify" title="Link to this definition"></a></dt>
 <dd><p>Notify all observers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a><em>, </em><em>optional</em>) – The extra objects passed to each observer after this
+observable. Default is an empty tuple.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.removeObserver">
-<span class="sig-name descname"><span class="pre">removeObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.removeObserver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.removeObserver" title="Link to this definition"></a></dt>
-<dd><p>Remove callable from the set of observers.</p>
+<span class="sig-name descname"><span class="pre">removeObserver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.removeObserver" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use diffpy.srfit.util.observable.Observable.remove_observer
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.observable.Observable.remove_observer">
+<span class="sig-name descname"><span class="pre">remove_observer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/observable.html#Observable.remove_observer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.observable.Observable.remove_observer" title="Link to this definition"></a></dt>
+<dd><p>Remove a callable from the set of observers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callable</strong> (<em>callable</em>) – The observer to remove.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#KeyError" title="(in Python v3.15)"><strong>KeyError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">callable</span></code> is not an observer of this observable.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -196,41 +274,97 @@ Objects can then be easily referenced via their assigned tags.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.tagmanager.</span></span><span class="sig-name descname"><span class="pre">TagManager</span></span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>TagManager class.</p>
 <p>Manage tags on hashable objects. Tags are strings that carry metadata.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.silent">
 <span class="sig-name descname"><span class="pre">silent</span></span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.silent" title="Link to this definition"></a></dt>
-<dd><p>Flag indicating whether to silently pass by when a tag
-cannot be found (bool, True). If this is False, then a
-KeyError will be thrown when a tag cannot be found.</p>
+<dd><p>The flag that is True (default) to treat an unknown tag as having
+no objects. If False, an unknown tag raises a KeyError.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager._tagdict">
 <span class="sig-name descname"><span class="pre">_tagdict</span></span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager._tagdict" title="Link to this definition"></a></dt>
-<dd><p>A dictionary of tags to sets of tagged objects.</p>
+<dd><p>The mapping of each tag to the set of objects it is applied to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.alltags">
 <span class="sig-name descname"><span class="pre">alltags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.alltags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.alltags" title="Link to this definition"></a></dt>
-<dd><p>Get all tags managed by the TagManager.</p>
+<dd><p>Return all tags managed by the TagManager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The tags that have been applied to any object.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict_keys</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.hasTags">
-<span class="sig-name descname"><span class="pre">hasTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.hasTags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.hasTags" title="Link to this definition"></a></dt>
-<dd><p>Determine if an object has all passed tags.</p>
-<p>Returns bool</p>
+<span class="sig-name descname"><span class="pre">hasTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.hasTags" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use diffpy.srfit.util.tagmanager.TagManager.has_tags
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.has_tags">
+<span class="sig-name descname"><span class="pre">has_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.has_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.has_tags" title="Link to this definition"></a></dt>
+<dd><p>Check whether an object has all of the given tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<em>hashable</em>) – The object to check.</p></li>
+<li><p><strong>*tags</strong> – The tags to look for.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The flag that is True if <code class="docutils literal notranslate"><span class="pre">obj</span></code> has every tag in <code class="docutils literal notranslate"><span class="pre">tags</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#KeyError" title="(in Python v3.15)"><strong>KeyError</strong></a> – If a tag does not exist and <code class="docutils literal notranslate"><span class="pre">silent</span></code> is False.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.intersection">
 <span class="sig-name descname"><span class="pre">intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.intersection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.intersection" title="Link to this definition"></a></dt>
-<dd><p>Get all objects that have all of the passed tags.</p>
-<p>Returns set</p>
+<dd><p>Return all objects that have all of the given tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*tags</strong> – The tags to look for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objects that have every tag in <code class="docutils literal notranslate"><span class="pre">tags</span></code>. Empty if no tags
+are given.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#set" title="(in Python v3.15)">set</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#KeyError" title="(in Python v3.15)"><strong>KeyError</strong></a> – If a tag does not exist and <code class="docutils literal notranslate"><span class="pre">silent</span></code> is False.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -241,26 +375,52 @@ KeyError will be thrown when a tag cannot be found.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – Any hashable object to be untagged.</p></li>
-<li><p><strong>*tags</strong> – Tags to apply to obj.</p></li>
+<li><p><strong>obj</strong> (<em>hashable</em>) – The object to tag.</p></li>
+<li><p><strong>*tags</strong> – The tags to apply to <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">obj</span></code> is not hashable.</p>
+</dd>
 </dl>
-<p>Raises TypeError if obj is not hashable.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.tags">
 <span class="sig-name descname"><span class="pre">tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.tags" title="Link to this definition"></a></dt>
-<dd><p>Get all tags on an object.</p>
-<p>Returns list</p>
+<dd><p>Return all tags on an object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> (<em>hashable</em>) – The object to look up.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The tags applied to <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.union">
 <span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.union"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.union" title="Link to this definition"></a></dt>
-<dd><p>Get all objects that have any of the passed tags.</p>
-<p>Returns set</p>
+<dd><p>Return all objects that have any of the given tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*tags</strong> – The tags to look for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The objects that have at least one tag in <code class="docutils literal notranslate"><span class="pre">tags</span></code>. Empty if
+no tags are given.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#set" title="(in Python v3.15)">set</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#KeyError" title="(in Python v3.15)"><strong>KeyError</strong></a> – If a tag does not exist and <code class="docutils literal notranslate"><span class="pre">silent</span></code> is False.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -270,22 +430,46 @@ KeyError will be thrown when a tag cannot be found.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – Any hashable object to be untagged.</p></li>
-<li><p><strong>*tags</strong> – Tags to remove from obj. If this is empty, then all
-tags will be removed from obj.</p></li>
+<li><p><strong>obj</strong> (<em>hashable</em>) – The object to untag.</p></li>
+<li><p><strong>*tags</strong> – The tags to remove from <code class="docutils literal notranslate"><span class="pre">obj</span></code>. If none are given, all tags
+are removed from <code class="docutils literal notranslate"><span class="pre">obj</span></code>.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#KeyError" title="(in Python v3.15)"><strong>KeyError</strong></a> – If a given tag does not apply to <code class="docutils literal notranslate"><span class="pre">obj</span></code> and <code class="docutils literal notranslate"><span class="pre">silent</span></code> is
+    False.</p>
+</dd>
 </dl>
-<p>Raises KeyError if a passed tag does not apply to obj and self.silent
-is False</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.verifyTags">
-<span class="sig-name descname"><span class="pre">verifyTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.verifyTags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.verifyTags" title="Link to this definition"></a></dt>
-<dd><p>Check that tags are all extant.</p>
-<p>Raises KeyError if a passed tag does not exist. This ignores
-self.silent.</p>
+<span class="sig-name descname"><span class="pre">verifyTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.verifyTags" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use diffpy.srfit.util.tagmanager.TagManager.verify_tags
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.util.tagmanager.TagManager.verify_tags">
+<span class="sig-name descname"><span class="pre">verify_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/tagmanager.html#TagManager.verify_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.tagmanager.TagManager.verify_tags" title="Link to this definition"></a></dt>
+<dd><p>Check that all of the given tags exist.</p>
+<p>This ignores <code class="docutils literal notranslate"><span class="pre">silent</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>*tags</strong> – The tags to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True when every tag exists.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#KeyError" title="(in Python v3.15)"><strong>KeyError</strong></a> – If a tag does not exist.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -297,9 +481,18 @@ self.silent.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.util.argbinders.bind2nd">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.argbinders.</span></span><span class="sig-name descname"><span class="pre">bind2nd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/argbinders.html#bind2nd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.argbinders.bind2nd" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Freeze second argument of a callable object to a given
-constant.</p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Freeze the second argument of a callable to a constant.</p>
+<p>Calling the instance as <code class="docutils literal notranslate"><span class="pre">bound(a,</span> <span class="pre">*args,</span> <span class="pre">**kwargs)</span></code> calls
+<code class="docutils literal notranslate"><span class="pre">func(a,</span> <span class="pre">arg1,</span> <span class="pre">*args,</span> <span class="pre">**kwargs)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>func</strong> (<em>callable</em>) – The callable whose second argument is frozen.</p></li>
+<li><p><strong>arg1</strong> – The value passed as the second argument of <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -308,16 +501,51 @@ constant.</p>
 <p>Name utilities.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="diffpy.srfit.util.nameutils.isIdentifier">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.nameutils.</span></span><span class="sig-name descname"><span class="pre">isIdentifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/nameutils.html#isIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.nameutils.isIdentifier" title="Link to this definition"></a></dt>
-<dd><p>Check to see if a python string is a valid identifier.</p>
-<p>From <a class="reference external" href="http://code.activestate.com/recipes/413487/">http://code.activestate.com/recipes/413487/</a></p>
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.nameutils.</span></span><span class="sig-name descname"><span class="pre">isIdentifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.nameutils.isIdentifier" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.util.nameutils.is_identifier instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.util.nameutils.is_identifier">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.nameutils.</span></span><span class="sig-name descname"><span class="pre">is_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/nameutils.html#is_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.nameutils.is_identifier" title="Link to this definition"></a></dt>
+<dd><p>Check whether a string is a valid name.</p>
+<p>A valid name starts with a letter or underscore and contains only
+letters, digits and underscores.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The string to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The flag that is True if <code class="docutils literal notranslate"><span class="pre">name</span></code> is a valid name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="diffpy.srfit.util.nameutils.validateName">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.nameutils.</span></span><span class="sig-name descname"><span class="pre">validateName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/nameutils.html#validateName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.nameutils.validateName" title="Link to this definition"></a></dt>
-<dd><p>Validate that a name is a valid identifier.</p>
-<p>Raises ValueError if the name is invalid.</p>
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.nameutils.</span></span><span class="sig-name descname"><span class="pre">validateName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.util.nameutils.validateName" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.util.nameutils.validate_name instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.util.nameutils.validate_name">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.nameutils.</span></span><span class="sig-name descname"><span class="pre">validate_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/nameutils.html#validate_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.nameutils.validate_name" title="Link to this definition"></a></dt>
+<dd><p>Raise an error if a string is not a valid name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The string to check.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">name</span></code> is not a valid name, as defined by <code class="docutils literal notranslate"><span class="pre">is_identifier</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -327,18 +555,17 @@ constant.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.util.weakrefcallable.WeakBoundMethod">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.util.weakrefcallable.</span></span><span class="sig-name descname"><span class="pre">WeakBoundMethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fallback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/util/weakrefcallable.html#WeakBoundMethod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.util.weakrefcallable.WeakBoundMethod" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Callable wrapper to a bound method stored as a weak reference.</p>
-<p>Support storage of bound methods without keeping the associated objects
-alive forever.  Provide facility for a fallback function to be used
-when method-related object is deleted.</p>
+<p>This stores a bound method without keeping its object alive, and can
+call a fallback function once that object has been deleted.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.util.weakrefcallable.WeakBoundMethod.function">
 <span class="sig-name descname"><span class="pre">function</span></span><a class="headerlink" href="#diffpy.srfit.util.weakrefcallable.WeakBoundMethod.function" title="Link to this definition"></a></dt>
-<dd><p>the unbound function extracted from the wrapped bound method.</p>
+<dd><p>The unbound function extracted from the wrapped bound method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>MethodType</p>
+<dd class="field-odd"><p>FunctionType</p>
 </dd>
 </dl>
 </dd></dl>
@@ -346,14 +573,13 @@ when method-related object is deleted.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.util.weakrefcallable.WeakBoundMethod.fallback">
 <span class="sig-name descname"><span class="pre">fallback</span></span><a class="headerlink" href="#diffpy.srfit.util.weakrefcallable.WeakBoundMethod.fallback" title="Link to this definition"></a></dt>
-<dd><p>plain function to be called when object holding the bound method
-gets deallocated.  The fallback function is called with this
-object as the first argument followed by any positional and
-keyword arguments passed for the bound method.  The fallback
-function can be used to deregister this wrapper.</p>
+<dd><p>The plain function called when the object holding the bound method
+has been deleted. It is called with this wrapper as the first
+argument, followed by any positional and keyword arguments passed
+for the bound method, and can be used to deregister this wrapper.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>FunctionType, optional</p>
+<dd class="field-odd"><p>FunctionType or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -361,10 +587,10 @@ function can be used to deregister this wrapper.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.util.weakrefcallable.WeakBoundMethod._wref">
 <span class="sig-name descname"><span class="pre">_wref</span></span><a class="headerlink" href="#diffpy.srfit.util.weakrefcallable.WeakBoundMethod._wref" title="Link to this definition"></a></dt>
-<dd><p>weak reference to the object the wrapped method is bound to.</p>
+<dd><p>The weak reference to the object the wrapped method is bound to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>weakref</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/weakref.html#weakref.ref" title="(in Python v3.15)">weakref.ref</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -372,11 +598,11 @@ function can be used to deregister this wrapper.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.util.weakrefcallable.WeakBoundMethod._class">
 <span class="sig-name descname"><span class="pre">_class</span></span><a class="headerlink" href="#diffpy.srfit.util.weakrefcallable.WeakBoundMethod._class" title="Link to this definition"></a></dt>
-<dd><p>the type of the object to which the method is bound.
-This is only used for pickling.</p>
+<dd><p>The type of the object the method is bound to. This is only used
+for pickling.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.14)">type</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#type" title="(in Python v3.15)">type</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -400,21 +626,21 @@ This is only used for pickling.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>f</strong> (<em>callable</em>) – object-bound method or a plain function.</p></li>
-<li><p><strong>fallback</strong> (<em>FunctionType</em><em>, </em><em>optional</em>) – plain function to be called when object holding <code class="docutils literal notranslate"><span class="pre">f</span></code> gets
-deallocated.  The fallback function is called with the
-wrapper object as the first argument followed by positional
-and keyword arguments passed for the bound method.  The
-fallback function can be used to deregister the wrapper.</p></li>
+<li><p><strong>f</strong> (<em>callable</em>) – The object-bound method or plain function to wrap.</p></li>
+<li><p><strong>fallback</strong> (<em>FunctionType</em><em>, </em><em>optional</em>) – The plain function called when the object holding <code class="docutils literal notranslate"><span class="pre">f</span></code> has been
+deleted. It is called with the wrapper as the first argument,
+followed by the positional and keyword arguments passed for the
+bound method, and can be used to deregister the wrapper. Default
+is None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>when <cite>f</cite> is a bound method.  If <cite>f</cite> is a plain function or
-already of WeakBoundMethod type, return <cite>f</cite> and ignore the
-<cite>fallback</cite> argument.</p>
+<dd class="field-even"><p>The weak wrapper when <code class="docutils literal notranslate"><span class="pre">f</span></code> is a bound method. When <code class="docutils literal notranslate"><span class="pre">f</span></code> is a
+plain function or already a WeakBoundMethod, <code class="docutils literal notranslate"><span class="pre">f</span></code> itself, and
+<code class="docutils literal notranslate"><span class="pre">fallback</span></code> is ignored.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.util.weakrefcallable.WeakBoundMethod" title="diffpy.srfit.util.weakrefcallable.WeakBoundMethod">WeakBoundMethod</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.util.weakrefcallable.WeakBoundMethod" title="diffpy.srfit.util.weakrefcallable.WeakBoundMethod">WeakBoundMethod</a> or callable</p>
 </dd>
 </dl>
 </dd></dl>

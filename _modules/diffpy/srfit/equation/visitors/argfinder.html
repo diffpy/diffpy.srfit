@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.visitors.argfinder &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.visitors.argfinder &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,12 +92,12 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Visitor for extracting the Argument entries in a Literal tree.</span>
+<span class="sd">"""Visitor for extracting the Argument entries in a Literal tree.</span>
 
-<span class="sd">ArgFinder extracts all Arguments from a literal true.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">ArgFinder extracts all Arguments from a literal tree.</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ArgFinder&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ArgFinder"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors.visitor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Visitor</span>
 
@@ -105,25 +105,23 @@
 <div class="viewcode-block" id="ArgFinder">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.argfinder.ArgFinder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ArgFinder</span><span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;ArgFinder extracts Arguments from a Literal tree.</span>
+<span class="w">    </span><span class="sd">"""ArgFinder extracts Arguments from a Literal tree.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    getconsts : bool, optional</span>
+<span class="sd">        The flag that is True (default) to also collect constant</span>
+<span class="sd">        Arguments.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    args</span>
-<span class="sd">        The list of collected Arguments</span>
-<span class="sd">    getconsts</span>
-<span class="sd">        Flag indicating whether to grab constant arguments.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    args : list</span>
+<span class="sd">        The collected Arguments.</span>
+<span class="sd">    getconsts : bool</span>
+<span class="sd">        The flag that is True to also collect constant Arguments.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">getconsts</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        getconsts</span>
-<span class="sd">            Flag indicating whether to parse constant arguments</span>
-<span class="sd">            (default True).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">getconsts</span> <span class="o">=</span> <span class="n">getconsts</span>
         <span class="k">return</span>
@@ -131,24 +129,46 @@
 <div class="viewcode-block" id="ArgFinder.reset">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.argfinder.ArgFinder.reset">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset the argument set.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Reset the argument set."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="ArgFinder.onArgument">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.argfinder.ArgFinder.onArgument">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">onArgument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Argument node.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ArgFinder.on_argument">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.argfinder.ArgFinder.on_argument">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Collect an Argument node.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        arg : Argument</span>
+<span class="sd">            The Argument to collect.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            The Arguments collected so far.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getconsts</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">arg</span><span class="o">.</span><span class="n">const</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span></div>
 
 
-<div class="viewcode-block" id="ArgFinder.onOperator">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.argfinder.ArgFinder.onOperator">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">onOperator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Operator node.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ArgFinder.on_operator">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.argfinder.ArgFinder.on_operator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Collect the Arguments of an Operator node.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        op : Operator</span>
+<span class="sd">            The Operator whose Arguments are collected.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            The Arguments collected so far.</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
             <span class="n">arg</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span></div>

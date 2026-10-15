@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>debyemodelII.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>debyemodelII.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,7 +122,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of fitting the Debye recipe to experimental Debye-Waller</span>
+<span class="sd">"""Example of fitting the Debye recipe to experimental Debye-Waller</span>
 <span class="sd">factors.</span>
 
 <span class="sd">This is an extension of example in debyemodel.py. The recipe we create will</span>
@@ -132,7 +132,7 @@
 
 <span class="sd">Instructions</span>
 
-<span class="sd">Run the example and then read through the &#39;makeRecipeII&#39; code to learn about</span>
+<span class="sd">Run the example and then read through the 'makeRecipeII' code to learn about</span>
 <span class="sd">multi-profile recipes.  You will learn how to constrain related information</span>
 <span class="sd">between the fit contributions.</span>
 
@@ -142,18 +142,18 @@
 <span class="sd">- The Debye temperature parameters from the two contributions can be</span>
 <span class="sd">  constrained without creating a new variable. Try to figure out how that is</span>
 <span class="sd">  done.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">debyemodel</span><span class="w"> </span><span class="kn">import</span> <span class="n">makeRecipe</span><span class="p">,</span> <span class="n">scipyOptimize</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="n">FitRecipe</span><span class="p">,</span> <span class="n">FitResults</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit</span><span class="w"> </span><span class="kn">import</span> <span class="n">FitRecipe</span><span class="p">,</span> <span class="n">FitResults</span>
 
 <span class="c1">######</span>
 <span class="c1">#  Example Code</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipeII</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a recipe for fitting low and high temperature regions.</span>
+<span class="w">    </span><span class="sd">"""Make a recipe for fitting low and high temperature regions.</span>
 
 <span class="sd">    We will fit the low and high temperature parts of Debye curve</span>
 <span class="sd">    simultaneously with the same Debye temperature, but different</span>
@@ -164,19 +164,19 @@
 <span class="sd">    We will use different fitting ranges for each FitContribution and</span>
 <span class="sd">    constrain the Debye temperature in each FitContribution to be the</span>
 <span class="sd">    same.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># We&#39;ll throw these away. We just want the FitContributions that are</span>
+<span class="sd">    """</span>
+    <span class="c1"># We'll throw these away. We just want the FitContributions that are</span>
     <span class="c1"># configured within the recipes.</span>
     <span class="n">m1</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">()</span>
     <span class="n">m2</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">()</span>
-    <span class="c1"># These are the FitContributions (we named them &quot;pb&quot; in the debyemodel</span>
+    <span class="c1"># These are the FitContributions (we named them "pb" in the debyemodel</span>
     <span class="c1"># example).</span>
     <span class="n">lowT</span> <span class="o">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">pb</span>
     <span class="n">highT</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">pb</span>
-    <span class="c1"># Let&#39;s rename the FitContributions to something more meaningful for this</span>
+    <span class="c1"># Let's rename the FitContributions to something more meaningful for this</span>
     <span class="c1"># example.</span>
-    <span class="n">lowT</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;lowT&quot;</span>
-    <span class="n">highT</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;highT&quot;</span>
+    <span class="n">lowT</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"lowT"</span>
+    <span class="n">highT</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"highT"</span>
 
     <span class="c1"># Now create a fresh FitRecipe to work with and add to it the two</span>
     <span class="c1"># FitContributions.</span>
@@ -193,27 +193,27 @@
     <span class="c1"># Vary the offset from each FitContribution separately, while keeping the</span>
     <span class="c1"># Debye temperatures the same. We give each offset variable a different</span>
     <span class="c1"># name in the recipe so it retains its identity.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;lowToffset&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;highToffset&quot;</span><span class="p">)</span>
-    <span class="c1"># We create a new Variable and use the recipe&#39;s &quot;constrain&quot; method to</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"lowToffset"</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">offset</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"highToffset"</span><span class="p">)</span>
+    <span class="c1"># We create a new Variable and use the recipe's "constrain" method to</span>
     <span class="c1"># associate the Debye temperature parameters with that variable.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">&quot;thetaD&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="s2">&quot;thetaD&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="s2">&quot;thetaD&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">"thetaD"</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="s2">"thetaD"</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">thetaD</span><span class="p">,</span> <span class="s2">"thetaD"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">recipe</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">plot_results</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the results contained within a refined FitRecipe.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Display the results contained within a refined FitRecipe."""</span>
     <span class="c1"># The variable values are returned in the order in which the variables were</span>
     <span class="c1"># added to the FitRecipe.</span>
     <span class="n">lowToffset</span><span class="p">,</span> <span class="n">highToffset</span><span class="p">,</span> <span class="n">thetaD</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get_values</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">r</span><span class="s2">&quot;lowT:  $T_d$=</span><span class="si">%3.1f</span><span class="s2"> K, offset=</span><span class="si">%1.5f</span><span class="s2"> $\AA^2$&quot;</span>
+        <span class="sa">r</span><span class="s2">"lowT:  $T_d$=</span><span class="si">%3.1f</span><span class="s2"> K, offset=</span><span class="si">%1.5f</span><span class="s2"> $\AA^2$"</span>
         <span class="o">%</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">thetaD</span><span class="p">),</span> <span class="n">lowToffset</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span>
-        <span class="sa">r</span><span class="s2">&quot;highT: $T_d$=</span><span class="si">%3.1f</span><span class="s2"> K, offset=</span><span class="si">%1.5f</span><span class="s2"> $\AA^2$&quot;</span>
+        <span class="sa">r</span><span class="s2">"highT: $T_d$=</span><span class="si">%3.1f</span><span class="s2"> K, offset=</span><span class="si">%1.5f</span><span class="s2"> $\AA^2$"</span>
         <span class="o">%</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">thetaD</span><span class="p">),</span> <span class="n">highToffset</span><span class="p">)</span>
     <span class="p">)</span>
 
@@ -221,16 +221,16 @@
     <span class="c1"># nice full plot. Since the calculated profile is only valid for the</span>
     <span class="c1"># calculation range that was used during the fit, we need to trigger a</span>
     <span class="c1"># recalculation over the widened range before plotting.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="s2">&quot;obs&quot;</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="s2">&quot;obs&quot;</span><span class="p">)</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="s2">&quot;obs&quot;</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="s2">&quot;obs&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">lowT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="s2">"obs"</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="s2">"obs"</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">highT</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="s2">"obs"</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="s2">"obs"</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">residual</span><span class="p">()</span>
 
     <span class="n">recipe</span><span class="o">.</span><span class="n">plot_recipe</span><span class="p">(</span>
         <span class="n">show_diff</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">data_label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;Pb $U_</span><span class="si">{iso}</span><span class="s2">$ Data&quot;</span><span class="p">,</span>
-        <span class="n">fit_label</span><span class="o">=</span><span class="s2">&quot;Calculated&quot;</span><span class="p">,</span>
-        <span class="n">xlabel</span><span class="o">=</span><span class="s2">&quot;T (K)&quot;</span><span class="p">,</span>
-        <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$U_</span><span class="si">{iso}</span><span class="s2"> (\AA^2)$&quot;</span><span class="p">,</span>
+        <span class="n">data_label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"Pb $U_</span><span class="si">{iso}</span><span class="s2">$ Data"</span><span class="p">,</span>
+        <span class="n">fit_label</span><span class="o">=</span><span class="s2">"Calculated"</span><span class="p">,</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">"T (K)"</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$U_</span><span class="si">{iso}</span><span class="s2"> (\AA^2)$"</span><span class="p">,</span>
         <span class="n">legend_loc</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span>
     <span class="p">)</span>
     <span class="k">return</span>
@@ -256,7 +256,7 @@
     <span class="k">return</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 

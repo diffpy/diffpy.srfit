@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.parameterset &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.fitbase.parameterset &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,14 +91,14 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;ParameterSet class.</span>
+<span class="sd">"""ParameterSet class.</span>
 
 <span class="sd">ParameterSets organize Parameters, Constraints, Restraints and other</span>
 <span class="sd">ParameterSets. They provide attribute-access of other ParameterSets and</span>
 <span class="sd">embedded Parameters.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ParameterSet&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ParameterSet"</span><span class="p">]</span>
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -106,26 +106,38 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.recipeorganizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecipeOrganizer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
 
-<span class="n">base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.fitbase.parameterset.ParameterSet&quot;</span>
-<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
+<span class="n">base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.fitbase.parameterset.ParameterSet"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
 
 <span class="n">addparset_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
-    <span class="n">base</span><span class="p">,</span> <span class="s2">&quot;addParameterSet&quot;</span><span class="p">,</span> <span class="s2">&quot;add_parameter_set&quot;</span><span class="p">,</span> <span class="n">removal_version</span>
+    <span class="n">base</span><span class="p">,</span> <span class="s2">"addParameterSet"</span><span class="p">,</span> <span class="s2">"add_parameter_set"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+
+<span class="n">addParameter_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">base</span><span class="p">,</span> <span class="s2">"addParameter"</span><span class="p">,</span> <span class="s2">"add_parameter"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+
+<span class="n">newParameter_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">base</span><span class="p">,</span> <span class="s2">"newParameter"</span><span class="p">,</span> <span class="s2">"new_parameter"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+
+<span class="n">removeParameter_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">base</span><span class="p">,</span> <span class="s2">"removeParameter"</span><span class="p">,</span> <span class="s2">"remove_parameter"</span><span class="p">,</span> <span class="n">removal_version</span>
 <span class="p">)</span>
 
 <span class="n">removeParameterSet_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
-    <span class="n">base</span><span class="p">,</span> <span class="s2">&quot;removeParameterSet&quot;</span><span class="p">,</span> <span class="s2">&quot;remove_parameter_set&quot;</span><span class="p">,</span> <span class="n">removal_version</span>
+    <span class="n">base</span><span class="p">,</span> <span class="s2">"removeParameterSet"</span><span class="p">,</span> <span class="s2">"remove_parameter_set"</span><span class="p">,</span> <span class="n">removal_version</span>
 <span class="p">)</span>
 
 <span class="n">setConst_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
-    <span class="n">base</span><span class="p">,</span> <span class="s2">&quot;setConst&quot;</span><span class="p">,</span> <span class="s2">&quot;set_constant&quot;</span><span class="p">,</span> <span class="n">removal_version</span>
+    <span class="n">base</span><span class="p">,</span> <span class="s2">"setConst"</span><span class="p">,</span> <span class="s2">"set_constant"</span><span class="p">,</span> <span class="n">removal_version</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="ParameterSet">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ParameterSet</span><span class="p">(</span><span class="n">RecipeOrganizer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Organize Parameters and other ParameterSets in a hierarchy.</span>
+<span class="w">    </span><span class="sd">"""Organize Parameters and other ParameterSets in a hierarchy.</span>
 
 <span class="sd">    ParameterSets are hierarchical organizations of Parameters, Constraints,</span>
 <span class="sd">    Restraints and other ParameterSets.</span>
@@ -133,8 +145,8 @@
 <span class="sd">    Contained Parameters and other ParameterSets can be accessed by name as</span>
 <span class="sd">    attributes in order to facilitate multi-level constraints and restraints.</span>
 <span class="sd">    These constraints and restraints can be placed at any level and a flattened</span>
-<span class="sd">    list of them can be retrieved with the &#39;_get_constraints&#39; and</span>
-<span class="sd">    &#39;_get_restraints&#39; methods.</span>
+<span class="sd">    list of them can be retrieved with the '_get_constraints' and</span>
+<span class="sd">    '_get_restraints' methods.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -144,12 +156,12 @@
 <span class="sd">        A managed dictionary of Calculators, indexed by name.</span>
 <span class="sd">    _constraints</span>
 <span class="sd">        A set of constrained Parameters. Constraints can be</span>
-<span class="sd">        added using the &#39;constrain&#39; methods.</span>
+<span class="sd">        added using the 'constrain' methods.</span>
 <span class="sd">    _parameters</span>
 <span class="sd">        A managed OrderedDict of parameters.</span>
 <span class="sd">    _restraints</span>
 <span class="sd">        A set of Restraints. Restraints can be added using the</span>
-<span class="sd">        &#39;restrain&#39; methods.</span>
+<span class="sd">        'restrain' methods.</span>
 <span class="sd">    _parsets</span>
 <span class="sd">        A managed dictionary of ParameterSets.</span>
 <span class="sd">    _eqfactory</span>
@@ -163,16 +175,16 @@
 <span class="sd">        Variable names (read only). See get_names.</span>
 <span class="sd">    values</span>
 <span class="sd">        Variable values (read only). See get_values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
+<span class="w">        </span><span class="sd">"""Initialize.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str</span>
 <span class="sd">            The name of this ParameterSet.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">RecipeOrganizer</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_parsets</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
@@ -180,14 +192,47 @@
         <span class="k">return</span>
 
     <span class="c1"># Alias Parameter accessors.</span>
-    <span class="n">addParameter</span> <span class="o">=</span> <span class="n">RecipeOrganizer</span><span class="o">.</span><span class="n">_add_parameter</span>
-    <span class="n">newParameter</span> <span class="o">=</span> <span class="n">RecipeOrganizer</span><span class="o">.</span><span class="n">_new_parameter</span>
-    <span class="n">removeParameter</span> <span class="o">=</span> <span class="n">RecipeOrganizer</span><span class="o">.</span><span class="n">_remove_parameter</span>
+    <span class="n">add_parameter</span> <span class="o">=</span> <span class="n">RecipeOrganizer</span><span class="o">.</span><span class="n">_add_parameter</span>
+    <span class="n">new_parameter</span> <span class="o">=</span> <span class="n">RecipeOrganizer</span><span class="o">.</span><span class="n">_new_parameter</span>
+    <span class="n">remove_parameter</span> <span class="o">=</span> <span class="n">RecipeOrganizer</span><span class="o">.</span><span class="n">_remove_parameter</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">addParameter_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">        4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.fitbase.parameterset.ParameterSet.add_parameter</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">,</span> <span class="n">check</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">newParameter_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">newParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">        4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.fitbase.parameterset.ParameterSet.new_parameter</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_parameter</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">check</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">removeParameter_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">removeParameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameter</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">        4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.fitbase.parameterset.ParameterSet.remove_parameter</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_parameter</span><span class="p">(</span><span class="n">parameter</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ParameterSet.add_parameter_set">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet.add_parameter_set">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_parameter_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a ParameterSet to the hierarchy.</span>
+<span class="w">        </span><span class="sd">"""Add a ParameterSet to the hierarchy.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -199,30 +244,27 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If the ParameterSet has no name, or if it has the same name</span>
 <span class="sd">            as some other managed object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_object</span><span class="p">(</span><span class="n">parset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parsets</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="ParameterSet.addParameterSet">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet.addParameterSet">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">addparset_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">addParameterSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use</span>
 <span class="sd">        diffpy.srfit.fitbase.parameterset.ParameterSet.add_parameter_set</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter_set</span><span class="p">(</span><span class="n">parset</span><span class="p">)</span>
-        <span class="k">return</span></div>
-
+        <span class="k">return</span>
 
 <div class="viewcode-block" id="ParameterSet.remove_parameter_set">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet.remove_parameter_set">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_parameter_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a ParameterSet from the hierarchy.</span>
+<span class="w">        </span><span class="sd">"""Remove a ParameterSet from the hierarchy.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -233,56 +275,50 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If parset is not managed by this object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_remove_object</span><span class="p">(</span><span class="n">parset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parsets</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="ParameterSet.removeParameterSet">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet.removeParameterSet">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">removeParameterSet_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">removeParameterSet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use</span>
 <span class="sd">        diffpy.srfit.fitbase.parameterset.ParameterSet.remove_parameter_set</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_parameter_set</span><span class="p">(</span><span class="n">parset</span><span class="p">)</span>
-        <span class="k">return</span></div>
-
+        <span class="k">return</span>
 
 <div class="viewcode-block" id="ParameterSet.set_constant">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet.set_constant">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_constant</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set every parameter within the set to a constant.</span>
+<span class="w">        </span><span class="sd">"""Set every parameter within the set to a constant.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        is_constant : bool, optional</span>
 <span class="sd">            The flag indicating if the parameter is constant (default</span>
 <span class="sd">            True).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterate_over_parameters</span><span class="p">():</span>
             <span class="n">par</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">is_constant</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="ParameterSet.setConst">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.parameterset.ParameterSet.setConst">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">setConst_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setConst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
 <span class="sd">        version 4.0.0.</span>
 
 <span class="sd">        Please use</span>
 <span class="sd">        diffpy.srfit.fitbase.parameterset.ParameterSet.set_constant</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_constant</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
         <span class="k">return</span></div>
-</div>
 
 
 

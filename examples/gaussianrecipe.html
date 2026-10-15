@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>gaussianrecipe.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>gaussianrecipe.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,7 +122,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of fitting a Gaussian to simulated data.</span>
+<span class="sd">"""Example of fitting a Gaussian to simulated data.</span>
 
 <span class="sd">This is an example of building a fit recipe that can be driven by an optimizer</span>
 <span class="sd">to fit a Gaussian profile to simulated data.  The purpose of this example is</span>
@@ -132,11 +132,11 @@
 <span class="sd">Instructions</span>
 
 <span class="sd">If you have not yet run the example, run it and inspect the output. The example</span>
-<span class="sd">script is driven by the &#39;main&#39; method defined below. Take a look at that method</span>
+<span class="sd">script is driven by the 'main' method defined below. Take a look at that method</span>
 <span class="sd">to get an understanding of how a fit recipe can be used once created.  After</span>
-<span class="sd">that, read the &#39;makeRecipe&#39; code to see what goes into a fit recipe. After</span>
-<span class="sd">that, read the &#39;scipyOptimize&#39; code to see how the refinement is executed.</span>
-<span class="sd">Finally, look at the &#39;plot_styles&#39; dict and the &#39;recipe.plot_recipe&#39; call</span>
+<span class="sd">that, read the 'makeRecipe' code to see what goes into a fit recipe. After</span>
+<span class="sd">that, read the 'scipyOptimize' code to see how the refinement is executed.</span>
+<span class="sd">Finally, look at the 'plot_styles' dict and the 'recipe.plot_recipe' call</span>
 <span class="sd">to see how the refined profile is plotted.</span>
 
 <span class="sd">Extensions</span>
@@ -151,13 +151,13 @@
 <span class="sd">  fit.</span>
 <span class="sd">- Create a FitRecipe to fit the Lorentzian profile in the data/lorentzian.dat</span>
 <span class="sd">  file.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">FitContribution</span><span class="p">,</span>
     <span class="n">FitRecipe</span><span class="p">,</span>
     <span class="n">FitResults</span><span class="p">,</span>
@@ -169,7 +169,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The workflow of creating, running and inspecting a fit.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""The workflow of creating, running and inspecting a fit."""</span>
     <span class="c1"># Start by creating the recipe. The recipe describes the data to be fit,</span>
     <span class="c1"># the profile generator used to simulate the data and the variables that</span>
     <span class="c1"># will be tuned by the optimizer.</span>
@@ -193,38 +193,38 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make a FitRecipe for fitting a Gaussian curve to data.</span>
+<span class="w">    </span><span class="sd">"""Make a FitRecipe for fitting a Gaussian curve to data.</span>
 
 <span class="sd">    The instructions for what we want to refine, and how to refine it</span>
 <span class="sd">    will be defined within a FitRecipe instance. The job of a FitRecipe</span>
 <span class="sd">    is to collect and associate all the data, the fitting equations,</span>
 <span class="sd">    fitting variables, constraints and restraints. The configured recipe</span>
-<span class="sd">    provides a &#39;residual&#39; function and the initial variable values that</span>
+<span class="sd">    provides a 'residual' function and the initial variable values that</span>
 <span class="sd">    an optimizer can use to refine the variables to minimize the</span>
 <span class="sd">    disagreement between the calculated profile and the data.</span>
 
 <span class="sd">    Once we define the FitRecipe, we can send it an optimizer to be</span>
-<span class="sd">    optimized. See the &#39;scipyOptimize&#39; function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    optimized. See the 'scipyOptimize' function.</span>
+<span class="sd">    """</span>
     <span class="c1"># The Profile</span>
     <span class="c1"># Create a Profile to hold the experimental and calculated signal.</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
 
     <span class="c1"># Load data and add it to the profile. This uses the loadtxt function from</span>
     <span class="c1"># numpy.</span>
-    <span class="n">profile</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/gaussian.dat&quot;</span><span class="p">)</span>
+    <span class="n">profile</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/gaussian.dat"</span><span class="p">)</span>
 
     <span class="c1"># The FitContribution</span>
     <span class="c1"># The FitContribution associates the Profile with a fitting equation. The</span>
     <span class="c1"># FitContribution also stores the parameters of the fitting equation. We</span>
-    <span class="c1"># give our FitContribution then name &quot;g1&quot;. We will be able to access the</span>
+    <span class="c1"># give our FitContribution then name "g1". We will be able to access the</span>
     <span class="c1"># FitContribution by that name within the FitRecipe.</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;g1&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">"g1"</span><span class="p">)</span>
     <span class="c1"># Tell the FitContribution about the Profile. The FitContribution will give</span>
     <span class="c1"># us access to the data held within the Profile. Here, we can tell it what</span>
     <span class="c1"># name we want to use for the independent variable. We tell it to use the</span>
-    <span class="c1"># name &quot;x&quot;.</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="c1"># name "x".</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
 
     <span class="c1"># Now we need to create a fitting equation. We do that by writing out the</span>
     <span class="c1"># equation as a string. The FitContribution will turn this into a callable</span>
@@ -232,14 +232,14 @@
     <span class="c1"># the equation (A, x, x0, sigma) and turns them into Parameter objects</span>
     <span class="c1"># internally. These objects can be accessed as attributes of the</span>
     <span class="c1"># contribution by name.  Since we told the contribution that our</span>
-    <span class="c1"># independent variable is named &quot;x&quot;, this value will be substituted into</span>
+    <span class="c1"># independent variable is named "x", this value will be substituted into</span>
     <span class="c1"># the fitting equation whenever it is called.</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">&quot;A * exp(-0.5*(x-x0)**2/sigma**2)&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="s2">"A * exp(-0.5*(x-x0)**2/sigma**2)"</span><span class="p">)</span>
 
-    <span class="c1"># To demonstrate how these parameters are used, we will give &quot;A&quot; an initial</span>
+    <span class="c1"># To demonstrate how these parameters are used, we will give "A" an initial</span>
     <span class="c1"># value. Note that Parameters are not numbers, but are containers for</span>
-    <span class="c1"># numbers. To get or modify the value of a parameter, use its &#39;value&#39;</span>
-    <span class="c1"># attribute.  Parameters also have a &#39;name&#39; attribute.</span>
+    <span class="c1"># numbers. To get or modify the value of a parameter, use its 'value'</span>
+    <span class="c1"># attribute.  Parameters also have a 'name' attribute.</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mf">1.0</span>
 
     <span class="c1"># The FitRecipe</span>
@@ -256,47 +256,47 @@
     <span class="c1"># Variables to the FitRecipe that directly modify the Parameters of the</span>
     <span class="c1"># FitContribution.</span>
     <span class="c1">#</span>
-    <span class="c1"># Here we create a Variable for the &#39;A&#39; Parameter from our fit equation.</span>
-    <span class="c1"># The resulting Variable will be named &#39;A&#39; as well, but it will be accessed</span>
+    <span class="c1"># Here we create a Variable for the 'A' Parameter from our fit equation.</span>
+    <span class="c1"># The resulting Variable will be named 'A' as well, but it will be accessed</span>
     <span class="c1"># via the FitRecipe.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">A</span><span class="p">)</span>
-    <span class="c1"># Here we create the Variable for &#39;x0&#39; and give it an initial value of 5.</span>
+    <span class="c1"># Here we create the Variable for 'x0' and give it an initial value of 5.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="c1"># Here we create a Variable named &#39;sig&#39;, which is tied to the &#39;sigma&#39;</span>
+    <span class="c1"># Here we create a Variable named 'sig', which is tied to the 'sigma'</span>
     <span class="c1"># Parameter of our FitContribution. We give it an initial value through the</span>
     <span class="c1"># FitRecipe instance.</span>
-    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;sig&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="n">contribution</span><span class="o">.</span><span class="n">sigma</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"sig"</span><span class="p">)</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">sig</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">return</span> <span class="n">recipe</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">scipyOptimize</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Optimize the recipe created above using scipy.</span>
+<span class="w">    </span><span class="sd">"""Optimize the recipe created above using scipy.</span>
 
-<span class="sd">    The FitRecipe we created in makeRecipe has a &#39;residual&#39; method that</span>
+<span class="sd">    The FitRecipe we created in makeRecipe has a 'residual' method that</span>
 <span class="sd">    we can be minimized using a scipy optimizer. The details are</span>
 <span class="sd">    described in the source.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># We&#39;re going to use the least-squares (Levenberg-Marquardt) optimizer from</span>
+<span class="sd">    """</span>
+    <span class="c1"># We're going to use the least-squares (Levenberg-Marquardt) optimizer from</span>
     <span class="c1"># scipy. We simply have to give it the function to minimize</span>
     <span class="c1"># (recipe.residual) and the starting values of the Variables</span>
     <span class="c1"># (recipe.get_values()).</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize.minpack</span><span class="w"> </span><span class="kn">import</span> <span class="n">leastsq</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">leastsq</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fit using scipy&#39;s LM optimizer&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Fit using scipy's LM optimizer"</span><span class="p">)</span>
     <span class="n">leastsq</span><span class="p">(</span><span class="n">recipe</span><span class="o">.</span><span class="n">residual</span><span class="p">,</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get_values</span><span class="p">())</span>
 
     <span class="k">return</span>
 
 
 <span class="n">plot_styles</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+    <span class="s2">"xlabel"</span><span class="p">:</span> <span class="s2">"x"</span><span class="p">,</span>
+    <span class="s2">"ylabel"</span><span class="p">:</span> <span class="s2">"y"</span><span class="p">,</span>
 <span class="p">}</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 

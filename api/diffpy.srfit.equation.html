@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation package &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation package &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -116,127 +116,217 @@ complete before putting it inside an Equation.</p>
 <p>Equations can act as Operator nodes within a literal tree. In this context,
 they evaluate as the root node, but provide a calling interface that
 accepts new argument values for the literal tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the Equation. If None (default) and <code class="docutils literal notranslate"><span class="pre">root</span></code> is
+given, the name is “eq_&lt;root name&gt;”.</p></li>
+<li><p><strong>root</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a><em>, </em><em>optional</em>) – The root node of the Literal tree. If None (default), call
+<code class="docutils literal notranslate"><span class="pre">set_root</span></code> to set it.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.root">
 <span class="sig-name descname"><span class="pre">root</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation.root" title="Link to this definition"></a></dt>
-<dd><p>The root Literal of the equation tree</p>
+<dd><p>The root Literal of the equation tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal">Literal</a> or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.argdict">
 <span class="sig-name descname"><span class="pre">argdict</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation.argdict" title="Link to this definition"></a></dt>
-<dd><p>An OrderedDict of Arguments from the root.</p>
+<dd><p>The non-constant Arguments of the tree, indexed by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OrderedDict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation.args" title="Link to this definition"></a></dt>
-<dd><p>Property that gets the values of argdict.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
-<dd><p>List of Literal arguments, set with ‘addLiteral’</p>
+<dd><p>The values of <code class="docutils literal notranslate"><span class="pre">argdict</span></code>, in the same order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation.name" title="Link to this definition"></a></dt>
-<dd><p>A name for this operator. e.g. “add” or “sin”</p>
+<dd><p>The name of the Equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.nin">
 <span class="sig-name descname"><span class="pre">nin</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation.nin" title="Link to this definition"></a></dt>
-<dd><p>Number of inputs (&lt;1 means this is variable)</p>
+<dd><p>The number of non-constant Arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.nout">
 <span class="sig-name descname"><span class="pre">nout</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation.nout" title="Link to this definition"></a></dt>
-<dd><p>Number of outputs</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.operation">
-<span class="sig-name descname"><span class="pre">operation</span></span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.Equation.operation" title="Link to this definition"></a></dt>
-<dd><p>Function that performs the operation. e.g. numpy.add.</p>
+<dd><p>The number of outputs, which is always 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.symbol">
 <span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation.symbol" title="Link to this definition"></a></dt>
-<dd><p>The symbolic representation. e.g. “+” or “sin”.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.Equation._value">
-<span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation._value" title="Link to this definition"></a></dt>
-<dd><p>The value of the Operator.</p>
+<dd><p>The symbolic representation, which is the same as <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.value">
 <span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#diffpy.srfit.equation.Equation.value" title="Link to this definition"></a></dt>
-<dd><p>Property for ‘getValue’.</p>
+<dd><p>The value of the Equation, read with <code class="docutils literal notranslate"><span class="pre">get_value</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)">object</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.addLiteral">
-<span class="sig-name descname"><span class="pre">addLiteral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.addLiteral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.Equation.addLiteral" title="Link to this definition"></a></dt>
-<dd><p>Cannot add a literal to an Equation.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.add_literal">
+<span class="sig-name descname"><span class="pre">add_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.add_literal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.Equation.add_literal" title="Link to this definition"></a></dt>
+<dd><p>Raise a RuntimeError, because an Equation takes its literals
+from its root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>literal</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal that cannot be added.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.15)"><strong>RuntimeError</strong></a> – Always.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id1">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id0">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
 <dd><p>Arguments of the operator.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.identify">
 <span class="sig-name descname"><span class="pre">identify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visitor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.identify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.Equation.identify" title="Link to this definition"></a></dt>
-<dd><p>Identify self to a visitor.</p>
+<dd><p>Identify this Equation to a visitor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>visitor</strong> (<a class="reference internal" href="diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor" title="diffpy.srfit.equation.visitors.visitor.Visitor"><em>Visitor</em></a>) – The visitor to identify to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of <code class="docutils literal notranslate"><span class="pre">visitor.on_equation(self)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)">object</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">nin</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">nin</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id3">
-<span class="sig-name descname"><span class="pre">nout</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">nout</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.operation">
+<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.Equation.operation" title="Link to this definition"></a></dt>
 <dd><p>Evaluate this Equation object.</p>
 <p>Same as the __call__ method.  This method is used via the
 Operator interface.</p>
-<p>Return the result of __call__(<a href="#id5"><span class="problematic" id="id6">*</span></a>args, <a href="#id7"><span class="problematic" id="id8">**</span></a>kw).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – The new values of the arguments, in the order of <code class="docutils literal notranslate"><span class="pre">args</span></code>.</p></li>
+<li><p><strong>**kw</strong> – The new values of the arguments, by name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the Equation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)">object</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.setRoot">
-<span class="sig-name descname"><span class="pre">setRoot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.setRoot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.Equation.setRoot" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setRoot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.Equation.setRoot" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use diffpy.srfit.equation.Equation.set_root instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.set_root">
+<span class="sig-name descname"><span class="pre">set_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.set_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.Equation.set_root" title="Link to this definition"></a></dt>
 <dd><p>Set the root of the Literal tree.</p>
-<p>Raises:
-ValueError if errors are found in the Literal tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>root</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The new root of the Literal tree.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If errors are found in the Literal tree.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.Equation.swap">
 <span class="sig-name descname"><span class="pre">swap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oldlit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newlit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.swap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.Equation.swap" title="Link to this definition"></a></dt>
 <dd><p>Swap a literal in the equation for another.</p>
-<p>Note that this may change the root and the operation interface</p>
+<p>Note that this may change the root and the operation interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldlit</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal to replace.</p></li>
+<li><p><strong>newlit</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal to put in its place.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">newlit</span></code> causes a self-reference.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id9">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id9" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id3">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id3" title="Link to this definition"></a></dt>
 <dd><p>Symbol representing the operator.</p>
 </dd></dl>
 
@@ -263,33 +353,33 @@ referenced by name, and when a new Literal of the same name is registered, the
 factory will swap out the old Literal for the new one in all equations built by
 the factory.</p>
 <p>An example using the EquationFactory:
-The makeEquation method turns the string-representation of an equation into
+The make_equation method turns the string-representation of an equation into
 a callable object.
 &gt; factory = EquationFactory()
-&gt; eq = factory.makeEquation(“A*sin(a*x)”)
+&gt; eq = factory.make_equation(“A*sin(a*x)”)
 will create an equation that evaluates as “A*sin(a*x)”. The equation takes no
 arguments.</p>
 <p>Custom Arguments and constants can be included in the equation:
-&gt; factory.registerConstant(“offset”, 3)
+&gt; factory.register_constant(“offset”, 3)
 &gt; A = Argument(name = “A”, value = 1.0)
-&gt; factory.registerArgument(“A”, A)
-&gt; eq = factory.makeEquation(“A*sin(a*x) + offset”)
+&gt; factory.register_argument(“A”, A)
+&gt; eq = factory.make_equation(“A*sin(a*x) + offset”)
 This includes a constant offset in the equation and makes sure that the
 user-defined Argument is in the equation. This can be used to assure that
 the same instance of an Argument appears in multiple equations. Other literals
 can be registered in a similar fashion.</p>
 <p>The BaseBuilder class does the hard work of making an equation from a string in
-EquationFactory.makeEquation. BaseBuilder can be used directly to create
+EquationFactory.make_equation. BaseBuilder can be used directly to create
 equations. BaseBuilder is specified in the ArgumentBuilder and OperatorBuilder
 classes.  You can create builders from Literals or equations by using the
-“wrap” methods within this module or by using the builder classes directly.</p>
+“wrap” functions within this module or by using the builder classes directly.</p>
 <p>With a collection of BaseBuilder objects, one can simply write the equation
 using normal python syntax:
 &gt; A = ArgumentBuilder(name = “A”)
 &gt; a = ArgumentBuilder(name = “a”)
 &gt; x = ArgumentBuilder(name = “x”)
 &gt; # sin is defined in this module as an OperatorBuilder
-&gt; sin = getBuilder(“sin”)
+&gt; sin = get_builder(“sin”)
 &gt; beq = A*sin(a*x)
 &gt; eq = beq.get_equation()</p>
 <p>The equation builder can also handle scalar constants. Staring with the above
@@ -300,16 +390,16 @@ Here, we didn’t have to wrap ‘3’ in an ArgumentBuilder. Non scalars, const
 or otherwise, must be wrapped as ArgumentBuilders in order to be used in this
 way.</p>
 <p>BaseBuilder can make use of user-defined functions.  Any callable python
-object can be wrapped as an OperatorBuilder with the wrapFunction method. For
-example.
+object can be wrapped as an OperatorBuilder with the wrap_function function.
+For example.
 &gt; _f = lambda a, b : (a-b)/(a+b)
-&gt; f = wrapFunction(“f”, _f)
+&gt; f = wrap_function(“f”, _f)
 &gt; # Using BaseBuilder
 &gt; a = ArgumentBuilder(name = “a”)
 &gt; b = ArgumentBuilder(name = “b”)
 &gt; c = ArgumentBuilder(name = “c”)
 &gt; beq = c*f(a,b)
-&gt; eq = beq.makeEquation()</p>
+&gt; eq = beq.get_equation()</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.ArgumentBuilder">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">ArgumentBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#ArgumentBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.ArgumentBuilder" title="Link to this definition"></a></dt>
@@ -317,10 +407,27 @@ example.
 <p>BaseBuilder wrapper around an Argument literal.</p>
 <p>Equation builder objects can be composed like a normal function where the
 arguments can be other BaseBuilder instances or constants.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><em>object</em></a><em>, </em><em>optional</em>) – The value of the new Argument. Default is None.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the new Argument. Default is None.</p></li>
+<li><p><strong>const</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The flag that is True if the new Argument is constant. Default is
+False.</p></li>
+<li><p><strong>arg</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument"><em>Argument</em></a><em>, </em><em>optional</em>) – The existing Argument to wrap. If None (default), a new Argument
+is created from <code class="docutils literal notranslate"><span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">const</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.ArgumentBuilder.literal">
 <span class="sig-name descname"><span class="pre">literal</span></span><a class="headerlink" href="#diffpy.srfit.equation.builder.ArgumentBuilder.literal" title="Link to this definition"></a></dt>
 <dd><p>The Argument wrapped by this instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument">Argument</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -328,7 +435,7 @@ arguments can be other BaseBuilder instances or constants.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.BaseBuilder">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">BaseBuilder</span></span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#BaseBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.BaseBuilder" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class for building equations.</p>
 <p>Equation builder objects can be composed like a normal function where the
 arguments can be other BaseBuilder instances or constants.</p>
@@ -336,6 +443,11 @@ arguments can be other BaseBuilder instances or constants.</p>
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.BaseBuilder.literal">
 <span class="sig-name descname"><span class="pre">literal</span></span><a class="headerlink" href="#diffpy.srfit.equation.builder.BaseBuilder.literal" title="Link to this definition"></a></dt>
 <dd><p>The equation Literal being built by this instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal">Literal</a> or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -353,6 +465,14 @@ instead.</p>
 <dd><p>Get the equation built by this object.</p>
 <p>The equation will given the name “_eq_&lt;root&gt;” where “&lt;root&gt;” is
 the name of the root node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The equation whose root is this builder’s literal.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#diffpy.srfit.equation.Equation" title="diffpy.srfit.equation.Equation">Equation</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -360,35 +480,62 @@ the name of the root node.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">EquationFactory</span></span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A Factory for equations.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.builders">
 <span class="sig-name descname"><span class="pre">builders</span></span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.builders" title="Link to this definition"></a></dt>
-<dd><p>A dictionary of BaseBuilders registered with the
-factory, indexed by name.</p>
+<dd><p>The BaseBuilders registered with the factory, indexed by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)">dict</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.newargs">
 <span class="sig-name descname"><span class="pre">newargs</span></span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.newargs" title="Link to this definition"></a></dt>
-<dd><p>A set of new arguments created by makeEquation. This is
-redefined whenever makeEquation is called.</p>
+<dd><p>The new arguments created by the last call to <code class="docutils literal notranslate"><span class="pre">make_equation</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#set" title="(in Python v3.15)">set</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.equations">
 <span class="sig-name descname"><span class="pre">equations</span></span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.equations" title="Link to this definition"></a></dt>
-<dd><p>Set of equations that have been built by the
-EquationFactory.</p>
+<dd><p>The equations that have been built by the factory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#set" title="(in Python v3.15)">set</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.deRegisterBuilder">
-<span class="sig-name descname"><span class="pre">deRegisterBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.deRegisterBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.deRegisterBuilder" title="Link to this definition"></a></dt>
-<dd><p>De-register a builder by name.</p>
+<span class="sig-name descname"><span class="pre">deRegisterBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.deRegisterBuilder" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.builder.EquationFactory.deregister_builder
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.deregister_builder">
+<span class="sig-name descname"><span class="pre">deregister_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.deregister_builder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.deregister_builder" title="Link to this definition"></a></dt>
+<dd><p>Deregister a builder by name.</p>
 <p>This does not change the equations that use the Literal wrapped
-by the builder.</p>
+by the builder. Nothing happens if no builder has this name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the builder to deregister.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -398,26 +545,44 @@ by the builder.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.makeEquation">
-<span class="sig-name descname"><span class="pre">makeEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eqstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buildargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'diffpy.srfit.equation.literals.argument.Argument'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argkw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.makeEquation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.makeEquation" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">makeEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eqstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buildargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'diffpy.srfit.equation.literals.argument.Argument'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argkw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.makeEquation" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.builder.EquationFactory.make_equation
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.make_equation">
+<span class="sig-name descname"><span class="pre">make_equation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eqstr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buildargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argclass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;class</span> <span class="pre">'diffpy.srfit.equation.literals.argument.Argument'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">argkw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.make_equation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.make_equation" title="Link to this definition"></a></dt>
 <dd><p>Make an equation from an equation string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>eqstr</strong> – An equation in string form using standard python
-syntax.  The equation string can use any function
-registered literal or function, including numpy ufuncs
-that are automatically registered.</p></li>
-<li><p><strong>buildargs</strong> – A flag indicating whether missing arguments can be
-created by the Factory (default True). If False, then
-the a ValueError will be raised if there are undefined
-arguments in the eqstr. Built arguments will be of type
-argclass.</p></li>
-<li><p><strong>argclass</strong> – Class to use when creating new Arguments (default
-diffpy.srfit.equation.literals.Argument). The class
-constructor must accept the ‘name’ key word.</p></li>
-<li><p><strong>argkw</strong> – Key word dictionary to pass to the argclass constructor
-(default {}).</p></li>
-<li><p><strong>string.</strong> (<em>Returns a callable Literal representing the equation</em>)</p></li>
+<li><p><strong>eqstr</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The equation in string form using standard python syntax. The
+equation string can use any registered literal or function,
+including the numpy ufuncs that are registered automatically.</p></li>
+<li><p><strong>buildargs</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The flag that is True (default) to let the factory create
+missing arguments. If False, undefined names in <code class="docutils literal notranslate"><span class="pre">eqstr</span></code>
+raise a ValueError.</p></li>
+<li><p><strong>argclass</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#type" title="(in Python v3.15)"><em>type</em></a><em>, </em><em>optional</em>) – The class used to create new arguments. Its constructor must
+accept the <code class="docutils literal notranslate"><span class="pre">name</span></code> keyword. Default is
+<code class="docutils literal notranslate"><span class="pre">diffpy.srfit.equation.literals.Argument</span></code>.</p></li>
+<li><p><strong>argkw</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><em>dict</em></a><em>, </em><em>optional</em>) – The keyword arguments passed to the <code class="docutils literal notranslate"><span class="pre">argclass</span></code> constructor.
+Default is an empty dict.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The callable equation built from <code class="docutils literal notranslate"><span class="pre">eqstr</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.Equation" title="diffpy.srfit.equation.Equation">Equation</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">buildargs</span></code> is False and <code class="docutils literal notranslate"><span class="pre">eqstr</span></code> uses undefined names.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#SyntaxError" title="(in Python v3.15)"><strong>SyntaxError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">eqstr</span></code> is not valid python syntax.</p></li>
 </ul>
 </dd>
 </dl>
@@ -425,30 +590,32 @@ constructor must accept the ‘name’ key word.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.registerArgument">
-<span class="sig-name descname"><span class="pre">registerArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.registerArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerArgument" title="Link to this definition"></a></dt>
-<dd><p>Register a named Argument with the factory.</p>
-<p>Returns the registered builder.</p>
+<span class="sig-name descname"><span class="pre">registerArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerArgument" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.builder.EquationFactory.register_argument
+instead.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.registerBuilder">
-<span class="sig-name descname"><span class="pre">registerBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.registerBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerBuilder" title="Link to this definition"></a></dt>
-<dd><p>Register builder in this module so it can be used in
-makeEquation.</p>
-<p>If an extant builder with the given name is already registered,
-this will replace all instances of the old builder’s literal in
-the factory’s equation set with the new builder’s literal. Note
-that this may lead to errors if one of the replacements causes a
-self-reference.</p>
-<p>Raises ValueError if the new builder’s literal causes a self-
-reference in an existing equation.</p>
+<span class="sig-name descname"><span class="pre">registerBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerBuilder" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.builder.EquationFactory.register_builder
+instead.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.registerConstant">
-<span class="sig-name descname"><span class="pre">registerConstant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.registerConstant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerConstant" title="Link to this definition"></a></dt>
-<dd><p>Register a named constant with the factory.</p>
-<p>Returns the registered builder.</p>
+<span class="sig-name descname"><span class="pre">registerConstant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerConstant" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.builder.EquationFactory.register_constant
+instead.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -463,15 +630,85 @@ instead.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.registerOperator">
-<span class="sig-name descname"><span class="pre">registerOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.registerOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerOperator" title="Link to this definition"></a></dt>
-<dd><p>Register an Operator literal with the factory.</p>
-<p>Operators can be used with or without arguments (or parentheses)
-in an equation string.  If used with arguments, then the
-Operator will use the passed arguments as arguments for the
-operation. If used without arguments, it is assumed that the
-operator is already populated with arguments, and those will be
-used.</p>
-<p>Returns the registered builder.</p>
+<span class="sig-name descname"><span class="pre">registerOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.registerOperator" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.builder.EquationFactory.register_operator
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.register_argument">
+<span class="sig-name descname"><span class="pre">register_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.register_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.register_argument" title="Link to this definition"></a></dt>
+<dd><p>Register a named Argument with the factory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name to register the argument under.</p></li>
+<li><p><strong>arg</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument"><em>Argument</em></a>) – The argument to register.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The registered builder.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.ArgumentBuilder" title="diffpy.srfit.equation.builder.ArgumentBuilder">ArgumentBuilder</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.register_builder">
+<span class="sig-name descname"><span class="pre">register_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">builder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.register_builder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.register_builder" title="Link to this definition"></a></dt>
+<dd><p>Register a builder so it can be used in <code class="docutils literal notranslate"><span class="pre">make_equation</span></code>.</p>
+<p>If an extant builder with the given name is already registered,
+this will replace all instances of the old builder’s literal in
+the factory’s equation set with the new builder’s literal. Note
+that this may lead to errors if one of the replacements causes a
+self-reference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name to register the builder under.</p></li>
+<li><p><strong>builder</strong> (<a class="reference internal" href="#diffpy.srfit.equation.builder.BaseBuilder" title="diffpy.srfit.equation.builder.BaseBuilder"><em>BaseBuilder</em></a>) – The builder to register.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The registered builder.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.BaseBuilder" title="diffpy.srfit.equation.builder.BaseBuilder">BaseBuilder</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#TypeError" title="(in Python v3.15)"><strong>TypeError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">name</span></code> is not a string or <code class="docutils literal notranslate"><span class="pre">builder</span></code> is not a
+    BaseBuilder.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the new builder’s literal causes a self-reference in an
+    existing equation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.register_constant">
+<span class="sig-name descname"><span class="pre">register_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.register_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.register_constant" title="Link to this definition"></a></dt>
+<dd><p>Register a named constant with the factory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the constant.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><em>object</em></a>) – The value of the constant.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The registered builder.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.ArgumentBuilder" title="diffpy.srfit.equation.builder.ArgumentBuilder">ArgumentBuilder</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -482,15 +719,41 @@ used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The name of the function</p></li>
-<li><p><strong>func</strong> (<em>callable</em>) – The callable python object</p></li>
-<li><p><strong>argnames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The argument names for func. If these names do not
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the function.</p></li>
+<li><p><strong>func</strong> (<em>callable</em>) – The callable python object.</p></li>
+<li><p><strong>argnames</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The argument names for func. If these names do not
 correspond to builders, then new constants with value 0
 will be created for each name.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>registered_builder</strong> – The registered builder.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.OperatorBuilder" title="diffpy.srfit.equation.builder.OperatorBuilder">OperatorBuilder</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.EquationFactory.register_operator">
+<span class="sig-name descname"><span class="pre">register_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#EquationFactory.register_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.EquationFactory.register_operator" title="Link to this definition"></a></dt>
+<dd><p>Register an Operator literal with the factory.</p>
+<p>Operators can be used with or without arguments (or parentheses)
+in an equation string.  If used with arguments, then the
+Operator will use the passed arguments as arguments for the
+operation. If used without arguments, it is assumed that the
+operator is already populated with arguments, and those will be
+used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name to register the operator under.</p></li>
+<li><p><strong>op</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator"><em>Operator</em></a>) – The operator to register.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The registered builder.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.OperatorBuilder" title="diffpy.srfit.equation.builder.OperatorBuilder">OperatorBuilder</a></p>
@@ -513,7 +776,11 @@ and also change its formula to return NaN.  This ensures that eq
 does not observe any object in the factory and thus prevents its
 indirect pickling with the factory because of observer callback
 function.</p>
-<p>No return value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eq</strong> (<a class="reference internal" href="#diffpy.srfit.equation.Equation" title="diffpy.srfit.equation.Equation"><em>Equation</em></a><em> or </em><em>None</em>) – The equation to invalidate. Nothing happens if this is None.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -523,53 +790,153 @@ function.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">OperatorBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#OperatorBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.OperatorBuilder" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.builder.BaseBuilder" title="diffpy.srfit.equation.builder.BaseBuilder"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseBuilder</span></code></a></p>
 <p>BaseBuilder wrapper around an Operator literal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the wrapped Operator.</p></li>
+<li><p><strong>op</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator"><em>Operator</em></a><em>, </em><em>optional</em>) – The Operator to wrap. If None (default), <code class="docutils literal notranslate"><span class="pre">name</span></code> is taken to be
+the name of a numpy ufunc, which defines the Operator when the
+builder is called.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.OperatorBuilder.literal">
 <span class="sig-name descname"><span class="pre">literal</span></span><a class="headerlink" href="#diffpy.srfit.equation.builder.OperatorBuilder.literal" title="Link to this definition"></a></dt>
 <dd><p>The Operator wrapped by this instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator">Operator</a> or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.OperatorBuilder.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#diffpy.srfit.equation.builder.OperatorBuilder.name" title="Link to this definition"></a></dt>
-<dd><p>The name of the operator to be wrapped</p>
+<dd><p>The name of the wrapped Operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.getBuilder">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">getBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#getBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.getBuilder" title="Link to this definition"></a></dt>
-<dd><p>Get an operator from the global builders dictionary.</p>
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">getBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.getBuilder" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.equation.builder.get_builder instead.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.wrapArgument">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrapArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#wrapArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapArgument" title="Link to this definition"></a></dt>
-<dd><p>Wrap an Argument as a builder.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.wrapFunction">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrapFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#wrapFunction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapFunction" title="Link to this definition"></a></dt>
-<dd><p>Wrap a function in an OperatorBuilder instance.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.get_builder">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">get_builder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#get_builder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.get_builder" title="Link to this definition"></a></dt>
+<dd><p>Get an operator builder from the global builders dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – The name of the function</p></li>
-<li><p><strong>func</strong> – A callable python object</p></li>
-<li><p><strong>nin</strong> – The number of input arguments (default 2)</p></li>
-<li><p><strong>nout</strong> – The number of return values (default 1)</p></li>
-<li><p><strong>function.</strong> (<em>Returns the OperatorBuilder instance that wraps the</em>)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the builder, such as “sin” or “add”.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The global builder registered under <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.OperatorBuilder" title="diffpy.srfit.equation.builder.OperatorBuilder">OperatorBuilder</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#KeyError" title="(in Python v3.15)"><strong>KeyError</strong></a> – If no global builder has this name.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.wrapArgument">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrapArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapArgument" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.equation.builder.wrap_argument instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.wrapFunction">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrapFunction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapFunction" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.equation.builder.wrap_function instead.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.builder.wrapOperator">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrapOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#wrapOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapOperator" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrapOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.builder.wrapOperator" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.equation.builder.wrap_operator instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.wrap_argument">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrap_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#wrap_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.wrap_argument" title="Link to this definition"></a></dt>
+<dd><p>Wrap an Argument as a builder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the argument. It is not used, because the builder
+takes its name from <code class="docutils literal notranslate"><span class="pre">arg</span></code>.</p></li>
+<li><p><strong>arg</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument"><em>Argument</em></a>) – The argument to wrap.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The builder that wraps <code class="docutils literal notranslate"><span class="pre">arg</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.ArgumentBuilder" title="diffpy.srfit.equation.builder.ArgumentBuilder">ArgumentBuilder</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.wrap_function">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrap_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#wrap_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.wrap_function" title="Link to this definition"></a></dt>
+<dd><p>Wrap a function in an OperatorBuilder instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the function.</p></li>
+<li><p><strong>func</strong> (<em>callable</em>) – The callable python object.</p></li>
+<li><p><strong>nin</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – The number of input arguments. Default is 2.</p></li>
+<li><p><strong>nout</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a><em>, </em><em>optional</em>) – The number of return values. Default is 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The builder that wraps the function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.OperatorBuilder" title="diffpy.srfit.equation.builder.OperatorBuilder">OperatorBuilder</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.builder.wrap_operator">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.builder.</span></span><span class="sig-name descname"><span class="pre">wrap_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/builder.html#wrap_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.builder.wrap_operator" title="Link to this definition"></a></dt>
 <dd><p>Wrap an Operator as a builder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – The name of the builder.</p></li>
+<li><p><strong>op</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator"><em>Operator</em></a>) – The operator to wrap.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The builder that wraps <code class="docutils literal notranslate"><span class="pre">op</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.equation.builder.OperatorBuilder" title="diffpy.srfit.equation.builder.OperatorBuilder">OperatorBuilder</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -577,17 +944,26 @@ function.</p>
 <span id="diffpy-srfit-equation-equationmod-module"></span><h3>diffpy.srfit.equation.equationmod module<a class="headerlink" href="#module-diffpy.srfit.equation.equationmod" title="Link to this heading"></a></h3>
 <p>The Equation class for holding and evaluating an equation.</p>
 <p>Equation is a functor that holds a Literal tree that defines an
-equation. It’s __call__ method evaluates the equation at the most recent
+equation. Its __call__ method evaluates the equation at the most recent
 value of its Arguments. The non-constant arguments are accessible as
 attributes of the Equation instance and can be passed as arguments to
 __call__.</p>
-<p>Example &gt; # make a Literal tree. Here’s a simple one &gt; add =
-AdditionOperator() &gt; a = Argument(name=”a”) # Don’t forget to name
-these! &gt; b = Argument(name=”b”) &gt; add.addLiteral(a) &gt; add.addLiteral(b)
-&gt; # make an Equation instance and pass the root &gt; eq = Equation(root =
-add) &gt; eq(a=3, b=4) # returns 7 &gt; eq(a=2) # remembers b=4, returns 6 &gt;
-eq.a.set_value(-3) &gt; eq.b.set_value(3) &gt; eq() # uses last assignment of
-a and b, returns 0</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># make a Literal tree. Here's a simple one</span>
+<span class="n">add</span> <span class="o">=</span> <span class="n">AdditionOperator</span><span class="p">()</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">Argument</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"a"</span><span class="p">)</span>  <span class="c1"># Don't forget to name these!</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">Argument</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"b"</span><span class="p">)</span>
+<span class="n">add</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="n">add</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="c1"># make an Equation instance and pass the root</span>
+<span class="n">eq</span> <span class="o">=</span> <span class="n">Equation</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">add</span><span class="p">)</span>
+<span class="n">eq</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># returns 7</span>
+<span class="n">eq</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># remembers b=4, returns 6</span>
+<span class="n">eq</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">eq</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">eq</span><span class="p">()</span>  <span class="c1"># uses last assignment of a and b, returns 0</span>
+</pre></div>
+</div>
 <p>See the class documentation for more information.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation">
@@ -603,127 +979,217 @@ complete before putting it inside an Equation.</p>
 <p>Equations can act as Operator nodes within a literal tree. In this context,
 they evaluate as the root node, but provide a calling interface that
 accepts new argument values for the literal tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the Equation. If None (default) and <code class="docutils literal notranslate"><span class="pre">root</span></code> is
+given, the name is “eq_&lt;root name&gt;”.</p></li>
+<li><p><strong>root</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a><em>, </em><em>optional</em>) – The root node of the Literal tree. If None (default), call
+<code class="docutils literal notranslate"><span class="pre">set_root</span></code> to set it.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.root">
 <span class="sig-name descname"><span class="pre">root</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.root" title="Link to this definition"></a></dt>
-<dd><p>The root Literal of the equation tree</p>
+<dd><p>The root Literal of the equation tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal">Literal</a> or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.argdict">
 <span class="sig-name descname"><span class="pre">argdict</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.argdict" title="Link to this definition"></a></dt>
-<dd><p>An OrderedDict of Arguments from the root.</p>
+<dd><p>The non-constant Arguments of the tree, indexed by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>OrderedDict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.args" title="Link to this definition"></a></dt>
-<dd><p>Property that gets the values of argdict.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id10">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#id10" title="Link to this definition"></a></dt>
-<dd><p>List of Literal arguments, set with ‘addLiteral’</p>
+<dd><p>The values of <code class="docutils literal notranslate"><span class="pre">argdict</span></code>, in the same order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.name" title="Link to this definition"></a></dt>
-<dd><p>A name for this operator. e.g. “add” or “sin”</p>
+<dd><p>The name of the Equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.nin">
 <span class="sig-name descname"><span class="pre">nin</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.nin" title="Link to this definition"></a></dt>
-<dd><p>Number of inputs (&lt;1 means this is variable)</p>
+<dd><p>The number of non-constant Arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.nout">
 <span class="sig-name descname"><span class="pre">nout</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.nout" title="Link to this definition"></a></dt>
-<dd><p>Number of outputs</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.operation">
-<span class="sig-name descname"><span class="pre">operation</span></span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.operation" title="Link to this definition"></a></dt>
-<dd><p>Function that performs the operation. e.g. numpy.add.</p>
+<dd><p>The number of outputs, which is always 1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.symbol">
 <span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.symbol" title="Link to this definition"></a></dt>
-<dd><p>The symbolic representation. e.g. “+” or “sin”.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation._value">
-<span class="sig-name descname"><span class="pre">_value</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation._value" title="Link to this definition"></a></dt>
-<dd><p>The value of the Operator.</p>
+<dd><p>The symbolic representation, which is the same as <code class="docutils literal notranslate"><span class="pre">name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.value">
 <span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.value" title="Link to this definition"></a></dt>
-<dd><p>Property for ‘getValue’.</p>
+<dd><p>The value of the Equation, read with <code class="docutils literal notranslate"><span class="pre">get_value</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)">object</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.addLiteral">
-<span class="sig-name descname"><span class="pre">addLiteral</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.addLiteral"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.addLiteral" title="Link to this definition"></a></dt>
-<dd><p>Cannot add a literal to an Equation.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.add_literal">
+<span class="sig-name descname"><span class="pre">add_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.add_literal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.add_literal" title="Link to this definition"></a></dt>
+<dd><p>Raise a RuntimeError, because an Equation takes its literals
+from its root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>literal</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal that cannot be added.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#RuntimeError" title="(in Python v3.15)"><strong>RuntimeError</strong></a> – Always.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id11">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#id11" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id4">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#id4" title="Link to this definition"></a></dt>
 <dd><p>Arguments of the operator.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.identify">
 <span class="sig-name descname"><span class="pre">identify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">visitor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.identify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.identify" title="Link to this definition"></a></dt>
-<dd><p>Identify self to a visitor.</p>
+<dd><p>Identify this Equation to a visitor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>visitor</strong> (<a class="reference internal" href="diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.visitor.Visitor" title="diffpy.srfit.equation.visitors.visitor.Visitor"><em>Visitor</em></a>) – The visitor to identify to.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of <code class="docutils literal notranslate"><span class="pre">visitor.on_equation(self)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)">object</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id12">
-<span class="sig-name descname"><span class="pre">nin</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id12" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">nin</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#id5" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id13">
-<span class="sig-name descname"><span class="pre">nout</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#id13" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">nout</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#id6" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="id14">
-<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id14" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.operation">
+<span class="sig-name descname"><span class="pre">operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.operation" title="Link to this definition"></a></dt>
 <dd><p>Evaluate this Equation object.</p>
 <p>Same as the __call__ method.  This method is used via the
 Operator interface.</p>
-<p>Return the result of __call__(<a href="#id15"><span class="problematic" id="id16">*</span></a>args, <a href="#id17"><span class="problematic" id="id18">**</span></a>kw).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – The new values of the arguments, in the order of <code class="docutils literal notranslate"><span class="pre">args</span></code>.</p></li>
+<li><p><strong>**kw</strong> – The new values of the arguments, by name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the Equation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)">object</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.setRoot">
-<span class="sig-name descname"><span class="pre">setRoot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.setRoot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.setRoot" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">setRoot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.setRoot" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use diffpy.srfit.equation.Equation.set_root instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.set_root">
+<span class="sig-name descname"><span class="pre">set_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.set_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.set_root" title="Link to this definition"></a></dt>
 <dd><p>Set the root of the Literal tree.</p>
-<p>Raises:
-ValueError if errors are found in the Literal tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>root</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The new root of the Literal tree.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If errors are found in the Literal tree.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.equationmod.Equation.swap">
 <span class="sig-name descname"><span class="pre">swap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oldlit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newlit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/equationmod.html#Equation.swap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.equationmod.Equation.swap" title="Link to this definition"></a></dt>
 <dd><p>Swap a literal in the equation for another.</p>
-<p>Note that this may change the root and the operation interface</p>
+<p>Note that this may change the root and the operation interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldlit</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal to replace.</p></li>
+<li><p><strong>newlit</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal to put in its place.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If <code class="docutils literal notranslate"><span class="pre">newlit</span></code> causes a self-reference.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="id19">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id19" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="id7">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">symbol</span></span><a class="headerlink" href="#id7" title="Link to this definition"></a></dt>
 <dd><p>Symbol representing the operator.</p>
 </dd></dl>
 

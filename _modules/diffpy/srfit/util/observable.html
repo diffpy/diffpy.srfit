@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.util.observable &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.util.observable &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,16 +91,29 @@
 <span class="c1"># Derived from pyre-1.0/packages/pyre/patterns/Observable.py</span>
 <span class="c1"># See pyre-1.0 for full copyright and license information</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Observable&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Observable"</span><span class="p">]</span>
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.util.weakrefcallable</span><span class="w"> </span><span class="kn">import</span> <span class="n">weak_ref</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">observable_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.util.observable.Observable"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
+<span class="n">addObserver_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">observable_base</span><span class="p">,</span> <span class="s2">"addObserver"</span><span class="p">,</span> <span class="s2">"add_observer"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">removeObserver_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">observable_base</span><span class="p">,</span> <span class="s2">"removeObserver"</span><span class="p">,</span> <span class="s2">"remove_observer"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">hasObserver_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">observable_base</span><span class="p">,</span> <span class="s2">"hasObserver"</span><span class="p">,</span> <span class="s2">"has_observer"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="Observable">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Observable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide notification support for classes that maintain dynamic</span>
+<span class="w">    </span><span class="sd">"""Provide notification support for classes that maintain dynamic</span>
 <span class="sd">    associations with multiple clients.</span>
 
 <span class="sd">    Observers, i.e. clients of the observable, register event handlers</span>
@@ -111,21 +124,24 @@
 <span class="sd">    value depends on them so that the dependents can be notified about</span>
 <span class="sd">    value changes and forced to recompute their own value.</span>
 
-<span class="sd">    The event handlers are callables that take the observable instance</span>
-<span class="sd">    as their single argument.</span>
-
-<span class="sd">    interface:</span>
-<span class="sd">      addObserver: registers its callable argument with the list of</span>
-<span class="sd">      handlers to invoke removeObserver: remove an event handler from</span>
-<span class="sd">      the list of handlers to invoke notify: invoke the registered</span>
-<span class="sd">      handlers in the order in which they were registered</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    The event handlers are callables that take a tuple starting with the</span>
+<span class="sd">    observable instance as their single argument. Register them with</span>
+<span class="sd">    ``add_observer``, remove them with ``remove_observer``, and invoke</span>
+<span class="sd">    them all with ``notify``.</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="Observable.notify">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.notify">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="p">()):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Notify all observers.&quot;&quot;&quot;</span>
-        <span class="c1"># build a list before notification, just in case the observer&#39;s</span>
+<span class="w">        </span><span class="sd">"""Notify all observers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        other : tuple, optional</span>
+<span class="sd">            The extra objects passed to each observer after this</span>
+<span class="sd">            observable. Default is an empty tuple.</span>
+<span class="sd">        """</span>
+        <span class="c1"># build a list before notification, just in case the observer's</span>
         <span class="c1"># callback behavior involves removing itself from our callback set</span>
         <span class="n">semaphores</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="p">,)</span> <span class="o">+</span> <span class="n">other</span>
         <span class="k">for</span> <span class="nb">callable</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_observers</span><span class="p">):</span>
@@ -135,32 +151,93 @@
 
     <span class="c1"># callback management</span>
 
-<div class="viewcode-block" id="Observable.addObserver">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.addObserver">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add callable to the set of observers.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Observable.add_observer">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.add_observer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Add a callable to the set of observers.</span>
+
+<span class="sd">        Bound methods are held by weak reference, and are removed</span>
+<span class="sd">        automatically once their object is deleted.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callable : callable</span>
+<span class="sd">            The observer to call when this observable notifies.</span>
+<span class="sd">        """</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">weak_ref</span><span class="p">(</span><span class="nb">callable</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="n">_fb_remove_observer</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_observers</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="Observable.removeObserver">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.removeObserver">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">removeObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove callable from the set of observers.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Observable.remove_observer">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.remove_observer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Remove a callable from the set of observers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callable : callable</span>
+<span class="sd">            The observer to remove.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        KeyError</span>
+<span class="sd">            If ``callable`` is not an observer of this observable.</span>
+<span class="sd">        """</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">weak_ref</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_observers</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="Observable.hasObserver">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.hasObserver">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">hasObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;True if `callable` is present in the set of observers.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Observable.has_observer">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.observable.Observable.has_observer">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Check whether a callable is in the set of observers.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        callable : callable</span>
+<span class="sd">            The observer to look for.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            The flag that is True if ``callable`` is an observer.</span>
+<span class="sd">        """</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">weak_ref</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span>
         <span class="n">rv</span> <span class="o">=</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_observers</span>
         <span class="k">return</span> <span class="n">rv</span></div>
 
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">addObserver_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use diffpy.srfit.util.observable.Observable.add_observer</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_observer</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">removeObserver_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">removeObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use diffpy.srfit.util.observable.Observable.remove_observer</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_observer</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">hasObserver_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">hasObserver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">callable</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use diffpy.srfit.util.observable.Observable.has_observer</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_observer</span><span class="p">(</span><span class="nb">callable</span><span class="p">)</span>
 
     <span class="c1"># meta methods</span>
 
@@ -181,7 +258,7 @@
     <span class="c1"># This is called from Observable.notify when the WeakBoundMethod</span>
     <span class="c1"># associated object dies.</span>
     <span class="n">observable</span> <span class="o">=</span> <span class="n">semaphores</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">observable</span><span class="o">.</span><span class="n">removeObserver</span><span class="p">(</span><span class="n">fobs</span><span class="p">)</span>
+    <span class="n">observable</span><span class="o">.</span><span class="n">remove_observer</span><span class="p">(</span><span class="n">fobs</span><span class="p">)</span>
     <span class="k">return</span>
 
 

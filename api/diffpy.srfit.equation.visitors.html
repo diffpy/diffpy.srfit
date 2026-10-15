@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.visitors package &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.visitors package &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -105,39 +105,80 @@ pattern (</p>
 <p><a class="reference external" href="http://en.wikipedia.org/wiki/Visitor_pattern">http://en.wikipedia.org/wiki/Visitor_pattern</a>).</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.getArgs">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">getArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getconsts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors.html#getArgs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.getArgs" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">getArgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getconsts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.visitors.getArgs" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.equation.visitors.get_args instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.getExpression">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">getExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eqskip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.visitors.getExpression" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.equation.visitors.get_expression instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.get_args">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">get_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">getconsts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors.html#get_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.get_args" title="Link to this definition"></a></dt>
 <dd><p>Get the Arguments of a Literal tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>getconsts</strong> – If True (default), then Arguments designated as constant
-are also retrieved.</p></li>
-<li><p><strong>depth-first.</strong> (<em>Returns a list</em><em> of </em><em>Arguments searched for</em>)</p></li>
+<li><p><strong>literal</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The root of the Literal tree.</p></li>
+<li><p><strong>getconsts</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The flag that is True (default) to also get the Arguments that
+are constant.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Arguments, found depth-first.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a> of <a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument">Argument</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.getExpression">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">getExpression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eqskip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors.html#getExpression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.getExpression" title="Link to this definition"></a></dt>
-<dd><p>Get math expression string from the Literal tree object.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.get_expression">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">get_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eqskip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors.html#get_expression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.get_expression" title="Link to this definition"></a></dt>
+<dd><p>Get the math expression string of a Literal tree.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>eqskip</strong> – regular expression pattern for Equation objects that should
-be printed under their own name.  Expand all Equation objects
-when None.</p></li>
-<li><p><strong>string.</strong> (<em>Return</em>)</p></li>
+<li><p><strong>literal</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The root of the Literal tree.</p></li>
+<li><p><strong>eqskip</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – The regular expression pattern for Equation objects that should
+be written under their own name. If None (default), all
+Equation objects are expanded.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The expression of the Literal tree.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.prettyPrint">
-<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">prettyPrint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors.html#prettyPrint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.prettyPrint" title="Link to this definition"></a></dt>
-<dd><p>Print a Literal tree.</p>
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">prettyPrint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.visitors.prettyPrint" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in version
+4.0.0.</p>
+<p>Please use diffpy.srfit.equation.visitors.pretty_print instead.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.pretty_print">
+<span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">pretty_print</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors.html#pretty_print"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.pretty_print" title="Link to this definition"></a></dt>
+<dd><p>Print the math expression of a Literal tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>literal</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The root of the Literal tree.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -146,14 +187,35 @@ when None.</p></li>
 <dd><p>Swap one literal for another in a Literal tree.</p>
 <p>Corrections are done in-place unless literal is oldlit, in which
 case the return value is newlit.</p>
-<p>Returns the literal tree with oldlit swapped for newlit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>literal</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The root of the Literal tree.</p></li>
+<li><p><strong>oldlit</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal to replace.</p></li>
+<li><p><strong>newlit</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal to put in its place.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Literal tree with <code class="docutils literal notranslate"><span class="pre">oldlit</span></code> swapped for <code class="docutils literal notranslate"><span class="pre">newlit</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal">Literal</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.validate">
 <span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.</span></span><span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">literal</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors.html#validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.validate" title="Link to this definition"></a></dt>
 <dd><p>Validate a Literal tree.</p>
-<p>Raises ValueError if the tree contains errors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>literal</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The root of the Literal tree.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the tree contains errors.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <section id="submodules">
@@ -175,36 +237,70 @@ the proper interface.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.validator.Validator.errors">
 <span class="sig-name descname"><span class="pre">errors</span></span><a class="headerlink" href="#diffpy.srfit.equation.visitors.validator.Validator.errors" title="Link to this definition"></a></dt>
-<dd><p>List of strings describing errors.</p>
+<dd><p>The descriptions of the errors found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.validator.Validator._nin">
 <span class="sig-name descname"><span class="pre">_nin</span></span><a class="headerlink" href="#diffpy.srfit.equation.visitors.validator.Validator._nin" title="Link to this definition"></a></dt>
-<dd><p>Variable for counting the number input arguments for an
-operator.</p>
+<dd><p>The number of outputs of the last node visited, used to count
+the inputs of its parent operator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)">int</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.validator.Validator.onArgument">
-<span class="sig-name descname"><span class="pre">onArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/validator.html#Validator.onArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.validator.Validator.onArgument" title="Link to this definition"></a></dt>
-<dd><p>Process an Argument node.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.validator.Validator.on_argument">
+<span class="sig-name descname"><span class="pre">on_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/validator.html#Validator.on_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.validator.Validator.on_argument" title="Link to this definition"></a></dt>
+<dd><p>Check an Argument node.</p>
 <p>The Argument must be an instance of ArgumentABC from
-diffpy.srfit.equation.literals.abcs</p>
+diffpy.srfit.equation.literals.abcs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arg</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument"><em>Argument</em></a>) – The Argument to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The errors found so far.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.validator.Validator.onOperator">
-<span class="sig-name descname"><span class="pre">onOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/validator.html#Validator.onOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.validator.Validator.onOperator" title="Link to this definition"></a></dt>
-<dd><p>Process an Operator node.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.validator.Validator.on_operator">
+<span class="sig-name descname"><span class="pre">on_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/validator.html#Validator.on_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.validator.Validator.on_operator" title="Link to this definition"></a></dt>
+<dd><p>Check an Operator node and its arguments.</p>
 <p>The Operator must be an instance of OperatorABC from
-diffpy.srfit.equation.literals.abcs</p>
+diffpy.srfit.equation.literals.abcs, be single-valued, have a
+name, symbol and operation, and receive as many inputs as it
+takes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>op</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator"><em>Operator</em></a>) – The Operator to check.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The errors found so far.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.validator.Validator.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/validator.html#Validator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.validator.Validator.reset" title="Link to this definition"></a></dt>
-<dd><p>Click the clicker and reset non-public data.</p>
+<dd><p>Clear the errors and the input count.</p>
 </dd></dl>
 
 </dd></dl>
@@ -222,39 +318,78 @@ Literals.</p>
 tree.</p>
 <p>Note that this cannot swap out a root node of a literal tree. This case
 must be tested for explicitly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldlit</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal to be replaced.</p></li>
+<li><p><strong>newlit</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal"><em>Literal</em></a>) – The literal to be placed into the literal tree.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.swapper.Swapper.newlit">
 <span class="sig-name descname"><span class="pre">newlit</span></span><a class="headerlink" href="#diffpy.srfit.equation.visitors.swapper.Swapper.newlit" title="Link to this definition"></a></dt>
 <dd><p>The literal to be placed into the literal tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal">Literal</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.swapper.Swapper.oldlit">
 <span class="sig-name descname"><span class="pre">oldlit</span></span><a class="headerlink" href="#diffpy.srfit.equation.visitors.swapper.Swapper.oldlit" title="Link to this definition"></a></dt>
 <dd><p>The literal to be replaced.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.literal.Literal" title="diffpy.srfit.equation.literals.literal.Literal">Literal</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.swapper.Swapper.onArgument">
-<span class="sig-name descname"><span class="pre">onArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/swapper.html#Swapper.onArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.swapper.Swapper.onArgument" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.swapper.Swapper.on_argument">
+<span class="sig-name descname"><span class="pre">on_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/swapper.html#Swapper.on_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.swapper.Swapper.on_argument" title="Link to this definition"></a></dt>
 <dd><p>Process an Argument node.</p>
 <p>Tell the parent to swap the old Argument with the replacement
 Literal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arg</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument"><em>Argument</em></a>) – The Argument to check.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.swapper.Swapper.onEquation">
-<span class="sig-name descname"><span class="pre">onEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/swapper.html#Swapper.onEquation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.swapper.Swapper.onEquation" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.swapper.Swapper.on_equation">
+<span class="sig-name descname"><span class="pre">on_equation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/swapper.html#Swapper.on_equation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.swapper.Swapper.on_equation" title="Link to this definition"></a></dt>
 <dd><p>Process an Equation node.</p>
 <p>This looks at the equation itself as well as the root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eq</strong> (<a class="reference internal" href="diffpy.srfit.equation.html#diffpy.srfit.equation.Equation" title="diffpy.srfit.equation.Equation"><em>Equation</em></a>) – The Equation to check and traverse.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the replacement Literal causes a self-reference.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.swapper.Swapper.onOperator">
-<span class="sig-name descname"><span class="pre">onOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/swapper.html#Swapper.onOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.swapper.Swapper.onOperator" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.swapper.Swapper.on_operator">
+<span class="sig-name descname"><span class="pre">on_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/swapper.html#Swapper.on_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.swapper.Swapper.on_operator" title="Link to this definition"></a></dt>
 <dd><p>Process an Operator node.</p>
 <p>Tell the parent to swap the old Operator with the replacement
-Literal.</p>
+Literal, and swap any of its arguments in place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>op</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator"><em>Operator</em></a>) – The Operator to check and traverse.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If the replacement Literal causes a self-reference.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -263,34 +398,72 @@ Literal.</p>
 <section id="module-diffpy.srfit.equation.visitors.argfinder">
 <span id="diffpy-srfit-equation-visitors-argfinder-module"></span><h3>diffpy.srfit.equation.visitors.argfinder module<a class="headerlink" href="#module-diffpy.srfit.equation.visitors.argfinder" title="Link to this heading"></a></h3>
 <p>Visitor for extracting the Argument entries in a Literal tree.</p>
-<p>ArgFinder extracts all Arguments from a literal true.</p>
+<p>ArgFinder extracts all Arguments from a literal tree.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.argfinder.ArgFinder">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.argfinder.</span></span><span class="sig-name descname"><span class="pre">ArgFinder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">getconsts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/argfinder.html#ArgFinder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.argfinder.ArgFinder" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#diffpy.srfit.equation.visitors.visitor.Visitor" title="diffpy.srfit.equation.visitors.visitor.Visitor"><code class="xref py py-class docutils literal notranslate"><span class="pre">Visitor</span></code></a></p>
 <p>ArgFinder extracts Arguments from a Literal tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>getconsts</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The flag that is True (default) to also collect constant
+Arguments.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.argfinder.ArgFinder.args">
 <span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#diffpy.srfit.equation.visitors.argfinder.ArgFinder.args" title="Link to this definition"></a></dt>
-<dd><p>The list of collected Arguments</p>
+<dd><p>The collected Arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.argfinder.ArgFinder.getconsts">
 <span class="sig-name descname"><span class="pre">getconsts</span></span><a class="headerlink" href="#diffpy.srfit.equation.visitors.argfinder.ArgFinder.getconsts" title="Link to this definition"></a></dt>
-<dd><p>Flag indicating whether to grab constant arguments.</p>
+<dd><p>The flag that is True to also collect constant Arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)">bool</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.argfinder.ArgFinder.onArgument">
-<span class="sig-name descname"><span class="pre">onArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/argfinder.html#ArgFinder.onArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.argfinder.ArgFinder.onArgument" title="Link to this definition"></a></dt>
-<dd><p>Process an Argument node.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.argfinder.ArgFinder.on_argument">
+<span class="sig-name descname"><span class="pre">on_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/argfinder.html#ArgFinder.on_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.argfinder.ArgFinder.on_argument" title="Link to this definition"></a></dt>
+<dd><p>Collect an Argument node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arg</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument"><em>Argument</em></a>) – The Argument to collect.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Arguments collected so far.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.argfinder.ArgFinder.onOperator">
-<span class="sig-name descname"><span class="pre">onOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/argfinder.html#ArgFinder.onOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.argfinder.ArgFinder.onOperator" title="Link to this definition"></a></dt>
-<dd><p>Process an Operator node.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.argfinder.ArgFinder.on_operator">
+<span class="sig-name descname"><span class="pre">on_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/argfinder.html#ArgFinder.on_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.argfinder.ArgFinder.on_operator" title="Link to this definition"></a></dt>
+<dd><p>Collect the Arguments of an Operator node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>op</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator"><em>Operator</em></a>) – The Operator whose Arguments are collected.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The Arguments collected so far.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)">list</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -316,27 +489,86 @@ Operator</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.visitor.Visitor">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.equation.visitors.visitor.</span></span><span class="sig-name descname"><span class="pre">Visitor</span></span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/visitor.html#Visitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Abstract class for all visitors to a Literal tree.</p>
-<p>See implemented visitors for examples of use.</p>
+<p>Subclasses must override <code class="docutils literal notranslate"><span class="pre">on_argument</span></code> and <code class="docutils literal notranslate"><span class="pre">on_operator</span></code>. See
+implemented visitors for examples of use.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.visitor.Visitor.onArgument">
-<span class="sig-name descname"><span class="pre">onArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/visitor.html#Visitor.onArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.onArgument" title="Link to this definition"></a></dt>
-<dd><p>Process an Argument node.</p>
+<span class="sig-name descname"><span class="pre">onArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.onArgument" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.visitors.visitor.Visitor.on_argument
+instead.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.visitor.Visitor.onEquation">
-<span class="sig-name descname"><span class="pre">onEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/visitor.html#Visitor.onEquation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.onEquation" title="Link to this definition"></a></dt>
-<dd><p>Process an Equation node.</p>
-<p>Equations are specialized Operators. They don’t need to be
-specifically supported by a Visitor.</p>
+<span class="sig-name descname"><span class="pre">onEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.onEquation" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.visitors.visitor.Visitor.on_equation
+instead.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.visitor.Visitor.onOperator">
-<span class="sig-name descname"><span class="pre">onOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/visitor.html#Visitor.onOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.onOperator" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">onOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.onOperator" title="Link to this definition"></a></dt>
+<dd><p>This function has been deprecated and will be removed in
+version 4.0.0.</p>
+<p>Please use
+diffpy.srfit.equation.visitors.visitor.Visitor.on_operator
+instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.visitor.Visitor.on_argument">
+<span class="sig-name descname"><span class="pre">on_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/visitor.html#Visitor.on_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.on_argument" title="Link to this definition"></a></dt>
+<dd><p>Process an Argument node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arg</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument"><em>Argument</em></a>) – The Argument to process.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#NotImplementedError" title="(in Python v3.15)"><strong>NotImplementedError</strong></a> – Always, because subclasses must override this method.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.visitor.Visitor.on_equation">
+<span class="sig-name descname"><span class="pre">on_equation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/visitor.html#Visitor.on_equation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.on_equation" title="Link to this definition"></a></dt>
+<dd><p>Process an Equation node.</p>
+<p>Equations are specialized Operators. They don’t need to be
+specifically supported by a Visitor, so by default they are
+passed to <code class="docutils literal notranslate"><span class="pre">on_operator</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eq</strong> (<a class="reference internal" href="diffpy.srfit.equation.html#diffpy.srfit.equation.Equation" title="diffpy.srfit.equation.Equation"><em>Equation</em></a>) – The Equation to process.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of <code class="docutils literal notranslate"><span class="pre">on_operator(eq)</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)">object</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.visitor.Visitor.on_operator">
+<span class="sig-name descname"><span class="pre">on_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/visitor.html#Visitor.on_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.visitor.Visitor.on_operator" title="Link to this definition"></a></dt>
 <dd><p>Process an Operator node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>op</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator"><em>Operator</em></a>) – The Operator to process.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#NotImplementedError" title="(in Python v3.15)"><strong>NotImplementedError</strong></a> – Always, because subclasses must override this method.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -356,15 +588,25 @@ tree, which is valid as a string equivalent of the equation.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.eqskip">
 <span class="sig-name descname"><span class="pre">eqskip</span></span><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.eqskip" title="Link to this definition"></a></dt>
-<dd><p>regular expression pattern for Equation objects that should
-not be expanded, but printed under their own name.  Expand
-all equations when None.</p>
+<dd><p>The regular expression pattern for Equation objects that should
+not be expanded, but printed under their own name. Expand all
+equations when None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a> or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.output">
 <span class="sig-name descname"><span class="pre">output</span></span><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.output" title="Link to this definition"></a></dt>
 <dd><p>The output generated by the printer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -375,28 +617,67 @@ all equations when None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.onArgument">
-<span class="sig-name descname"><span class="pre">onArgument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/printer.html#Printer.onArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.onArgument" title="Link to this definition"></a></dt>
-<dd><p>Process an Argument node.</p>
-<p>No assumption is made about the argument type.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.on_argument">
+<span class="sig-name descname"><span class="pre">on_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/printer.html#Printer.on_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.on_argument" title="Link to this definition"></a></dt>
+<dd><p>Write an Argument node.</p>
+<p>The name is written, or the value if the Argument has no name.
+No assumption is made about the argument type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>arg</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument" title="diffpy.srfit.equation.literals.Argument"><em>Argument</em></a>) – The Argument to write.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The output so far.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.onEquation">
-<span class="sig-name descname"><span class="pre">onEquation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/printer.html#Printer.onEquation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.onEquation" title="Link to this definition"></a></dt>
-<dd><p>Process an Equation node.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.on_equation">
+<span class="sig-name descname"><span class="pre">on_equation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/printer.html#Printer.on_equation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.on_equation" title="Link to this definition"></a></dt>
+<dd><p>Write an Equation node.</p>
+<p>The Equation is written by name if it matches <code class="docutils literal notranslate"><span class="pre">eqskip</span></code>, and
+expanded otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eq</strong> (<a class="reference internal" href="diffpy.srfit.equation.html#diffpy.srfit.equation.Equation" title="diffpy.srfit.equation.Equation"><em>Equation</em></a>) – The Equation to write.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The output so far.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.onOperator">
-<span class="sig-name descname"><span class="pre">onOperator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/printer.html#Printer.onOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.onOperator" title="Link to this definition"></a></dt>
-<dd><p>Process an Operator node.</p>
+<dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.on_operator">
+<span class="sig-name descname"><span class="pre">on_operator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/printer.html#Printer.on_operator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.on_operator" title="Link to this definition"></a></dt>
+<dd><p>Write an Operator node.</p>
+<p>Binary operators whose symbol differs from their name are
+written in infix form, such as “(a + b)”. Others are written as
+a function call, such as “sin(a)”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>op</strong> (<a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator" title="diffpy.srfit.equation.literals.Operator"><em>Operator</em></a>) – The Operator to write.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The output so far.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="diffpy.srfit.equation.visitors.printer.Printer.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/equation/visitors/printer.html#Printer.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.equation.visitors.printer.Printer.reset" title="Link to this definition"></a></dt>
-<dd><p>Reset the out put string.</p>
+<dd><p>Reset the output string.</p>
 </dd></dl>
 
 </dd></dl>

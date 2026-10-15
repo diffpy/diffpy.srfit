@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.validatable &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.fitbase.validatable &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,25 +91,25 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Validatable class.</span>
+<span class="sd">"""Validatable class.</span>
 
 <span class="sd">A Validatable has state that must be validated before a FitRecipe can</span>
 <span class="sd">first calculate the residual.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Validatable&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Validatable"</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="Validatable">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.validatable.Validatable">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Validatable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for objects with state that must be validated.</span>
+<span class="w">    </span><span class="sd">"""Base class for objects with state that must be validated.</span>
 
 <span class="sd">    A Validatable has state that must be validated by a FitRecipe.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate_others</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the configuration of Validatables in iterable.</span>
+<span class="w">        </span><span class="sd">"""Validate the configuration of Validatables in iterable.</span>
 
 <span class="sd">        This is provided as a convenience for derived classes. No need</span>
 <span class="sd">        to overload this. Call this method from overloaded _validate</span>
@@ -119,7 +119,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        iterable : iterable</span>
 <span class="sd">            The Validatables to validate.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -129,7 +129,7 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate self and Validatables.</span>
+<span class="w">        </span><span class="sd">"""Validate self and Validatables.</span>
 
 <span class="sd">        Overload this in a derived class.</span>
 
@@ -137,7 +137,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        AttributeError</span>
 <span class="sd">            If validation fails.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Validate self here.</span>
         <span class="c1"># Then validate others.</span>
         <span class="k">return</span></div>

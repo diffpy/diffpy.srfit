@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.interface.interface &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.interface.interface &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,22 +91,20 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Interface enhancements for Parameter-type classes.</span>
+<span class="sd">"""Interface enhancements for Parameter-type classes.</span>
 
 <span class="sd">Most interface additions can thought of by considering the classes in</span>
-<span class="sd">SrFit to be sets of parameters. &quot;+=&quot; adds a new parameter, when that</span>
-<span class="sd">makes sense. &quot;|=&quot; is the &#39;union&#39; of these sets, and in general is used</span>
+<span class="sd">SrFit to be sets of parameters. ``+=`` adds a new parameter, when that</span>
+<span class="sd">makes sense. ``|=`` is the 'union' of these sets, and in general is used</span>
 <span class="sd">to combine different objects. See individual interface classes for</span>
 <span class="sd">specifics.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;ParameterInterface&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;FitRecipeInterface&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RecipeOrganizerInterface&quot;</span><span class="p">,</span>
+    <span class="s2">"ParameterInterface"</span><span class="p">,</span>
+    <span class="s2">"FitRecipeInterface"</span><span class="p">,</span>
+    <span class="s2">"RecipeOrganizerInterface"</span><span class="p">,</span>
 <span class="p">]</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">six</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals.abcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArgumentABC</span>
 
@@ -114,10 +112,12 @@
 <div class="viewcode-block" id="ParameterInterface">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ParameterInterface</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mix-in class for enhancing the Parameter interface.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Mix-in class for enhancing the Parameter interface."""</span>
 
+<div class="viewcode-block" id="ParameterInterface.__lshift__">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.ParameterInterface.__lshift__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__lshift__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value with ``&lt;&lt;``.</span>
+<span class="w">        </span><span class="sd">"""Set the value with ``&lt;&lt;``.</span>
 
 <span class="sd">        Think of ``&lt;&lt;`` as injecting a value.</span>
 
@@ -130,12 +130,13 @@
 <span class="sd">        -------</span>
 <span class="sd">        ParameterInterface</span>
 <span class="sd">            Return self after the value has been set.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">ArgumentABC</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">v</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+</div>
 
 
 
@@ -147,10 +148,12 @@
 <div class="viewcode-block" id="RecipeOrganizerInterface">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.RecipeOrganizerInterface">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RecipeOrganizerInterface</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mix-in class for enhancing the RecipeOrganizer interface.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Mix-in class for enhancing the RecipeOrganizer interface."""</span>
 
+<div class="viewcode-block" id="RecipeOrganizerInterface.__imul__">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.RecipeOrganizerInterface.__imul__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constrain with ``*=``.</span>
+<span class="w">        </span><span class="sd">"""Constrain with ``*=``.</span>
 
 <span class="sd">        Think of ``*`` as a push-pin. This accepts arguments for a</span>
 <span class="sd">        single constraint.</span>
@@ -158,18 +161,21 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        args : tuple</span>
-<span class="sd">            The arguments to pass to `constrain`.</span>
+<span class="sd">            The arguments to pass to `add_constraint`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        RecipeOrganizerInterface</span>
 <span class="sd">            Return self after applying the constraint.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_applyargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">constrain</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+<span class="sd">        """</span>
+        <span class="n">_applyargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
+
+<div class="viewcode-block" id="RecipeOrganizerInterface.__imod__">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.RecipeOrganizerInterface.__imod__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__imod__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Restrain with ``%=``.</span>
+<span class="w">        </span><span class="sd">"""Restrain with ``%=``.</span>
 
 <span class="sd">        Think of ``%`` as a loose rope. This accepts arguments for a</span>
 <span class="sd">        single restraint.</span>
@@ -177,18 +183,21 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        args : tuple</span>
-<span class="sd">            The arguments to pass to `restrain`.</span>
+<span class="sd">            The arguments to pass to `add_soft_bounds`.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        RecipeOrganizerInterface</span>
 <span class="sd">            Return self after applying the restraint.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_applyargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrain</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+<span class="sd">        """</span>
+        <span class="n">_applyargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_soft_bounds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
+
+<div class="viewcode-block" id="RecipeOrganizerInterface.__iadd__">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.RecipeOrganizerInterface.__iadd__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a parameter with ``+=``.</span>
+<span class="w">        </span><span class="sd">"""Add a parameter with ``+=``.</span>
 
 <span class="sd">        Think of ``+`` as addition of a Parameter. This accepts</span>
 <span class="sd">        arguments for a single call to `_new_parameter` or</span>
@@ -204,11 +213,11 @@
 <span class="sd">        -------</span>
 <span class="sd">        RecipeOrganizerInterface</span>
 <span class="sd">            Return self after adding the parameter.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Want to detect _add_parameter or _new_parameter</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_add_parameter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
@@ -216,6 +225,7 @@
 
         <span class="n">_applyargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+</div>
 
 
 
@@ -227,10 +237,12 @@
 <div class="viewcode-block" id="FitRecipeInterface">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FitRecipeInterface</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mix-in class for enhancing the FitRecipe interface.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Mix-in class for enhancing the FitRecipe interface."""</span>
 
+<div class="viewcode-block" id="FitRecipeInterface.__ior__">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface.__ior__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__ior__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a contribution with ``|=``.</span>
+<span class="w">        </span><span class="sd">"""Add a contribution with ``|=``.</span>
 
 <span class="sd">        Think of ``|`` as the union of components. This accepts a</span>
 <span class="sd">        single argument.</span>
@@ -244,12 +256,15 @@
 <span class="sd">        -------</span>
 <span class="sd">        FitRecipeInterface</span>
 <span class="sd">            Return self after adding the contribution.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_contribution</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
+
+<div class="viewcode-block" id="FitRecipeInterface.__iadd__">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.interface.html#diffpy.srfit.interface.interface.FitRecipeInterface.__iadd__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a variable with ``+=``.</span>
+<span class="w">        </span><span class="sd">"""Add a variable with ``+=``.</span>
 
 <span class="sd">        Think of ``+`` as addition of a variable. This accepts a</span>
 <span class="sd">        single argument or an iterable of single arguments or</span>
@@ -265,11 +280,11 @@
 <span class="sd">        -------</span>
 <span class="sd">        FitRecipeInterface</span>
 <span class="sd">            Return self after adding the variable.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># Want to detect add_variable or create_new_variable</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_variable</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
@@ -277,6 +292,7 @@
 
         <span class="n">_applymanyargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
+</div>
 
 
 
@@ -286,17 +302,17 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_applymanyargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply arguments to a function.</span>
+<span class="w">    </span><span class="sd">"""Apply arguments to a function.</span>
 
 <span class="sd">    Args can be any of the following. arg (arg1, arg2, ...) ((arg1a,</span>
 <span class="sd">    arg1b, ...), ...)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">"__iter__"</span><span class="p">):</span>
         <span class="n">f</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="s2">"__iter__"</span><span class="p">):</span>
             <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">f</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
@@ -305,12 +321,12 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_applyargs</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply arguments to a function.</span>
+<span class="w">    </span><span class="sd">"""Apply arguments to a function.</span>
 
 <span class="sd">    Args can be any of the following. arg (arg1, arg2, ...) ((arg1a,</span>
 <span class="sd">    arg1b, ...), ...)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">&quot;__iter__&quot;</span><span class="p">):</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="s2">"__iter__"</span><span class="p">):</span>
         <span class="n">f</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>

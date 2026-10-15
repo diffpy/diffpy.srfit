@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.interface package &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.interface package &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -101,29 +101,146 @@ for scripting.</p>
 <span id="diffpy-srfit-interface-interface-module"></span><h3>diffpy.srfit.interface.interface module<a class="headerlink" href="#module-diffpy.srfit.interface.interface" title="Link to this heading"></a></h3>
 <p>Interface enhancements for Parameter-type classes.</p>
 <p>Most interface additions can thought of by considering the classes in
-SrFit to be sets of parameters. “+=” adds a new parameter, when that
-makes sense. “<a href="#id1"><span class="problematic" id="id2">|</span></a>=” is the ‘union’ of these sets, and in general is used
+SrFit to be sets of parameters. <code class="docutils literal notranslate"><span class="pre">+=</span></code> adds a new parameter, when that
+makes sense. <code class="docutils literal notranslate"><span class="pre">|=</span></code> is the ‘union’ of these sets, and in general is used
 to combine different objects. See individual interface classes for
 specifics.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.interface.interface.FitRecipeInterface">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.interface.interface.</span></span><span class="sig-name descname"><span class="pre">FitRecipeInterface</span></span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#FitRecipeInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.FitRecipeInterface" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Mix-in class for enhancing the FitRecipe interface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.interface.interface.FitRecipeInterface.__iadd__">
+<span class="sig-name descname"><span class="pre">__iadd__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#FitRecipeInterface.__iadd__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.FitRecipeInterface.__iadd__" title="Link to this definition"></a></dt>
+<dd><p>Add a variable with <code class="docutils literal notranslate"><span class="pre">+=</span></code>.</p>
+<p>Think of <code class="docutils literal notranslate"><span class="pre">+</span></code> as addition of a variable. This accepts a
+single argument or an iterable of single arguments or
+argument tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> – The arguments to pass to <cite>add_variable</cite> or
+<cite>create_new_variable</cite>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return self after adding the variable.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface">FitRecipeInterface</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.interface.interface.FitRecipeInterface.__ior__">
+<span class="sig-name descname"><span class="pre">__ior__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#FitRecipeInterface.__ior__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.FitRecipeInterface.__ior__" title="Link to this definition"></a></dt>
+<dd><p>Add a contribution with <code class="docutils literal notranslate"><span class="pre">|=</span></code>.</p>
+<p>Think of <code class="docutils literal notranslate"><span class="pre">|</span></code> as the union of components. This accepts a
+single argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference internal" href="diffpy.srfit.html#diffpy.srfit.FitContribution" title="diffpy.srfit.FitContribution"><em>FitContribution</em></a>) – The contribution to add.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return self after adding the contribution.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.interface.interface.FitRecipeInterface" title="diffpy.srfit.interface.interface.FitRecipeInterface">FitRecipeInterface</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.interface.interface.ParameterInterface">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.interface.interface.</span></span><span class="sig-name descname"><span class="pre">ParameterInterface</span></span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#ParameterInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.ParameterInterface" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Mix-in class for enhancing the Parameter interface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.interface.interface.ParameterInterface.__lshift__">
+<span class="sig-name descname"><span class="pre">__lshift__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#ParameterInterface.__lshift__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.ParameterInterface.__lshift__" title="Link to this definition"></a></dt>
+<dd><p>Set the value with <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code>.</p>
+<p>Think of <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> as injecting a value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>v</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a><em> or </em><a class="reference internal" href="diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.ArgumentABC" title="diffpy.srfit.equation.literals.abcs.ArgumentABC"><em>ArgumentABC</em></a>) – The value, or Argument derivative, to assign.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return self after the value has been set.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.interface.interface.ParameterInterface" title="diffpy.srfit.interface.interface.ParameterInterface">ParameterInterface</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="diffpy.srfit.interface.interface.RecipeOrganizerInterface">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">diffpy.srfit.interface.interface.</span></span><span class="sig-name descname"><span class="pre">RecipeOrganizerInterface</span></span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#RecipeOrganizerInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Mix-in class for enhancing the RecipeOrganizer interface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.interface.interface.RecipeOrganizerInterface.__iadd__">
+<span class="sig-name descname"><span class="pre">__iadd__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#RecipeOrganizerInterface.__iadd__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface.__iadd__" title="Link to this definition"></a></dt>
+<dd><p>Add a parameter with <code class="docutils literal notranslate"><span class="pre">+=</span></code>.</p>
+<p>Think of <code class="docutils literal notranslate"><span class="pre">+</span></code> as addition of a Parameter. This accepts
+arguments for a single call to <cite>_new_parameter</cite> or
+<cite>_add_parameter</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a>) – The arguments to pass to <cite>_new_parameter</cite> or
+<cite>_add_parameter</cite>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return self after adding the parameter.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="diffpy.srfit.interface.interface.RecipeOrganizerInterface">RecipeOrganizerInterface</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.interface.interface.RecipeOrganizerInterface.__imod__">
+<span class="sig-name descname"><span class="pre">__imod__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#RecipeOrganizerInterface.__imod__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface.__imod__" title="Link to this definition"></a></dt>
+<dd><p>Restrain with <code class="docutils literal notranslate"><span class="pre">%=</span></code>.</p>
+<p>Think of <code class="docutils literal notranslate"><span class="pre">%</span></code> as a loose rope. This accepts arguments for a
+single restraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a>) – The arguments to pass to <cite>add_soft_bounds</cite>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return self after applying the restraint.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="diffpy.srfit.interface.interface.RecipeOrganizerInterface">RecipeOrganizerInterface</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="diffpy.srfit.interface.interface.RecipeOrganizerInterface.__imul__">
+<span class="sig-name descname"><span class="pre">__imul__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/diffpy/srfit/interface/interface.html#RecipeOrganizerInterface.__imul__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface.__imul__" title="Link to this definition"></a></dt>
+<dd><p>Constrain with <code class="docutils literal notranslate"><span class="pre">*=</span></code>.</p>
+<p>Think of <code class="docutils literal notranslate"><span class="pre">*</span></code> as a push-pin. This accepts arguments for a
+single constraint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><em>tuple</em></a>) – The arguments to pass to <cite>add_constraint</cite>.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return self after applying the constraint.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#diffpy.srfit.interface.interface.RecipeOrganizerInterface" title="diffpy.srfit.interface.interface.RecipeOrganizerInterface">RecipeOrganizerInterface</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>

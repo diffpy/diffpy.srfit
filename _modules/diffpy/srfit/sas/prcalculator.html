@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.sas.prcalculator &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.sas.prcalculator &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,16 +91,16 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Nanoparticle form factor P(r) calculator.</span>
+<span class="sd">"""Nanoparticle form factor P(r) calculator.</span>
 
 <span class="sd">The PrCalculator class wraps a sas.pr.invertor.Invertor object as a</span>
 <span class="sd">Calculator. This is not wrapped as a ProfileGenerator because it will be</span>
 <span class="sd">used to share information between SAS I(Q) to PDF G(r), but it does not</span>
 <span class="sd">use the same profile as the PDF, which is where the calculator will be</span>
 <span class="sd">applied.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PrCalculator&quot;</span><span class="p">,</span> <span class="s2">&quot;CFCalculator&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"PrCalculator"</span><span class="p">,</span> <span class="s2">"CFCalculator"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
@@ -114,7 +114,7 @@
 <div class="viewcode-block" id="PrCalculator">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.PrCalculator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PrCalculator</span><span class="p">(</span><span class="n">Calculator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for calculating P(r) from data.</span>
+<span class="w">    </span><span class="sd">"""A class for calculating P(r) from data.</span>
 
 <span class="sd">    This is provided so that SAS data can be used to calculate a nanoparticle</span>
 <span class="sd">    form factor (characteristic function) for nanoparticle PDF refinements. For</span>
@@ -129,7 +129,7 @@
 <span class="sd">    _invertor</span>
 <span class="sd">        sas.pr.invertor.Invertor object. This object is internal,</span>
 <span class="sd">        but can be configured by the user after initialization.</span>
-<span class="sd">        Note that the &#39;x&#39;, &#39;y&#39; and &#39;err&#39; attributes get overwritten</span>
+<span class="sd">        Note that the 'x', 'y' and 'err' attributes get overwritten</span>
 <span class="sd">        every time the invertor is used.</span>
 
 <span class="sd">    Managed Parameters</span>
@@ -142,16 +142,16 @@
 <span class="sd">        The I(q) signal</span>
 <span class="sd">    diq</span>
 <span class="sd">        The uncertainty in I(q)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the generator.</span>
+<span class="w">        </span><span class="sd">"""Initialize the generator.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name</span>
 <span class="sd">            A name for the PrCalculator</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">Calculator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># delayed import of Invertor</span>
@@ -159,25 +159,25 @@
         <span class="k">if</span> <span class="n">Invertor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.sas.sasimport</span><span class="w"> </span><span class="kn">import</span> <span class="n">sasimport</span>
 
-            <span class="n">Invertor</span> <span class="o">=</span> <span class="n">sasimport</span><span class="p">(</span><span class="s2">&quot;sas.pr.invertor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">Invertor</span>
+            <span class="n">Invertor</span> <span class="o">=</span> <span class="n">sasimport</span><span class="p">(</span><span class="s2">"sas.pr.invertor"</span><span class="p">)</span><span class="o">.</span><span class="n">Invertor</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_invertor</span> <span class="o">=</span> <span class="n">Invertor</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">&quot;iq&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">&quot;diq&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">"scale"</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">"q"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">"iq"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_new_parameter</span><span class="p">(</span><span class="s2">"diq"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate P(r) from the data or calculated signal.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Calculate P(r) from the data or calculated signal."""</span>
         <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">q</span><span class="o">.</span><span class="n">value</span>
         <span class="n">iq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iq</span><span class="o">.</span><span class="n">value</span>
         <span class="n">diq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diq</span><span class="o">.</span><span class="n">value</span>
         <span class="k">if</span> <span class="n">diq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">diq</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_invertor</span><span class="o">.</span><span class="n">d_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">+</span> <span class="mf">5.0</span>
-        <span class="c1"># Assume profile doesn&#39;t include 0. It&#39;s up to the user to make this</span>
+        <span class="c1"># Assume profile doesn't include 0. It's up to the user to make this</span>
         <span class="c1"># happen.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_invertor</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">q</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_invertor</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">iq</span>
@@ -200,7 +200,7 @@
 <div class="viewcode-block" id="CFCalculator">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.sas.html#diffpy.srfit.sas.CFCalculator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CFCalculator</span><span class="p">(</span><span class="n">PrCalculator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for calculating the characteristic function (CF) from</span>
+<span class="w">    </span><span class="sd">"""A class for calculating the characteristic function (CF) from</span>
 <span class="sd">    data.</span>
 
 <span class="sd">    This calculator produces</span>
@@ -212,7 +212,7 @@
 <span class="sd">    _invertor</span>
 <span class="sd">        sas.pr.invertor.Invertor object. This object is internal,</span>
 <span class="sd">        but can be configured by the user after initialization.</span>
-<span class="sd">        Note that the &#39;x&#39;, &#39;y&#39; and &#39;err&#39; attributes get overwritten</span>
+<span class="sd">        Note that the 'x', 'y' and 'err' attributes get overwritten</span>
 <span class="sd">        every time the invertor is used.</span>
 
 <span class="sd">    Managed Parameters</span>
@@ -225,14 +225,14 @@
 <span class="sd">        The I(q) signal</span>
 <span class="sd">    diq</span>
 <span class="sd">        The uncertainty in I(q)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate P(r) from the data or calculated signal.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Calculate P(r) from the data or calculated signal."""</span>
         <span class="n">fr</span> <span class="o">=</span> <span class="n">PrCalculator</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
         <span class="n">fr</span> <span class="o">/=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">r</span><span class="o">**</span><span class="mi">2</span>
         <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># Assume the scale makes fr properly normalized. We don&#39;t have much</span>
+            <span class="c1"># Assume the scale makes fr properly normalized. We don't have much</span>
             <span class="c1"># other choice.</span>
             <span class="n">fr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">fr</span></div>

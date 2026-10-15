@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.calculator &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.fitbase.calculator &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,77 +91,82 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;The Calculator for Parameter-aware functions.</span>
+<span class="sd">"""The Calculator for Parameter-aware functions.</span>
 
 <span class="sd">Calculator is a functor class for producing a signal from embedded</span>
 <span class="sd">Parameters. Calculators can store Parameters and ParameterSets,</span>
 <span class="sd">Constraints and Restraints. Also, the __call__ function can be</span>
 <span class="sd">overloaded to accept external arguments. Calculators are used to wrap</span>
-<span class="sd">registered functions so that the function&#39;s Parameters are contained in</span>
+<span class="sd">registered functions so that the function's Parameters are contained in</span>
 <span class="sd">an object specific to the function.  A custom Calculator can be added to</span>
-<span class="sd">another RecipeOrganizer with the &#39;register_calculator&#39; method.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">another RecipeOrganizer with the 'register_calculator' method.</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Calculator&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Calculator"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals.operators</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameterset</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParameterSet</span>
 
 
 <div class="viewcode-block" id="Calculator">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.Calculator">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.Calculator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Calculator</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">ParameterSet</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for calculators.</span>
+<span class="w">    </span><span class="sd">"""Base class for calculators.</span>
 
-<span class="sd">    A Calculator organizes Parameters and has a __call__ method that can</span>
-<span class="sd">    calculate a generic signal.</span>
+<span class="sd">    A Calculator organizes Parameters and has a ``__call__`` method that</span>
+<span class="sd">    can calculate a generic signal. Calculator is also an Operator</span>
+<span class="sd">    (diffpy.srfit.equation.literals.operators), so it can be used directly</span>
+<span class="sd">    in an evaluation network.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the Calculator. It must be a valid attribute name.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    name</span>
-<span class="sd">        A name for this organizer.</span>
-<span class="sd">    meta</span>
-<span class="sd">        A dictionary of metadata needed by the calculator.</span>
-<span class="sd">    _calculators</span>
-<span class="sd">        A managed dictionary of Calculators, indexed by name.</span>
-<span class="sd">    _constraints</span>
-<span class="sd">        A set of constrained Parameters. Constraints can be</span>
-<span class="sd">        added using the &#39;constrain&#39; methods.</span>
-<span class="sd">    _parameters</span>
-<span class="sd">        A managed OrderedDict of contained Parameters.</span>
-<span class="sd">    _parsets</span>
-<span class="sd">        A managed dictionary of ParameterSets.</span>
-<span class="sd">    _restraints</span>
-<span class="sd">        A set of Restraints. Restraints can be added using the</span>
-<span class="sd">        &#39;restrain&#39; or &#39;confine&#39; methods.</span>
-<span class="sd">    _eqfactory</span>
-<span class="sd">        A diffpy.srfit.equation.builder.EquationFactory</span>
-<span class="sd">        instance that is used create Equations from string.</span>
-
-<span class="sd">    Operator Attributes</span>
-<span class="sd">    -------------------</span>
-<span class="sd">    args</span>
-<span class="sd">        List of Literal arguments</span>
-<span class="sd">    nin</span>
-<span class="sd">        Number of inputs (&lt;1 means this is variable)</span>
-<span class="sd">    nout</span>
-<span class="sd">        Number of outputs (1)</span>
-<span class="sd">    operation</span>
-<span class="sd">        Function that performs the operation, self.__call__</span>
-<span class="sd">    symbol</span>
-<span class="sd">        Same as name</span>
-<span class="sd">    _value</span>
-<span class="sd">        The value of the Operator.</span>
-<span class="sd">    value</span>
-<span class="sd">        Property for &#39;getValue&#39;.</span>
-
-<span class="sd">    Properties</span>
-<span class="sd">    ----------</span>
-<span class="sd">    names</span>
-<span class="sd">        Variable names (read only). See get_names.</span>
-<span class="sd">    values</span>
-<span class="sd">        Variable values (read only). See get_values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the Calculator.</span>
+<span class="sd">    meta : dict</span>
+<span class="sd">        The metadata needed by the calculator.</span>
+<span class="sd">    names : list of str</span>
+<span class="sd">        The names of the top-level Parameters (read only). See</span>
+<span class="sd">        ``get_names``.</span>
+<span class="sd">    values : list</span>
+<span class="sd">        The values of the top-level Parameters (read only). See</span>
+<span class="sd">        ``get_values``.</span>
+<span class="sd">    args : list</span>
+<span class="sd">        The Literal arguments of the operator, added with</span>
+<span class="sd">        ``add_literal``.</span>
+<span class="sd">    nin : int</span>
+<span class="sd">        The number of inputs. The class value -1 means that any number of</span>
+<span class="sd">        inputs is allowed.</span>
+<span class="sd">    nout : int</span>
+<span class="sd">        The number of outputs, which is 1.</span>
+<span class="sd">    symbol : str</span>
+<span class="sd">        The symbolic representation of the operator, which is the same as</span>
+<span class="sd">        ``name`` (read only).</span>
+<span class="sd">    value : object</span>
+<span class="sd">        The value of the operator (read only). See ``get_value``.</span>
+<span class="sd">    _value : object</span>
+<span class="sd">        The cached value of the operator, or None if it must be</span>
+<span class="sd">        recomputed.</span>
+<span class="sd">    _calculators : dict</span>
+<span class="sd">        The managed dictionary of Calculators, indexed by name.</span>
+<span class="sd">    _constraints : dict</span>
+<span class="sd">        The dictionary of Constraints, indexed by the constrained</span>
+<span class="sd">        Parameter. Constraints can be added using the ``add_constraint``</span>
+<span class="sd">        method.</span>
+<span class="sd">    _parameters : OrderedDict</span>
+<span class="sd">        The managed OrderedDict of contained Parameters.</span>
+<span class="sd">    _parsets : OrderedDict</span>
+<span class="sd">        The managed OrderedDict of contained ParameterSets.</span>
+<span class="sd">    _restraints : set</span>
+<span class="sd">        The set of Restraints. Restraints can be added using the</span>
+<span class="sd">        ``add_soft_bounds`` method.</span>
+<span class="sd">    _eqfactory : diffpy.srfit.equation.builder.EquationFactory</span>
+<span class="sd">        The factory that is used to create Equations from strings.</span>
+<span class="sd">    """</span>
 
     <span class="c1"># define abstract attributes from the Operator base.</span>
 
@@ -178,11 +183,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The symbolic representation, which is the Calculator name."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
     <span class="c1"># Overload me!</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the signal produced by this Calculator.</span>
+<span class="w">        </span><span class="sd">"""Calculate the signal produced by this Calculator.</span>
 
 <span class="sd">        This method must be overloaded. When overloading, you should</span>
 <span class="sd">        specify the arguments explicitly, otherwise the parameters must</span>
@@ -197,13 +203,16 @@
 <span class="sd">        -------</span>
 <span class="sd">        object</span>
 <span class="sd">            The calculated signal.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="Calculator.operation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.Calculator.operation">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.Calculator.operation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate and cache the signal produced by this Calculator.</span>
+<span class="w">        </span><span class="sd">"""Calculate and cache the signal produced by this Calculator.</span>
+
+<span class="sd">        This calls ``__call__`` and stores the result as the operator</span>
+<span class="sd">        value.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -214,13 +223,13 @@
 <span class="sd">        -------</span>
 <span class="sd">        object</span>
 <span class="sd">            The calculated signal.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
+<span class="w">        </span><span class="sd">"""Validate my state.</span>
 
 <span class="sd">        This performs ParameterSet validations. This does not validate</span>
 <span class="sd">        the operation, since this could be costly. The operation should</span>
@@ -230,7 +239,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        AttributeError</span>
 <span class="sd">            If validation fails.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ParameterSet</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="k">return</span></div>

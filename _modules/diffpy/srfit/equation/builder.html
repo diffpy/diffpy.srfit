@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.builder &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.builder &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,7 +91,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Classes and utilities for creating equations.</span>
+<span class="sd">"""Classes and utilities for creating equations.</span>
 
 <span class="sd">The EquationFactory class is used to create an equation (an Equation instance)</span>
 <span class="sd">from a string equation.  User-defined Literals can be registered with the</span>
@@ -101,36 +101,36 @@
 <span class="sd">the factory.</span>
 
 <span class="sd">An example using the EquationFactory:</span>
-<span class="sd">The makeEquation method turns the string-representation of an equation into</span>
+<span class="sd">The make_equation method turns the string-representation of an equation into</span>
 <span class="sd">a callable object.</span>
 <span class="sd">&gt; factory = EquationFactory()</span>
-<span class="sd">&gt; eq = factory.makeEquation(&quot;A*sin(a*x)&quot;)</span>
-<span class="sd">will create an equation that evaluates as &quot;A*sin(a*x)&quot;. The equation takes no</span>
+<span class="sd">&gt; eq = factory.make_equation("A*sin(a*x)")</span>
+<span class="sd">will create an equation that evaluates as "A*sin(a*x)". The equation takes no</span>
 <span class="sd">arguments.</span>
 
 <span class="sd">Custom Arguments and constants can be included in the equation:</span>
-<span class="sd">&gt; factory.registerConstant(&quot;offset&quot;, 3)</span>
-<span class="sd">&gt; A = Argument(name = &quot;A&quot;, value = 1.0)</span>
-<span class="sd">&gt; factory.registerArgument(&quot;A&quot;, A)</span>
-<span class="sd">&gt; eq = factory.makeEquation(&quot;A*sin(a*x) + offset&quot;)</span>
+<span class="sd">&gt; factory.register_constant("offset", 3)</span>
+<span class="sd">&gt; A = Argument(name = "A", value = 1.0)</span>
+<span class="sd">&gt; factory.register_argument("A", A)</span>
+<span class="sd">&gt; eq = factory.make_equation("A*sin(a*x) + offset")</span>
 <span class="sd">This includes a constant offset in the equation and makes sure that the</span>
 <span class="sd">user-defined Argument is in the equation. This can be used to assure that</span>
 <span class="sd">the same instance of an Argument appears in multiple equations. Other literals</span>
 <span class="sd">can be registered in a similar fashion.</span>
 
 <span class="sd">The BaseBuilder class does the hard work of making an equation from a string in</span>
-<span class="sd">EquationFactory.makeEquation. BaseBuilder can be used directly to create</span>
+<span class="sd">EquationFactory.make_equation. BaseBuilder can be used directly to create</span>
 <span class="sd">equations. BaseBuilder is specified in the ArgumentBuilder and OperatorBuilder</span>
 <span class="sd">classes.  You can create builders from Literals or equations by using the</span>
-<span class="sd">&quot;wrap&quot; methods within this module or by using the builder classes directly.</span>
+<span class="sd">"wrap" functions within this module or by using the builder classes directly.</span>
 
 <span class="sd">With a collection of BaseBuilder objects, one can simply write the equation</span>
 <span class="sd">using normal python syntax:</span>
-<span class="sd">&gt; A = ArgumentBuilder(name = &quot;A&quot;)</span>
-<span class="sd">&gt; a = ArgumentBuilder(name = &quot;a&quot;)</span>
-<span class="sd">&gt; x = ArgumentBuilder(name = &quot;x&quot;)</span>
+<span class="sd">&gt; A = ArgumentBuilder(name = "A")</span>
+<span class="sd">&gt; a = ArgumentBuilder(name = "a")</span>
+<span class="sd">&gt; x = ArgumentBuilder(name = "x")</span>
 <span class="sd">&gt; # sin is defined in this module as an OperatorBuilder</span>
-<span class="sd">&gt; sin = getBuilder(&quot;sin&quot;)</span>
+<span class="sd">&gt; sin = get_builder("sin")</span>
 <span class="sd">&gt; beq = A*sin(a*x)</span>
 <span class="sd">&gt; eq = beq.get_equation()</span>
 
@@ -138,30 +138,30 @@
 <span class="sd">setup:</span>
 <span class="sd">&gt; beq2 = A*sin(a*x) + 3</span>
 <span class="sd">&gt; eq2 = beq2.get_equation()</span>
-<span class="sd">Here, we didn&#39;t have to wrap &#39;3&#39; in an ArgumentBuilder. Non scalars, constant</span>
+<span class="sd">Here, we didn't have to wrap '3' in an ArgumentBuilder. Non scalars, constant</span>
 <span class="sd">or otherwise, must be wrapped as ArgumentBuilders in order to be used in this</span>
 <span class="sd">way.</span>
 
 <span class="sd">BaseBuilder can make use of user-defined functions.  Any callable python</span>
-<span class="sd">object can be wrapped as an OperatorBuilder with the wrapFunction method. For</span>
-<span class="sd">example.</span>
+<span class="sd">object can be wrapped as an OperatorBuilder with the wrap_function function.</span>
+<span class="sd">For example.</span>
 <span class="sd">&gt; _f = lambda a, b : (a-b)/(a+b)</span>
-<span class="sd">&gt; f = wrapFunction(&quot;f&quot;, _f)</span>
+<span class="sd">&gt; f = wrap_function("f", _f)</span>
 <span class="sd">&gt; # Using BaseBuilder</span>
-<span class="sd">&gt; a = ArgumentBuilder(name = &quot;a&quot;)</span>
-<span class="sd">&gt; b = ArgumentBuilder(name = &quot;b&quot;)</span>
-<span class="sd">&gt; c = ArgumentBuilder(name = &quot;c&quot;)</span>
+<span class="sd">&gt; a = ArgumentBuilder(name = "a")</span>
+<span class="sd">&gt; b = ArgumentBuilder(name = "b")</span>
+<span class="sd">&gt; c = ArgumentBuilder(name = "c")</span>
 <span class="sd">&gt; beq = c*f(a,b)</span>
-<span class="sd">&gt; eq = beq.makeEquation()</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&gt; eq = beq.get_equation()</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numbers</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">token</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tokenize</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">six</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">literals</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.equationmod</span><span class="w"> </span><span class="kn">import</span> <span class="n">Equation</span>
@@ -169,14 +169,18 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;EquationFactory&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;BaseBuilder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ArgumentBuilder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;OperatorBuilder&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;wrapArgument&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;wrapOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;wrapFunction&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;getBuilder&quot;</span><span class="p">,</span>
+    <span class="s2">"EquationFactory"</span><span class="p">,</span>
+    <span class="s2">"BaseBuilder"</span><span class="p">,</span>
+    <span class="s2">"ArgumentBuilder"</span><span class="p">,</span>
+    <span class="s2">"OperatorBuilder"</span><span class="p">,</span>
+    <span class="s2">"wrap_argument"</span><span class="p">,</span>
+    <span class="s2">"wrap_operator"</span><span class="p">,</span>
+    <span class="s2">"wrap_function"</span><span class="p">,</span>
+    <span class="s2">"get_builder"</span><span class="p">,</span>
+    <span class="s2">"wrapArgument"</span><span class="p">,</span>
+    <span class="s2">"wrapOperator"</span><span class="p">,</span>
+    <span class="s2">"wrapFunction"</span><span class="p">,</span>
+    <span class="s2">"getBuilder"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="c1"># NOTE - the builder cannot handle numpy arrays on the left of a binary</span>
@@ -186,118 +190,186 @@
 
 <span class="n">_builders</span> <span class="o">=</span> <span class="p">{}</span>
 
-<span class="n">EquationFactory_base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.equation.builder.EquationFactory&quot;</span>
-<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
+<span class="n">EquationFactory_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.equation.builder.EquationFactory"</span>
+<span class="n">builder_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.equation.builder"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
 
 <span class="n">registerFunction_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">EquationFactory_base</span><span class="p">,</span>
-    <span class="s2">&quot;registerFunction&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;register_function&quot;</span><span class="p">,</span>
+    <span class="s2">"registerFunction"</span><span class="p">,</span>
+    <span class="s2">"register_function"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">makeEquation_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">EquationFactory_base</span><span class="p">,</span> <span class="s2">"makeEquation"</span><span class="p">,</span> <span class="s2">"make_equation"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">registerConstant_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">EquationFactory_base</span><span class="p">,</span>
+    <span class="s2">"registerConstant"</span><span class="p">,</span>
+    <span class="s2">"register_constant"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">registerArgument_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">EquationFactory_base</span><span class="p">,</span>
+    <span class="s2">"registerArgument"</span><span class="p">,</span>
+    <span class="s2">"register_argument"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">registerOperator_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">EquationFactory_base</span><span class="p">,</span>
+    <span class="s2">"registerOperator"</span><span class="p">,</span>
+    <span class="s2">"register_operator"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">registerBuilder_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">EquationFactory_base</span><span class="p">,</span>
+    <span class="s2">"registerBuilder"</span><span class="p">,</span>
+    <span class="s2">"register_builder"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">deRegisterBuilder_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">EquationFactory_base</span><span class="p">,</span>
+    <span class="s2">"deRegisterBuilder"</span><span class="p">,</span>
+    <span class="s2">"deregister_builder"</span><span class="p">,</span>
+    <span class="n">removal_version</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">wrapArgument_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">builder_base</span><span class="p">,</span> <span class="s2">"wrapArgument"</span><span class="p">,</span> <span class="s2">"wrap_argument"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">wrapOperator_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">builder_base</span><span class="p">,</span> <span class="s2">"wrapOperator"</span><span class="p">,</span> <span class="s2">"wrap_operator"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">wrapFunction_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">builder_base</span><span class="p">,</span> <span class="s2">"wrapFunction"</span><span class="p">,</span> <span class="s2">"wrap_function"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">getBuilder_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">builder_base</span><span class="p">,</span> <span class="s2">"getBuilder"</span><span class="p">,</span> <span class="s2">"get_builder"</span><span class="p">,</span> <span class="n">removal_version</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="EquationFactory">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">EquationFactory</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Factory for equations.</span>
+<span class="w">    </span><span class="sd">"""A Factory for equations.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    builders</span>
-<span class="sd">        A dictionary of BaseBuilders registered with the</span>
-<span class="sd">        factory, indexed by name.</span>
-<span class="sd">    newargs</span>
-<span class="sd">        A set of new arguments created by makeEquation. This is</span>
-<span class="sd">        redefined whenever makeEquation is called.</span>
-<span class="sd">    equations</span>
-<span class="sd">        Set of equations that have been built by the</span>
-<span class="sd">        EquationFactory.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    builders : dict</span>
+<span class="sd">        The BaseBuilders registered with the factory, indexed by name.</span>
+<span class="sd">    newargs : set</span>
+<span class="sd">        The new arguments created by the last call to ``make_equation``.</span>
+<span class="sd">    equations : set</span>
+<span class="sd">        The equations that have been built by the factory.</span>
+<span class="sd">    """</span>
 
-    <span class="n">symbols</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;**&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;|&quot;</span><span class="p">)</span>
-    <span class="n">ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+    <span class="n">symbols</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"+"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">,</span> <span class="s2">"*"</span><span class="p">,</span> <span class="s2">"/"</span><span class="p">,</span> <span class="s2">"**"</span><span class="p">,</span> <span class="s2">"%"</span><span class="p">,</span> <span class="s2">"|"</span><span class="p">)</span>
+    <span class="n">ignore</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"("</span><span class="p">,</span> <span class="s2">","</span><span class="p">,</span> <span class="s2">")"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
-
-<span class="sd">        This registers &quot;pi&quot; and &quot;e&quot; as constants within the factory.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Initialize the factory and register "pi" and "e" as</span>
+<span class="sd">        constants."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">builders</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_builders</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">newargs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">equations</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">registerConstant</span><span class="p">(</span><span class="s2">&quot;pi&quot;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">registerConstant</span><span class="p">(</span><span class="s2">&quot;e&quot;</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">e</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_constant</span><span class="p">(</span><span class="s2">"pi"</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_constant</span><span class="p">(</span><span class="s2">"e"</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">e</span><span class="p">)</span>
         <span class="k">return</span>
 
-<div class="viewcode-block" id="EquationFactory.makeEquation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.makeEquation">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">makeEquation</span><span class="p">(</span>
+<div class="viewcode-block" id="EquationFactory.make_equation">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.make_equation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_equation</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">,</span> <span class="n">buildargs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">argclass</span><span class="o">=</span><span class="n">literals</span><span class="o">.</span><span class="n">Argument</span><span class="p">,</span> <span class="n">argkw</span><span class="o">=</span><span class="p">{}</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Make an equation from an equation string.</span>
+<span class="w">        </span><span class="sd">"""Make an equation from an equation string.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        eqstr</span>
-<span class="sd">            An equation in string form using standard python</span>
-<span class="sd">            syntax.  The equation string can use any function</span>
-<span class="sd">            registered literal or function, including numpy ufuncs</span>
-<span class="sd">            that are automatically registered.</span>
-<span class="sd">        buildargs</span>
-<span class="sd">            A flag indicating whether missing arguments can be</span>
-<span class="sd">            created by the Factory (default True). If False, then</span>
-<span class="sd">            the a ValueError will be raised if there are undefined</span>
-<span class="sd">            arguments in the eqstr. Built arguments will be of type</span>
-<span class="sd">            argclass.</span>
-<span class="sd">        argclass</span>
-<span class="sd">            Class to use when creating new Arguments (default</span>
-<span class="sd">            diffpy.srfit.equation.literals.Argument). The class</span>
-<span class="sd">            constructor must accept the &#39;name&#39; key word.</span>
-<span class="sd">        argkw</span>
-<span class="sd">            Key word dictionary to pass to the argclass constructor</span>
-<span class="sd">            (default {}).</span>
+<span class="sd">        eqstr : str</span>
+<span class="sd">            The equation in string form using standard python syntax. The</span>
+<span class="sd">            equation string can use any registered literal or function,</span>
+<span class="sd">            including the numpy ufuncs that are registered automatically.</span>
+<span class="sd">        buildargs : bool, optional</span>
+<span class="sd">            The flag that is True (default) to let the factory create</span>
+<span class="sd">            missing arguments. If False, undefined names in ``eqstr``</span>
+<span class="sd">            raise a ValueError.</span>
+<span class="sd">        argclass : type, optional</span>
+<span class="sd">            The class used to create new arguments. Its constructor must</span>
+<span class="sd">            accept the ``name`` keyword. Default is</span>
+<span class="sd">            ``diffpy.srfit.equation.literals.Argument``.</span>
+<span class="sd">        argkw : dict, optional</span>
+<span class="sd">            The keyword arguments passed to the ``argclass`` constructor.</span>
+<span class="sd">            Default is an empty dict.</span>
 
-<span class="sd">        Returns a callable Literal representing the equation string.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Equation</span>
+<span class="sd">            The callable equation built from ``eqstr``.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``buildargs`` is False and ``eqstr`` uses undefined names.</span>
+<span class="sd">        SyntaxError</span>
+<span class="sd">            If ``eqstr`` is not valid python syntax.</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_builders</span><span class="p">(</span><span class="n">eqstr</span><span class="p">,</span> <span class="n">buildargs</span><span class="p">,</span> <span class="n">argclass</span><span class="p">,</span> <span class="n">argkw</span><span class="p">)</span>
         <span class="n">beq</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">eqstr</span><span class="p">,</span> <span class="p">{},</span> <span class="bp">self</span><span class="o">.</span><span class="n">builders</span><span class="p">)</span>
         <span class="c1"># handle scalar numbers or numpy arrays</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">beq</span><span class="p">,</span> <span class="p">(</span><span class="n">numbers</span><span class="o">.</span><span class="n">Number</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)):</span>
             <span class="n">lit</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">beq</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">eq</span> <span class="o">=</span> <span class="n">Equation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">lit</span><span class="p">)</span>
+            <span class="n">eq</span> <span class="o">=</span> <span class="n">Equation</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">""</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="n">lit</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">eq</span> <span class="o">=</span> <span class="n">beq</span><span class="o">.</span><span class="n">get_equation</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">eq</span></div>
 
 
-<div class="viewcode-block" id="EquationFactory.registerConstant">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.registerConstant">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">registerConstant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a named constant with the factory.</span>
+<div class="viewcode-block" id="EquationFactory.register_constant">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.register_constant">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Register a named constant with the factory.</span>
 
-<span class="sd">        Returns the registered builder.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the constant.</span>
+<span class="sd">        value : object</span>
+<span class="sd">            The value of the constant.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ArgumentBuilder</span>
+<span class="sd">            The registered builder.</span>
+<span class="sd">        """</span>
         <span class="n">arg</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">registerArgument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_argument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="EquationFactory.registerArgument">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.registerArgument">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">registerArgument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a named Argument with the factory.</span>
+<div class="viewcode-block" id="EquationFactory.register_argument">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.register_argument">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Register a named Argument with the factory.</span>
 
-<span class="sd">        Returns the registered builder.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">argbuilder</span> <span class="o">=</span> <span class="n">wrapArgument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">registerBuilder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">argbuilder</span><span class="p">)</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name to register the argument under.</span>
+<span class="sd">        arg : Argument</span>
+<span class="sd">            The argument to register.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ArgumentBuilder</span>
+<span class="sd">            The registered builder.</span>
+<span class="sd">        """</span>
+        <span class="n">argbuilder</span> <span class="o">=</span> <span class="n">wrap_argument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_builder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">argbuilder</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="EquationFactory.registerOperator">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.registerOperator">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">registerOperator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register an Operator literal with the factory.</span>
+<div class="viewcode-block" id="EquationFactory.register_operator">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.register_operator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Register an Operator literal with the factory.</span>
 
 <span class="sd">        Operators can be used with or without arguments (or parentheses)</span>
 <span class="sd">        in an equation string.  If used with arguments, then the</span>
@@ -306,25 +378,35 @@
 <span class="sd">        operator is already populated with arguments, and those will be</span>
 <span class="sd">        used.</span>
 
-<span class="sd">        Returns the registered builder.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">opbuilder</span> <span class="o">=</span> <span class="n">wrapOperator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">registerBuilder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">opbuilder</span><span class="p">)</span></div>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name to register the operator under.</span>
+<span class="sd">        op : Operator</span>
+<span class="sd">            The operator to register.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        OperatorBuilder</span>
+<span class="sd">            The registered builder.</span>
+<span class="sd">        """</span>
+        <span class="n">opbuilder</span> <span class="o">=</span> <span class="n">wrap_operator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_builder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">opbuilder</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="EquationFactory.register_function">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.register_function">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">register_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">argnames</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a named function with the factory.</span>
+<span class="w">        </span><span class="sd">"""Register a named function with the factory.</span>
 
 <span class="sd">        This will register a builder for the function.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str</span>
-<span class="sd">            The name of the function</span>
+<span class="sd">            The name of the function.</span>
 <span class="sd">        func : callable</span>
-<span class="sd">            The callable python object</span>
+<span class="sd">            The callable python object.</span>
 <span class="sd">        argnames : list of str</span>
 <span class="sd">            The argument names for func. If these names do not</span>
 <span class="sd">            correspond to builders, then new constants with value 0</span>
@@ -334,50 +416,56 @@
 <span class="sd">        -------</span>
 <span class="sd">        registered_builder : OperatorBuilder</span>
 <span class="sd">            The registered builder.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">argnames</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">builders</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">registerConstant</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">opbuilder</span> <span class="o">=</span> <span class="n">wrapFunction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">argnames</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">register_constant</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">opbuilder</span> <span class="o">=</span> <span class="n">wrap_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">argnames</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">argname</span> <span class="ow">in</span> <span class="n">argnames</span><span class="p">:</span>
             <span class="n">builder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">builders</span><span class="p">[</span><span class="n">argname</span><span class="p">]</span>
             <span class="n">argliteral</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">literal</span>
-            <span class="n">opbuilder</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">addLiteral</span><span class="p">(</span><span class="n">argliteral</span><span class="p">)</span>
-        <span class="n">registered_builder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">registerBuilder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">opbuilder</span><span class="p">)</span>
+            <span class="n">opbuilder</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="n">argliteral</span><span class="p">)</span>
+        <span class="n">registered_builder</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_builder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">opbuilder</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">registered_builder</span></div>
 
 
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">registerFunction_dep_msg</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">registerFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">argnames</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in</span>
-<span class="sd">        version 4.0.0.</span>
-
-<span class="sd">        Please use</span>
-<span class="sd">        diffpy.srfit.equation.builder.EquationFactory.register_function</span>
-<span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">argnames</span><span class="p">)</span>
-
-<div class="viewcode-block" id="EquationFactory.registerBuilder">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.registerBuilder">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">registerBuilder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">builder</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register builder in this module so it can be used in</span>
-<span class="sd">        makeEquation.</span>
+<div class="viewcode-block" id="EquationFactory.register_builder">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.register_builder">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">builder</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Register a builder so it can be used in ``make_equation``.</span>
 
 <span class="sd">        If an extant builder with the given name is already registered,</span>
-<span class="sd">        this will replace all instances of the old builder&#39;s literal in</span>
-<span class="sd">        the factory&#39;s equation set with the new builder&#39;s literal. Note</span>
+<span class="sd">        this will replace all instances of the old builder's literal in</span>
+<span class="sd">        the factory's equation set with the new builder's literal. Note</span>
 <span class="sd">        that this may lead to errors if one of the replacements causes a</span>
 <span class="sd">        self-reference.</span>
 
-<span class="sd">        Raises ValueError if the new builder&#39;s literal causes a self-</span>
-<span class="sd">        reference in an existing equation.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Name must be a string&quot;</span><span class="p">)</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name to register the builder under.</span>
+<span class="sd">        builder : BaseBuilder</span>
+<span class="sd">            The builder to register.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BaseBuilder</span>
+<span class="sd">            The registered builder.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If ``name`` is not a string or ``builder`` is not a</span>
+<span class="sd">            BaseBuilder.</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the new builder's literal causes a self-reference in an</span>
+<span class="sd">            existing equation.</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Name must be a string"</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">BaseBuilder</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;builder must be a BaseBuilder instance&quot;</span><span class="p">)</span>
-        <span class="c1"># Swap out the old builder&#39;s literal, if necessary</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"builder must be a BaseBuilder instance"</span><span class="p">)</span>
+        <span class="c1"># Swap out the old builder's literal, if necessary</span>
         <span class="n">newlit</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">literal</span>
         <span class="n">swapbyname</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span> <span class="n">ArgumentBuilder</span><span class="p">)</span>
         <span class="n">bloldlits</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -396,14 +484,19 @@
         <span class="k">return</span> <span class="n">builder</span></div>
 
 
-<div class="viewcode-block" id="EquationFactory.deRegisterBuilder">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.deRegisterBuilder">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">deRegisterBuilder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;De-register a builder by name.</span>
+<div class="viewcode-block" id="EquationFactory.deregister_builder">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.deregister_builder">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deregister_builder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Deregister a builder by name.</span>
 
 <span class="sd">        This does not change the equations that use the Literal wrapped</span>
-<span class="sd">        by the builder.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        by the builder. Nothing happens if no builder has this name.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the builder to deregister.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">builders</span><span class="p">:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">builders</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
         <span class="k">return</span></div>
@@ -412,7 +505,7 @@
 <div class="viewcode-block" id="EquationFactory.wipeout">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.EquationFactory.wipeout">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">wipeout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Invalidate the specified equation and remove it from the</span>
+<span class="w">        </span><span class="sd">"""Invalidate the specified equation and remove it from the</span>
 <span class="sd">        factory.</span>
 
 <span class="sd">        This will remove the equation from the purview of the factory</span>
@@ -421,21 +514,103 @@
 <span class="sd">        indirect pickling with the factory because of observer callback</span>
 <span class="sd">        function.</span>
 
-<span class="sd">        No return value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eq : Equation or None</span>
+<span class="sd">            The equation to invalidate. Nothing happens if this is None.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">eq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">assert</span> <span class="n">eq</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span>
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
         <span class="c1"># invalidate this equation to clean up any observer relations of</span>
         <span class="c1"># objects in the factory towards its literals tree.</span>
-        <span class="n">nan</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="s2">&quot;nan&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">eq</span><span class="o">.</span><span class="n">setRoot</span><span class="p">(</span><span class="n">nan</span><span class="p">)</span>
+        <span class="n">nan</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">eq</span><span class="o">.</span><span class="n">set_root</span><span class="p">(</span><span class="n">nan</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">makeEquation_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">makeEquation</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">,</span> <span class="n">buildargs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">argclass</span><span class="o">=</span><span class="n">literals</span><span class="o">.</span><span class="n">Argument</span><span class="p">,</span> <span class="n">argkw</span><span class="o">=</span><span class="p">{}</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.builder.EquationFactory.make_equation</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_equation</span><span class="p">(</span><span class="n">eqstr</span><span class="p">,</span> <span class="n">buildargs</span><span class="p">,</span> <span class="n">argclass</span><span class="p">,</span> <span class="n">argkw</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">registerConstant_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerConstant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.builder.EquationFactory.register_constant</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_constant</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">registerArgument_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerArgument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.builder.EquationFactory.register_argument</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_argument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">registerOperator_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerOperator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.builder.EquationFactory.register_operator</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_operator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">registerFunction_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerFunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">argnames</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.builder.EquationFactory.register_function</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">argnames</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">registerBuilder_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerBuilder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">builder</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.builder.EquationFactory.register_builder</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">register_builder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">builder</span><span class="p">)</span>
+
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">deRegisterBuilder_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deRegisterBuilder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use</span>
+<span class="sd">        diffpy.srfit.equation.builder.EquationFactory.deregister_builder</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">deregister_builder</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_builders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">,</span> <span class="n">buildargs</span><span class="p">,</span> <span class="n">argclass</span><span class="p">,</span> <span class="n">argkw</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare builders so that equation string can be evaluated.</span>
+<span class="w">        </span><span class="sd">"""Prepare builders so that equation string can be evaluated.</span>
 
 <span class="sd">        This method checks the equation string for errors and missing</span>
 <span class="sd">        arguments, and creates new arguments if allowed. In the process it</span>
@@ -443,34 +618,30 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        eqstr</span>
-<span class="sd">            An equation in string as specified in the makeEquation</span>
-<span class="sd">            method.</span>
-<span class="sd">        buildargs</span>
-<span class="sd">            A flag indicating whether missing arguments can be</span>
-<span class="sd">            created by the factory. If False, then the a ValueError</span>
-<span class="sd">            will be raised if there are undefined arguments in the</span>
-<span class="sd">            eqstr.</span>
-<span class="sd">        argclass</span>
-<span class="sd">            Class to use when creating new Arguments. The class</span>
-<span class="sd">            constructor must accept the &#39;name&#39; key word.</span>
-<span class="sd">        argkw</span>
-<span class="sd">            Key word dictionary to pass to the argclass</span>
-<span class="sd">            constructor.</span>
+<span class="sd">        eqstr : str</span>
+<span class="sd">            The equation string, as in ``make_equation``.</span>
+<span class="sd">        buildargs : bool</span>
+<span class="sd">            The flag that is True to let the factory create missing</span>
+<span class="sd">            arguments.</span>
+<span class="sd">        argclass : type</span>
+<span class="sd">            The class used to create new arguments.</span>
+<span class="sd">        argkw : dict</span>
+<span class="sd">            The keyword arguments passed to the ``argclass`` constructor.</span>
 
-<span class="sd">        Raises ValueError if new arguments must be created, but this is</span>
-<span class="sd">        disallowed due to the buildargs flag.</span>
-<span class="sd">        Raises SyntaxError if the equation string uses invalid syntax.</span>
-
-<span class="sd">        Returns a dictionary of the name, BaseBuilder pairs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If new arguments must be created but ``buildargs`` is False.</span>
+<span class="sd">        SyntaxError</span>
+<span class="sd">            If the equation string uses invalid syntax.</span>
+<span class="sd">        """</span>
         <span class="n">eqargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_undefined_args</span><span class="p">(</span><span class="n">eqstr</span><span class="p">)</span>
 
         <span class="c1"># Raise an error if there are arguments that need to be created, but</span>
         <span class="c1"># this is disallowed.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">buildargs</span> <span class="ow">and</span> <span class="n">eqargs</span><span class="p">:</span>
-            <span class="n">eqargsstr</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">eqargs</span><span class="p">)</span>
-            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;The equation contains undefined arguments: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">eqargsstr</span>
+            <span class="n">eqargsstr</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">eqargs</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">"The equation contains undefined arguments: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">eqargsstr</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="c1"># Make the arguments</span>
@@ -479,22 +650,22 @@
             <span class="n">arg</span> <span class="o">=</span> <span class="n">argclass</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">argname</span><span class="p">,</span> <span class="o">**</span><span class="n">argkw</span><span class="p">)</span>
             <span class="n">argbuilder</span> <span class="o">=</span> <span class="n">ArgumentBuilder</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">argname</span><span class="p">,</span> <span class="n">arg</span><span class="o">=</span><span class="n">arg</span><span class="p">)</span>
             <span class="n">newargs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">registerBuilder</span><span class="p">(</span><span class="n">argname</span><span class="p">,</span> <span class="n">argbuilder</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">register_builder</span><span class="p">(</span><span class="n">argname</span><span class="p">,</span> <span class="n">argbuilder</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">newargs</span> <span class="o">=</span> <span class="n">newargs</span>
 
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_get_undefined_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the undefined arguments from eqstr.</span>
+<span class="w">        </span><span class="sd">"""Get the undefined arguments from eqstr.</span>
 
 <span class="sd">        This tokenizes eqstr and extracts undefined arguments. An</span>
 <span class="sd">        undefined argument is defined as any token that is not a special</span>
 <span class="sd">        character that does not correspond to a builder.</span>
 
 <span class="sd">        Raises SyntaxError if the equation string uses invalid syntax.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">interface</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">eqstr</span><span class="p">)</span><span class="o">.</span><span class="n">readline</span>
+<span class="sd">        """</span>
+        <span class="n">interface</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">eqstr</span><span class="p">)</span><span class="o">.</span><span class="n">readline</span>
         <span class="c1"># output is an iterator. Each entry (token) is a 5-tuple</span>
         <span class="c1"># token[0] = token type</span>
         <span class="c1"># token[1] = token string</span>
@@ -511,7 +682,7 @@
                 <span class="k">if</span> <span class="n">tok</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">OP</span><span class="p">):</span>
                     <span class="n">args</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tok</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">except</span> <span class="n">tokenize</span><span class="o">.</span><span class="n">TokenError</span><span class="p">:</span>
-            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;invalid syntax: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="n">eqstr</span>
+            <span class="n">m</span> <span class="o">=</span> <span class="s2">"invalid syntax: '</span><span class="si">%s</span><span class="s2">'"</span> <span class="o">%</span> <span class="n">eqstr</span>
             <span class="k">raise</span> <span class="ne">SyntaxError</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 
         <span class="c1"># Scan the tokens for names that do not correspond to registered</span>
@@ -537,13 +708,13 @@
 
 <span class="c1"># End class EquationFactory</span>
 
-<span class="n">base_basebuilder</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.equation.builder.BaseBuilder&quot;</span>
-<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
+<span class="n">base_basebuilder</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.equation.builder.BaseBuilder"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
 
 <span class="n">getequation_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">base_basebuilder</span><span class="p">,</span>
-    <span class="s2">&quot;getEquation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_equation&quot;</span><span class="p">,</span>
+    <span class="s2">"getEquation"</span><span class="p">,</span>
+    <span class="s2">"get_equation"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -551,25 +722,25 @@
 <div class="viewcode-block" id="BaseBuilder">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.BaseBuilder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseBuilder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for building equations.</span>
+<span class="w">    </span><span class="sd">"""Class for building equations.</span>
 
 <span class="sd">    Equation builder objects can be composed like a normal function where the</span>
 <span class="sd">    arguments can be other BaseBuilder instances or constants.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    literal</span>
+<span class="sd">    literal : Literal or None</span>
 <span class="sd">        The equation Literal being built by this instance.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">literal</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raises exception for easier debugging.&quot;&quot;&quot;</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) cannot accept arguments&quot;</span> <span class="o">%</span> <span class="p">(</span>
+<span class="w">        </span><span class="sd">"""Raise a TypeError, because a BaseBuilder takes no</span>
+<span class="sd">        arguments."""</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) cannot accept arguments"</span> <span class="o">%</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
         <span class="p">)</span>
@@ -578,29 +749,34 @@
 <div class="viewcode-block" id="BaseBuilder.get_equation">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.BaseBuilder.get_equation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the equation built by this object.</span>
+<span class="w">        </span><span class="sd">"""Get the equation built by this object.</span>
 
-<span class="sd">        The equation will given the name &quot;_eq_&lt;root&gt;&quot; where &quot;&lt;root&gt;&quot; is</span>
+<span class="sd">        The equation will given the name "_eq_&lt;root&gt;" where "&lt;root&gt;" is</span>
 <span class="sd">        the name of the root node.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Equation</span>
+<span class="sd">            The equation whose root is this builder's literal.</span>
+<span class="sd">        """</span>
         <span class="c1"># We need to make a name for this, so we name it after its root</span>
-        <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;_eq_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="s2">"_eq_</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">name</span>
         <span class="n">eq</span> <span class="o">=</span> <span class="n">Equation</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">eq</span></div>
 
 
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">getequation_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.equation.builder.BaseBuilder.get_equation</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_equation</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__eval_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">OperatorClass</span><span class="p">,</span> <span class="n">onleft</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate a binary function.</span>
+<span class="w">        </span><span class="sd">"""Evaluate a binary function.</span>
 
 <span class="sd">        Other can be an BaseBuilder or a constant.</span>
 
@@ -609,7 +785,7 @@
 <span class="sd">        onleft</span>
 <span class="sd">            Indicates that the operator was passed on the left side</span>
 <span class="sd">            (default True).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Create the Operator</span>
         <span class="n">op</span> <span class="o">=</span> <span class="n">OperatorClass</span><span class="p">()</span>
 
@@ -617,7 +793,7 @@
         <span class="c1"># ordering is preserved.</span>
         <span class="k">if</span> <span class="n">onleft</span><span class="p">:</span>
             <span class="c1"># Add the literals to the operator</span>
-            <span class="n">op</span><span class="o">.</span><span class="n">addLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
+            <span class="n">op</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
 
         <span class="c1"># Deal with constants</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseBuilder</span><span class="p">):</span>
@@ -626,11 +802,11 @@
             <span class="n">literal</span> <span class="o">=</span> <span class="n">other</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">literal</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">other</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">op</span><span class="o">.</span><span class="n">addLiteral</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">onleft</span><span class="p">:</span>
             <span class="c1"># Add the literals to the operator</span>
-            <span class="n">op</span><span class="o">.</span><span class="n">addLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
+            <span class="n">op</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
 
         <span class="c1"># Create a new OperatorBuilder for the Operator</span>
         <span class="n">opbuilder</span> <span class="o">=</span> <span class="n">OperatorBuilder</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -638,9 +814,9 @@
         <span class="k">return</span> <span class="n">opbuilder</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__eval_unary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">OperatorClass</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate a unary function.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Evaluate a unary function."""</span>
         <span class="n">op</span> <span class="o">=</span> <span class="n">OperatorClass</span><span class="p">()</span>
-        <span class="n">op</span><span class="o">.</span><span class="n">addLiteral</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
+        <span class="n">op</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
         <span class="n">opbuilder</span> <span class="o">=</span> <span class="n">OperatorBuilder</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="n">opbuilder</span><span class="o">.</span><span class="n">literal</span> <span class="o">=</span> <span class="n">op</span>
         <span class="k">return</span> <span class="n">opbuilder</span>
@@ -671,14 +847,6 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__eval_binary</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">literals</span><span class="o">.</span><span class="n">DivisionOperator</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
 
-    <span class="c1"># Python 2 Compatibility -------------------------------------------------</span>
-
-    <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-        <span class="n">__div__</span> <span class="o">=</span> <span class="fm">__truediv__</span>
-        <span class="n">__rdiv__</span> <span class="o">=</span> <span class="fm">__rtruediv__</span>
-
-    <span class="c1"># ------------------------------------------------------------------------</span>
-
     <span class="k">def</span><span class="w"> </span><span class="fm">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__eval_binary</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">literals</span><span class="o">.</span><span class="n">ExponentiationOperator</span><span class="p">)</span>
 
@@ -704,35 +872,31 @@
 <div class="viewcode-block" id="ArgumentBuilder">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.ArgumentBuilder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ArgumentBuilder</span><span class="p">(</span><span class="n">BaseBuilder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;BaseBuilder wrapper around an Argument literal.</span>
+<span class="w">    </span><span class="sd">"""BaseBuilder wrapper around an Argument literal.</span>
 
 <span class="sd">    Equation builder objects can be composed like a normal function where the</span>
 <span class="sd">    arguments can be other BaseBuilder instances or constants.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value : object, optional</span>
+<span class="sd">        The value of the new Argument. Default is None.</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        The name of the new Argument. Default is None.</span>
+<span class="sd">    const : bool, optional</span>
+<span class="sd">        The flag that is True if the new Argument is constant. Default is</span>
+<span class="sd">        False.</span>
+<span class="sd">    arg : Argument, optional</span>
+<span class="sd">        The existing Argument to wrap. If None (default), a new Argument</span>
+<span class="sd">        is created from ``value``, ``name`` and ``const``.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    literal</span>
+<span class="sd">    literal : Argument</span>
 <span class="sd">        The Argument wrapped by this instance.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">arg</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an ArgumentBuilder instance, containing a new</span>
-<span class="sd">        Argument.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        value</span>
-<span class="sd">            The value of the wrapped Argument (float, default None)</span>
-<span class="sd">        name</span>
-<span class="sd">            The name of the wrapped Argument (string, default None)</span>
-<span class="sd">        const</span>
-<span class="sd">            Flag indicating whether the Argument is constant (bool,</span>
-<span class="sd">            default False)</span>
-<span class="sd">        arg</span>
-<span class="sd">            A pre-defined Argument to use. If this is None (default),</span>
-<span class="sd">            then a new Argument will be created from value, name and</span>
-<span class="sd">            const.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">BaseBuilder</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">literal</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">Argument</span><span class="p">(</span>
@@ -750,46 +914,52 @@
 <div class="viewcode-block" id="OperatorBuilder">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.OperatorBuilder">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OperatorBuilder</span><span class="p">(</span><span class="n">BaseBuilder</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;BaseBuilder wrapper around an Operator literal.</span>
+<span class="w">    </span><span class="sd">"""BaseBuilder wrapper around an Operator literal.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the wrapped Operator.</span>
+<span class="sd">    op : Operator, optional</span>
+<span class="sd">        The Operator to wrap. If None (default), ``name`` is taken to be</span>
+<span class="sd">        the name of a numpy ufunc, which defines the Operator when the</span>
+<span class="sd">        builder is called.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    literal</span>
+<span class="sd">    literal : Operator or None</span>
 <span class="sd">        The Operator wrapped by this instance.</span>
-<span class="sd">    name</span>
-<span class="sd">        The name of the operator to be wrapped</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the wrapped Operator.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrap an Operator or a function by name.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name</span>
-<span class="sd">            The name of the wrapped Operator</span>
-<span class="sd">        op</span>
-<span class="sd">            If specified, this sets the literal attribute as this</span>
-<span class="sd">            operator (default None). Otherwise, the name is assumed to</span>
-<span class="sd">            be that of a numpy ufunc, which is used to specify the</span>
-<span class="sd">            Operator.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">BaseBuilder</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">literal</span> <span class="o">=</span> <span class="n">op</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the operator builder.</span>
+<span class="w">        </span><span class="sd">"""Call the operator builder.</span>
 
 <span class="sd">        This creates a new builder that encapsulates the operation.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        args</span>
-<span class="sd">            Arguments of the operation.</span>
+<span class="sd">        *args</span>
+<span class="sd">            The arguments of the operation.</span>
 
-<span class="sd">        Raises ValueError if self.literal.nin &gt;= 0 and len(args) != op.nin</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        OperatorBuilder</span>
+<span class="sd">            The new builder for the operation applied to ``args``.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the operator takes a fixed number of arguments and</span>
+<span class="sd">            ``args`` has a different length.</span>
+<span class="sd">        """</span>
         <span class="n">newobj</span> <span class="o">=</span> <span class="n">OperatorBuilder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 
         <span class="c1"># If all we have is a name, then we assume that it is the name of a</span>
@@ -799,7 +969,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">literal</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">UFuncOperator</span><span class="p">(</span><span class="n">ufunc</span><span class="p">)</span>
         <span class="c1"># Here the Operator is already specified.  We can copy its attributes</span>
         <span class="c1"># to a new Operator inside of the new OperatorBuilder.</span>
-        <span class="n">op</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">makeOperator</span><span class="p">(</span>
+        <span class="n">op</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">make_operator</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="n">symbol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span>
             <span class="n">nin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">nin</span><span class="p">,</span>
@@ -808,11 +978,11 @@
         <span class="p">)</span>
         <span class="n">newobj</span><span class="o">.</span><span class="n">literal</span> <span class="o">=</span> <span class="n">op</span>
 
-        <span class="c1"># Now that we have a literal, let&#39;s check our inputs</span>
+        <span class="c1"># Now that we have a literal, let's check our inputs</span>
         <span class="n">literal</span> <span class="o">=</span> <span class="n">newobj</span><span class="o">.</span><span class="n">literal</span>
         <span class="k">if</span> <span class="n">literal</span><span class="o">.</span><span class="n">nin</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">!=</span> <span class="n">literal</span><span class="o">.</span><span class="n">nin</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> takes </span><span class="si">%i</span><span class="s2"> arguments (</span><span class="si">%i</span><span class="s2"> given)&quot;</span>
+                <span class="s2">"</span><span class="si">%s</span><span class="s2"> takes </span><span class="si">%i</span><span class="s2"> arguments (</span><span class="si">%i</span><span class="s2"> given)"</span>
                 <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">nin</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
             <span class="p">)</span>
 
@@ -820,9 +990,9 @@
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="c1"># Wrap the argument if it is not already</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">BaseBuilder</span><span class="p">):</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">"_</span><span class="si">%i</span><span class="s2">"</span> <span class="o">%</span> <span class="n">i</span>
                 <span class="n">arg</span> <span class="o">=</span> <span class="n">ArgumentBuilder</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">arg</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">newobj</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">addLiteral</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
+            <span class="n">newobj</span><span class="o">.</span><span class="n">literal</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">literal</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">newobj</span></div>
 
@@ -833,43 +1003,73 @@
 <span class="c1"># Utility functions</span>
 
 
-<div class="viewcode-block" id="wrapArgument">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.wrapArgument">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">wrapArgument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap an Argument as a builder.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="wrap_argument">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.wrap_argument">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrap_argument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Wrap an Argument as a builder.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the argument. It is not used, because the builder</span>
+<span class="sd">        takes its name from ``arg``.</span>
+<span class="sd">    arg : Argument</span>
+<span class="sd">        The argument to wrap.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ArgumentBuilder</span>
+<span class="sd">        The builder that wraps ``arg``.</span>
+<span class="sd">    """</span>
     <span class="n">argbuilder</span> <span class="o">=</span> <span class="n">ArgumentBuilder</span><span class="p">(</span><span class="n">arg</span><span class="o">=</span><span class="n">arg</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">argbuilder</span></div>
 
 
 
-<div class="viewcode-block" id="wrapOperator">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.wrapOperator">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">wrapOperator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap an Operator as a builder.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="wrap_operator">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.wrap_operator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrap_operator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Wrap an Operator as a builder.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the builder.</span>
+<span class="sd">    op : Operator</span>
+<span class="sd">        The operator to wrap.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    OperatorBuilder</span>
+<span class="sd">        The builder that wraps ``op``.</span>
+<span class="sd">    """</span>
     <span class="n">opbuilder</span> <span class="o">=</span> <span class="n">OperatorBuilder</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">opbuilder</span></div>
 
 
 
-<div class="viewcode-block" id="wrapFunction">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.wrapFunction">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">wrapFunction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">nin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nout</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap a function in an OperatorBuilder instance.</span>
+<div class="viewcode-block" id="wrap_function">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.wrap_function">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrap_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">nin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nout</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Wrap a function in an OperatorBuilder instance.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    name</span>
-<span class="sd">        The name of the function</span>
-<span class="sd">    func</span>
-<span class="sd">        A callable python object</span>
-<span class="sd">    nin</span>
-<span class="sd">        The number of input arguments (default 2)</span>
-<span class="sd">    nout</span>
-<span class="sd">        The number of return values (default 1)</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the function.</span>
+<span class="sd">    func : callable</span>
+<span class="sd">        The callable python object.</span>
+<span class="sd">    nin : int, optional</span>
+<span class="sd">        The number of input arguments. Default is 2.</span>
+<span class="sd">    nout : int, optional</span>
+<span class="sd">        The number of return values. Default is 1.</span>
 
-<span class="sd">    Returns the OperatorBuilder instance that wraps the function.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">op</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">makeOperator</span><span class="p">(</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    OperatorBuilder</span>
+<span class="sd">        The builder that wraps the function.</span>
+<span class="sd">    """</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">make_operator</span><span class="p">(</span>
         <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">nin</span><span class="o">=</span><span class="n">nin</span><span class="p">,</span> <span class="n">nout</span><span class="o">=</span><span class="n">nout</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="n">func</span>
     <span class="p">)</span>
 
@@ -880,17 +1080,73 @@
 
 
 
-<div class="viewcode-block" id="getBuilder">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.getBuilder">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">getBuilder</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an operator from the global builders dictionary.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="get_builder">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.builder.get_builder">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_builder</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Get an operator builder from the global builders dictionary.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the builder, such as "sin" or "add".</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    OperatorBuilder</span>
+<span class="sd">        The global builder registered under ``name``.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    KeyError</span>
+<span class="sd">        If no global builder has this name.</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="n">_builders</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
 
 
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">wrapArgument_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrapArgument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.equation.builder.wrap_argument instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">wrap_argument</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">wrapOperator_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrapOperator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.equation.builder.wrap_operator instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">wrap_operator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
+
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">wrapFunction_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrapFunction</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">nin</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nout</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.equation.builder.wrap_function instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">wrap_function</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">nin</span><span class="p">,</span> <span class="n">nout</span><span class="p">)</span>
+
+
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">getBuilder_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">getBuilder</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.equation.builder.get_builder instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">get_builder</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">__wrap_numpy_operators</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Export all numpy operators as OperatorBuilder instances in the</span>
-<span class="sd">    module namespace.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Export all numpy operators as OperatorBuilder instances in the</span>
+<span class="sd">    module namespace."""</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">numpy</span><span class="p">):</span>
         <span class="n">op</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">numpy</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ufunc</span><span class="p">):</span>
@@ -903,9 +1159,9 @@
 
 <span class="c1"># Register other functions as well</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">__wrap_srfit_operators</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Export all non-base operators from the</span>
+<span class="w">    </span><span class="sd">"""Export all non-base operators from the</span>
 <span class="sd">    diffpy.srfit.equation.literals.operators module as OperatorBuilder</span>
-<span class="sd">    instances in the module namespace.&quot;&quot;&quot;</span>
+<span class="sd">    instances in the module namespace."""</span>
     <span class="n">opmod</span> <span class="o">=</span> <span class="n">literals</span><span class="o">.</span><span class="n">operators</span>
     <span class="n">excluded_types</span> <span class="o">=</span> <span class="nb">set</span><span class="p">((</span><span class="n">opmod</span><span class="o">.</span><span class="n">CustomOperator</span><span class="p">,</span> <span class="n">opmod</span><span class="o">.</span><span class="n">UFuncOperator</span><span class="p">))</span>
 
@@ -921,7 +1177,7 @@
     <span class="c1"># create OperatorBuilder objects</span>
     <span class="k">for</span> <span class="n">nm</span><span class="p">,</span> <span class="n">opclass</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">opmod</span><span class="p">,</span> <span class="n">_is_exported_type</span><span class="p">):</span>
         <span class="n">op</span> <span class="o">=</span> <span class="n">opclass</span><span class="p">()</span>
-        <span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Unnamed Operator should never appear here.&quot;</span>
+        <span class="k">assert</span> <span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">"Unnamed Operator should never appear here."</span>
         <span class="n">_builders</span><span class="p">[</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">OperatorBuilder</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
     <span class="k">return</span>
 

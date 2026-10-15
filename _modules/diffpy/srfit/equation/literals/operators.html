@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.literals.operators &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.literals.operators &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,45 +91,58 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Operator classes.</span>
+<span class="sd">"""Operator classes.</span>
 
 <span class="sd">Operators are combined with other Literals to create an equation.</span>
 <span class="sd">Operators are non-leaf nodes on a Literal tree. These trees can be</span>
 <span class="sd">evaluated by the Evaluator visitor, or otherwise inspected.</span>
 
 <span class="sd">The Operator class contains all the information necessary to be</span>
-<span class="sd">identified and evaluated by a Visitor. Thus, a single onOperator method</span>
+<span class="sd">identified and evaluated by a Visitor. Thus, a single on_operator method</span>
 <span class="sd">exists in the Visitor base class. Other Operators can be derived from</span>
 <span class="sd">Operator (see AdditionOperator), but they all identify themselves with</span>
-<span class="sd">the Visitor.onOperator method.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">the Visitor.on_operator method.</span>
+<span class="sd">"""</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;Operator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;AdditionOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SubtractionOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;MultiplicationOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DivisionOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ExponentiationOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;RemainderOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;NegationOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ConvolutionOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;SumOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;UFuncOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ArrayOperator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;PolyvalOperator&quot;</span><span class="p">,</span>
+    <span class="s2">"Operator"</span><span class="p">,</span>
+    <span class="s2">"AdditionOperator"</span><span class="p">,</span>
+    <span class="s2">"SubtractionOperator"</span><span class="p">,</span>
+    <span class="s2">"MultiplicationOperator"</span><span class="p">,</span>
+    <span class="s2">"DivisionOperator"</span><span class="p">,</span>
+    <span class="s2">"ExponentiationOperator"</span><span class="p">,</span>
+    <span class="s2">"RemainderOperator"</span><span class="p">,</span>
+    <span class="s2">"NegationOperator"</span><span class="p">,</span>
+    <span class="s2">"ConvolutionOperator"</span><span class="p">,</span>
+    <span class="s2">"SumOperator"</span><span class="p">,</span>
+    <span class="s2">"UFuncOperator"</span><span class="p">,</span>
+    <span class="s2">"ArrayOperator"</span><span class="p">,</span>
+    <span class="s2">"PolyvalOperator"</span><span class="p">,</span>
+    <span class="s2">"make_operator"</span><span class="p">,</span>
+    <span class="s2">"makeOperator"</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals.abcs</span><span class="w"> </span><span class="kn">import</span> <span class="n">OperatorABC</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals.literal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">operator_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.equation.literals.Operator"</span>
+<span class="n">literals_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.equation.literals"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
+<span class="n">addLiteral_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">operator_base</span><span class="p">,</span> <span class="s2">"addLiteral"</span><span class="p">,</span> <span class="s2">"add_literal"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
+<span class="n">makeOperator_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">literals_base</span><span class="p">,</span> <span class="s2">"makeOperator"</span><span class="p">,</span> <span class="s2">"make_operator"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="Operator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Operator</span><span class="p">(</span><span class="n">Literal</span><span class="p">,</span> <span class="n">OperatorABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class for specifying a general operator.</span>
+<span class="w">    </span><span class="sd">"""Abstract class for specifying a general operator.</span>
 
 <span class="sd">    This class provides several methods that are common to a derived</span>
 <span class="sd">    classes for concrete operations.</span>
@@ -148,15 +161,15 @@
 <span class="sd">        This must be defined in a derived class.</span>
 <span class="sd">    symbol : str, abstract</span>
 <span class="sd">        The symbolic representation for the operator such as</span>
-<span class="sd">        &quot;+&quot; or &quot;sin&quot;.  This attribute must be defined in a derived</span>
+<span class="sd">        "+" or "sin".  This attribute must be defined in a derived</span>
 <span class="sd">        class.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    args : list</span>
 <span class="sd">        The list of `Literal` arguments.  Read-only, use the</span>
-<span class="sd">        `addLiteral` method to change its content.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        `add_literal` method to change its content.</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Private Attributes</span>
     <span class="c1"># ------------------</span>
@@ -169,14 +182,14 @@
     <span class="n">_value</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the operator object with the specified name.</span>
+<span class="w">        </span><span class="sd">"""Initialize the operator object with the specified name.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str, optional</span>
 <span class="sd">            Name for the operator object.  When not specified,</span>
 <span class="sd">            use the class attribute `name`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">Literal</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">return</span>
@@ -184,47 +197,65 @@
 <div class="viewcode-block" id="Operator.identify">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator.identify">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visitor</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify self to a visitor.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">onOperator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Identify self to a visitor."""</span>
+        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">on_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Operator.addLiteral">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator.addLiteral">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">addLiteral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a literal to this operator.</span>
+<div class="viewcode-block" id="Operator.add_literal">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator.add_literal">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Add a literal to this operator.</span>
 
 <span class="sd">        Note that order of operation matters. The first literal added is</span>
 <span class="sd">        the leftmost argument. The last is the rightmost.</span>
 
-<span class="sd">        Raises ValueError if the literal causes a self-reference.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Make sure we don&#39;t have self-reference</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        literal : Literal</span>
+<span class="sd">            The literal to add as the next argument.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``literal`` causes a self-reference.</span>
+<span class="sd">        """</span>
+        <span class="c1"># Make sure we don't have self-reference</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_loop_check</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span>
-        <span class="n">literal</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+        <span class="n">literal</span><span class="o">.</span><span class="n">add_observer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">other</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="p">,))</span>
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="Operator.getValue">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator.getValue">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get or evaluate the value of the operator.&quot;&quot;&quot;</span>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">addLiteral_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addLiteral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use diffpy.srfit.equation.literals.Operator.add_literal</span>
+<span class="sd">        instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_literal</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Operator.get_value">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Operator.get_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Get or evaluate the value of the operator."""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">arg</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">operation</span><span class="p">(</span><span class="o">*</span><span class="n">vals</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span></div>
 
 
-    <span class="n">value</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">())</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_loop_check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a literal causes self-reference.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Check if a literal causes self-reference."""</span>
         <span class="k">if</span> <span class="n">literal</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;</span><span class="si">%s</span><span class="s2">&#39; causes self-reference&quot;</span> <span class="o">%</span> <span class="n">literal</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"'</span><span class="si">%s</span><span class="s2">' causes self-reference"</span> <span class="o">%</span> <span class="n">literal</span><span class="p">)</span>
 
         <span class="c1"># Check to see if I am a dependency of the literal.</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">literal</span><span class="p">,</span> <span class="s2">"args"</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">lit_arg</span> <span class="ow">in</span> <span class="n">literal</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_loop_check</span><span class="p">(</span><span class="n">lit_arg</span><span class="p">)</span>
         <span class="k">return</span></div>
@@ -232,13 +263,13 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UnaryOperator</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class for an unary operator with one input and one</span>
+<span class="w">    </span><span class="sd">"""Abstract class for an unary operator with one input and one</span>
 <span class="sd">    result.</span>
 
 <span class="sd">    This base class defines the `nin` and `nout` attributes.  The</span>
 <span class="sd">    derived concrete operator must provide the remaining abstract</span>
 <span class="sd">    attributes of the `Operator` class.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">nin</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">nout</span> <span class="o">=</span> <span class="mi">1</span>
@@ -248,13 +279,13 @@
 <div class="viewcode-block" id="BinaryOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.BinaryOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BinaryOperator</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class for a binary operator with two inputs and one</span>
+<span class="w">    </span><span class="sd">"""Abstract class for a binary operator with two inputs and one</span>
 <span class="sd">    result.</span>
 
 <span class="sd">    This base class defines the `nin` and `nout` attributes.  The</span>
 <span class="sd">    derived concrete operator must define the remaining abstract</span>
 <span class="sd">    attributes of the `Operator` class.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">nin</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">nout</span> <span class="o">=</span> <span class="mi">1</span>
@@ -265,10 +296,10 @@
 <div class="viewcode-block" id="CustomOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.CustomOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomOperator</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Concrete class for a user-defined Operator.</span>
+<span class="w">    </span><span class="sd">"""Concrete class for a user-defined Operator.</span>
 
-<span class="sd">    Use the `makeOperator` factory function to create an instance.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    Use the `make_operator` factory function to create an instance.</span>
+<span class="sd">    """</span>
 
     <span class="c1"># declare all abstract attributes from the Operator base.</span>
     <span class="n">nin</span> <span class="o">=</span> <span class="kc">None</span>
@@ -279,10 +310,10 @@
 
 
 
-<div class="viewcode-block" id="makeOperator">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.makeOperator">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">makeOperator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">nin</span><span class="p">,</span> <span class="n">nout</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a new custom operator object.</span>
+<div class="viewcode-block" id="make_operator">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.make_operator">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_operator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">nin</span><span class="p">,</span> <span class="n">nout</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return a new custom operator object.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -290,20 +321,20 @@
 <span class="sd">        Name of the custom operator object.</span>
 <span class="sd">    symbol : str</span>
 <span class="sd">        The symbolic representation for the operator such as</span>
-<span class="sd">        &quot;+&quot; or &quot;sin&quot;.</span>
+<span class="sd">        "+" or "sin".</span>
 <span class="sd">    operation : callable</span>
 <span class="sd">        Function that performs the operation, e.g., `numpy.add`.</span>
 <span class="sd">    nin : int</span>
 <span class="sd">        Number of input arguments for the operator.  Any number of</span>
 <span class="sd">        arguments is allowed when -1.</span>
-<span class="sd">    nout : in</span>
+<span class="sd">    nout : int</span>
 <span class="sd">        Number of outputs returned by the `operation`.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    CustomOperator</span>
 <span class="sd">        The new custom operator object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">op</span> <span class="o">=</span> <span class="n">CustomOperator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
     <span class="n">op</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
     <span class="n">op</span><span class="o">.</span><span class="n">operation</span> <span class="o">=</span> <span class="n">operation</span>
@@ -313,16 +344,26 @@
 
 
 
+<span class="nd">@deprecated</span><span class="p">(</span><span class="n">makeOperator_dep_msg</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">makeOperator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">nin</span><span class="p">,</span> <span class="n">nout</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
+<span class="sd">    4.0.0.</span>
+
+<span class="sd">    Please use diffpy.srfit.equation.literals.make_operator instead.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">make_operator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">operation</span><span class="p">,</span> <span class="n">nin</span><span class="p">,</span> <span class="n">nout</span><span class="p">)</span>
+
+
 <span class="c1"># Some specified operators</span>
 
 
 <div class="viewcode-block" id="AdditionOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.AdditionOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AdditionOperator</span><span class="p">(</span><span class="n">BinaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Addition operator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Addition operator."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;add&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;+&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"add"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"+"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">add</span><span class="p">)</span>
     <span class="k">pass</span></div>
 
@@ -331,10 +372,10 @@
 <div class="viewcode-block" id="SubtractionOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.SubtractionOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SubtractionOperator</span><span class="p">(</span><span class="n">BinaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subtraction operator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Subtraction operator."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;subtract&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"subtract"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"-"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">subtract</span><span class="p">)</span>
     <span class="k">pass</span></div>
 
@@ -343,10 +384,10 @@
 <div class="viewcode-block" id="MultiplicationOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.MultiplicationOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MultiplicationOperator</span><span class="p">(</span><span class="n">BinaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiplication operator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Multiplication operator."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;multiply&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"multiply"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"*"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">multiply</span><span class="p">)</span>
     <span class="k">pass</span></div>
 
@@ -355,10 +396,10 @@
 <div class="viewcode-block" id="DivisionOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.DivisionOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DivisionOperator</span><span class="p">(</span><span class="n">BinaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Division operator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Division operator."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;divide&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"divide"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"/"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">divide</span><span class="p">)</span>
     <span class="k">pass</span></div>
 
@@ -367,10 +408,10 @@
 <div class="viewcode-block" id="ExponentiationOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.ExponentiationOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExponentiationOperator</span><span class="p">(</span><span class="n">BinaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exponentiation operator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Exponentiation operator."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;power&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;**&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"power"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"**"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">power</span><span class="p">)</span>
     <span class="k">pass</span></div>
 
@@ -379,10 +420,10 @@
 <div class="viewcode-block" id="RemainderOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.RemainderOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RemainderOperator</span><span class="p">(</span><span class="n">BinaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remainder operator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Remainder operator."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;mod&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;%&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"mod"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"%"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">mod</span><span class="p">)</span>
     <span class="k">pass</span></div>
 
@@ -391,10 +432,10 @@
 <div class="viewcode-block" id="NegationOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.NegationOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NegationOperator</span><span class="p">(</span><span class="n">UnaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Negation operator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Negation operator."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;negative&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"negative"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"-"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">negative</span><span class="p">)</span>
     <span class="k">pass</span></div>
 
@@ -402,7 +443,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_conv</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">):</span>
     <span class="c1"># Get the full convolution</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"full"</span><span class="p">)</span>
     <span class="c1"># Find the centroid of the first signal</span>
     <span class="n">s1</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span>
     <span class="n">x1</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">v1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -427,7 +468,7 @@
 <div class="viewcode-block" id="ConvolutionOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.ConvolutionOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConvolutionOperator</span><span class="p">(</span><span class="n">BinaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convolve two signals.</span>
+<span class="w">    </span><span class="sd">"""Convolve two signals.</span>
 
 <span class="sd">    This convolves two signals such that centroid of the first array is</span>
 <span class="sd">    not altered by the convolution. Furthermore, the integrated</span>
@@ -437,10 +478,10 @@
 
 <span class="sd">    Note that this is only possible when the signals are computed over</span>
 <span class="sd">    the same range.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;convolve&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;convolve&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"convolve"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"convolve"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">_conv</span><span class="p">)</span>
     <span class="k">pass</span></div>
 
@@ -449,10 +490,10 @@
 <div class="viewcode-block" id="SumOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.SumOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SumOperator</span><span class="p">(</span><span class="n">UnaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;numpy.sum operator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""numpy.sum operator."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;sum&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;sum&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"sum"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"sum"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">)</span></div>
 
 
@@ -460,11 +501,11 @@
 <div class="viewcode-block" id="UFuncOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.UFuncOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">UFuncOperator</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A operator wrapper around a numpy ufunc.</span>
+<span class="w">    </span><span class="sd">"""A operator wrapper around a numpy ufunc.</span>
 
 <span class="sd">    The name and symbol attributes are set equal to the ufunc.__name__</span>
 <span class="sd">    attribute. nin and nout are also taken from the ufunc.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">symbol</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">nin</span> <span class="o">=</span> <span class="kc">None</span>
@@ -472,7 +513,7 @@
     <span class="n">operation</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization.</span>
+<span class="w">        </span><span class="sd">"""Initialization.</span>
 
 <span class="sd">        Arguments</span>
 
@@ -480,7 +521,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        op</span>
 <span class="sd">            A numpy ufunc</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">Operator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">op</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="vm">__name__</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nin</span> <span class="o">=</span> <span class="n">op</span><span class="o">.</span><span class="n">nin</span>
@@ -493,11 +534,11 @@
 <div class="viewcode-block" id="ArrayOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.ArrayOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ArrayOperator</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Operator that will take parameters and turn them into an</span>
-<span class="sd">    array.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Operator that will take parameters and turn them into an</span>
+<span class="sd">    array."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;array&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;array&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"array"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"array"</span>
     <span class="n">nin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
     <span class="n">nout</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -513,10 +554,10 @@
 <div class="viewcode-block" id="PolyvalOperator">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.PolyvalOperator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PolyvalOperator</span><span class="p">(</span><span class="n">BinaryOperator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Operator for numpy polyval.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Operator for numpy polyval."""</span>
 
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;polyval&quot;</span>
-    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">&quot;polyval&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"polyval"</span>
+    <span class="n">symbol</span> <span class="o">=</span> <span class="s2">"polyval"</span>
     <span class="n">operation</span> <span class="o">=</span> <span class="nb">staticmethod</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">polyval</span><span class="p">)</span>
     <span class="k">pass</span></div>
 

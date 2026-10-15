@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.profilegenerator &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.fitbase.profilegenerator &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,7 +91,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;The ProfileGenerator class for generating a profile.</span>
+<span class="sd">"""The ProfileGenerator class for generating a profile.</span>
 
 <span class="sd">ProfileGenerators encapsulate the evaluation and required Parameters and</span>
 <span class="sd">ParameterSets of a profile calculator.  The ProfileGenerator class can</span>
@@ -106,22 +106,22 @@
 <span class="sd">    class Gaussian(ProfileGenerator):</span>
 <span class="sd">        def __init__(self):</span>
 <span class="sd">            # Initialize and give this a name</span>
-<span class="sd">            ProfileGenerator.__init__(self, &quot;g&quot;)</span>
+<span class="sd">            ProfileGenerator.__init__(self, "g")</span>
 <span class="sd">            # Add amplitude, center and width parameters</span>
-<span class="sd">            self.newParameter(&quot;amp&quot;, 0)</span>
-<span class="sd">            self.newParameter(&quot;center&quot;, 0)</span>
-<span class="sd">            self.newParameter(&quot;width&quot;, 0)</span>
+<span class="sd">            self.new_parameter("amp", 0)</span>
+<span class="sd">            self.new_parameter("center", 0)</span>
+<span class="sd">            self.new_parameter("width", 0)</span>
 <span class="sd">        def __call__(self, x):</span>
-<span class="sd">            a = self.amp.getValue()</span>
-<span class="sd">            x0 = self.center.getValue()</span>
-<span class="sd">            w = self.width.getValue()</span>
+<span class="sd">            a = self.amp.get_value()</span>
+<span class="sd">            x0 = self.center.get_value()</span>
+<span class="sd">            w = self.width.get_value()</span>
 <span class="sd">            return a * exp(-0.5*((x-x0)/w)**2)</span>
 
 <span class="sd">More examples can be found in the example directory of the</span>
 <span class="sd">documentation.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ProfileGenerator&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ProfileGenerator"</span><span class="p">]</span>
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals.operators</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operator</span>
@@ -130,78 +130,75 @@
 
 
 <div class="viewcode-block" id="ProfileGenerator">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileGenerator">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ProfileGenerator</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="n">ParameterSet</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for profile generators.</span>
+<span class="w">    </span><span class="sd">"""Base class for profile generators.</span>
 
-<span class="sd">    A ProfileGenerator organizes Parameters and has a __call__ method that can</span>
-<span class="sd">    generate a profile. ProfileGenerator is also an Operator</span>
-<span class="sd">    (diffpy.srfit.equation.literals.operators), so it can be used directly in</span>
-<span class="sd">    an evaluation network.</span>
+<span class="sd">    A ProfileGenerator organizes Parameters and has a ``__call__`` method</span>
+<span class="sd">    that can generate a profile. ProfileGenerator is also an Operator</span>
+<span class="sd">    (diffpy.srfit.equation.literals.operators), so it can be used directly</span>
+<span class="sd">    in an evaluation network.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the ProfileGenerator. It must be a valid attribute</span>
+<span class="sd">        name.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    name</span>
-<span class="sd">        A name for this organizer.</span>
-<span class="sd">    profile</span>
-<span class="sd">        A Profile instance that contains the calculation range</span>
-<span class="sd">        and will contain the generated profile.</span>
-<span class="sd">    meta</span>
-<span class="sd">        A dictionary of metadata needed by the generator.</span>
-<span class="sd">    eq</span>
-<span class="sd">        The Equation object used to wrap this ProfileGenerator.</span>
-<span class="sd">        This is set when the ProfileGenerator is added to a</span>
-<span class="sd">        FitContribution.</span>
-<span class="sd">    _calculators</span>
-<span class="sd">        A managed dictionary of Calculators, indexed by name.</span>
-<span class="sd">    _constraints</span>
-<span class="sd">        A set of constrained Parameters. Constraints can be</span>
-<span class="sd">        added using the &#39;constrain&#39; methods.</span>
-<span class="sd">    _parameters</span>
-<span class="sd">        A managed OrderedDict of contained Parameters.</span>
-<span class="sd">    _parsets</span>
-<span class="sd">        A managed dictionary of ParameterSets.</span>
-<span class="sd">    _restraints</span>
-<span class="sd">        A set of Restraints. Restraints can be added using the</span>
-<span class="sd">        &#39;restrain&#39; or &#39;confine&#39; methods.</span>
-<span class="sd">    _eqfactory</span>
-<span class="sd">        A diffpy.srfit.equation.builder.EquationFactory</span>
-<span class="sd">        instance that is used create Equations from string.</span>
-
-<span class="sd">    Operator Attributes</span>
-<span class="sd">    -------------------</span>
-<span class="sd">    args</span>
-<span class="sd">        List of Literal arguments, set with &#39;addLiteral&#39;</span>
-<span class="sd">    name</span>
-<span class="sd">        A name for this operator. e.g. &quot;add&quot; or &quot;sin&quot;</span>
-<span class="sd">    nin</span>
-<span class="sd">        Number of inputs (&lt;1 means this is variable)</span>
-<span class="sd">    nout</span>
-<span class="sd">        Number of outputs</span>
-<span class="sd">    operation</span>
-<span class="sd">        Function that performs the operation. e.g. numpy.add. In</span>
-<span class="sd">        this case, operation is an instance method.</span>
-<span class="sd">    symbol</span>
-<span class="sd">        The symbolic representation. e.g. &quot;+&quot; or &quot;sin&quot;</span>
-<span class="sd">    _value</span>
-<span class="sd">        The value of the Operator.</span>
-<span class="sd">    value</span>
-<span class="sd">        Property for &#39;getValue&#39;.</span>
-
-<span class="sd">    Properties</span>
-<span class="sd">    ----------</span>
-<span class="sd">    names</span>
-<span class="sd">        Variable names (read only). See get_names.</span>
-<span class="sd">    values</span>
-<span class="sd">        Variable values (read only). See get_values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the ProfileGenerator.</span>
+<span class="sd">    profile : Profile or None</span>
+<span class="sd">        The Profile that contains the calculation range and will contain</span>
+<span class="sd">        the generated profile. It is None until ``set_profile`` is called.</span>
+<span class="sd">    meta : dict</span>
+<span class="sd">        The metadata needed by the generator. It is updated from the</span>
+<span class="sd">        Profile metadata whenever the Profile is set or changes.</span>
+<span class="sd">    names : list of str</span>
+<span class="sd">        The names of the top-level Parameters (read only). See</span>
+<span class="sd">        ``get_names``.</span>
+<span class="sd">    values : list</span>
+<span class="sd">        The values of the top-level Parameters (read only). See</span>
+<span class="sd">        ``get_values``.</span>
+<span class="sd">    args : list</span>
+<span class="sd">        The Literal arguments of the operator, added with</span>
+<span class="sd">        ``add_literal``.</span>
+<span class="sd">    nin : int</span>
+<span class="sd">        The number of inputs, which is 0. The independent variable is</span>
+<span class="sd">        taken from ``profile``.</span>
+<span class="sd">    nout : int</span>
+<span class="sd">        The number of outputs, which is 1.</span>
+<span class="sd">    symbol : str</span>
+<span class="sd">        The symbolic representation of the operator, which is the same as</span>
+<span class="sd">        ``name`` (read only).</span>
+<span class="sd">    value : object</span>
+<span class="sd">        The value of the operator (read only). See ``get_value``.</span>
+<span class="sd">    _value : object</span>
+<span class="sd">        The cached value of the operator, or None if it must be</span>
+<span class="sd">        recomputed.</span>
+<span class="sd">    _calculators : dict</span>
+<span class="sd">        The managed dictionary of Calculators, indexed by name.</span>
+<span class="sd">    _constraints : dict</span>
+<span class="sd">        The dictionary of Constraints, indexed by the constrained</span>
+<span class="sd">        Parameter. Constraints can be added using the ``add_constraint``</span>
+<span class="sd">        method.</span>
+<span class="sd">    _parameters : OrderedDict</span>
+<span class="sd">        The managed OrderedDict of contained Parameters.</span>
+<span class="sd">    _parsets : OrderedDict</span>
+<span class="sd">        The managed OrderedDict of contained ParameterSets.</span>
+<span class="sd">    _restraints : set</span>
+<span class="sd">        The set of Restraints. Restraints can be added using the</span>
+<span class="sd">        ``add_soft_bounds`` method.</span>
+<span class="sd">    _eqfactory : diffpy.srfit.equation.builder.EquationFactory</span>
+<span class="sd">        The factory that is used to create Equations from strings.</span>
+<span class="sd">    """</span>
 
     <span class="c1"># define abstract attributes from the Operator base.</span>
     <span class="n">nin</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">nout</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the attributes.&quot;&quot;&quot;</span>
         <span class="n">Operator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">ParameterSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="kc">None</span>
@@ -210,12 +207,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The symbolic representation, which is the generator name."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
 
     <span class="c1"># Overload me!</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the profile.</span>
+<span class="w">        </span><span class="sd">"""Evaluate the profile.</span>
 
 <span class="sd">        This method must be overloaded. It only takes the independent</span>
 <span class="sd">        variable to calculate over.</span>
@@ -229,41 +227,45 @@
 <span class="sd">        -------</span>
 <span class="sd">        ndarray</span>
 <span class="sd">            The calculated profile.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">x</span>
 
     <span class="c1"># No need to overload anything below here</span>
 
 <div class="viewcode-block" id="ProfileGenerator.operation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileGenerator.operation">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileGenerator.operation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">operation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the profile.</span>
+<span class="w">        </span><span class="sd">"""Evaluate the profile over the calculation points.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        ndarray</span>
-<span class="sd">            The result of ``__call__(profile.x)``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            The profile calculated by ``__call__`` at ``profile.x``.</span>
+<span class="sd">        """</span>
         <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">y</span></div>
 
 
 <div class="viewcode-block" id="ProfileGenerator.set_profile">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.ProfileGenerator.set_profile">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.ProfileGenerator.set_profile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign the profile.</span>
+<span class="w">        </span><span class="sd">"""Assign the profile.</span>
+
+<span class="sd">        The generator stops observing any previously assigned Profile and</span>
+<span class="sd">        starts observing the new one, so that changes to the Profile</span>
+<span class="sd">        update ``meta`` and invalidate the cached value.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        profile : Profile</span>
 <span class="sd">            The Profile that specifies the calculation points and which</span>
 <span class="sd">            will store the calculated signal.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">removeObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_profile_update</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">remove_observer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_profile_update</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">profile</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_profile_update</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">add_observer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_profile_update</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_on_profile_update</span><span class="p">(</span><span class="n">other</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="p">,))</span>
         <span class="k">return</span></div>
 
@@ -276,16 +278,16 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_process_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process the metadata.</span>
+<span class="w">        </span><span class="sd">"""Process the metadata.</span>
 
 <span class="sd">        This can be used to configure a ProfileGenerator upon a change</span>
 <span class="sd">        in the metadata. This method gets called whenever the Profile is</span>
 <span class="sd">        set.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
+<span class="w">        </span><span class="sd">"""Validate my state.</span>
 
 <span class="sd">        This performs profile validations. This performs ParameterSet</span>
 <span class="sd">        validations. This does not validate the operation, since this</span>
@@ -296,9 +298,9 @@
 <span class="sd">        ------</span>
 <span class="sd">        SrFitError</span>
 <span class="sd">            If validation fails.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;profile is None&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"profile is None"</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span>
         <span class="n">ParameterSet</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span></div>

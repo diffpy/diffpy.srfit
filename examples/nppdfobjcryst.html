@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>nppdfobjcryst.py &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>nppdfobjcryst.py &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -122,11 +122,11 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">########################################################################</span>
-<span class="sd">&quot;&quot;&quot;Example of a nanoparticle PDF refinement using DebyePDFGenerator.</span>
+<span class="sd">"""Example of a nanoparticle PDF refinement using DebyePDFGenerator.</span>
 
 <span class="sd">This example is similar to crystalpdfobjcryst.py, except that it uses</span>
 <span class="sd">the DebyePDFGenerator from SrReal to refine a pyobjcryst Molecule.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
@@ -143,7 +143,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeRecipe</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="n">datname</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a recipe that uses the DebyePDFGenerator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Create a recipe that uses the DebyePDFGenerator."""</span>
     <span class="c1"># The Profile</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="n">Profile</span><span class="p">()</span>
 
@@ -152,35 +152,35 @@
     <span class="n">profile</span><span class="o">.</span><span class="n">set_calculation_range</span><span class="p">(</span><span class="n">xmin</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
     <span class="c1"># The ProfileGenerator</span>
-    <span class="c1"># Create a DebyePDFGenerator named &quot;G&quot;.</span>
-    <span class="n">generator</span> <span class="o">=</span> <span class="n">DebyePDFGenerator</span><span class="p">(</span><span class="s2">&quot;G&quot;</span><span class="p">)</span>
+    <span class="c1"># Create a DebyePDFGenerator named "G".</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">DebyePDFGenerator</span><span class="p">(</span><span class="s2">"G"</span><span class="p">)</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
     <span class="c1"># These are metadata needed by the generator</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setQmin</span><span class="p">(</span><span class="mf">0.68</span><span class="p">)</span>
     <span class="n">generator</span><span class="o">.</span><span class="n">setQmax</span><span class="p">(</span><span class="mi">22</span><span class="p">)</span>
 
     <span class="c1"># The FitContribution</span>
-    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">&quot;bucky&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span> <span class="o">=</span> <span class="n">FitContribution</span><span class="p">(</span><span class="s2">"bucky"</span><span class="p">)</span>
     <span class="n">contribution</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">contribution</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="s2">"r"</span><span class="p">)</span>
 
     <span class="c1"># Make a FitRecipe.</span>
     <span class="n">recipe</span> <span class="o">=</span> <span class="n">FitRecipe</span><span class="p">()</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">add_contribution</span><span class="p">(</span><span class="n">contribution</span><span class="p">)</span>
 
-    <span class="c1"># Specify which parameters we want to refine. We&#39;ll be using the</span>
-    <span class="c1"># MoleculeParSet within the generator, so let&#39;s get a handle to it. See the</span>
+    <span class="c1"># Specify which parameters we want to refine. We'll be using the</span>
+    <span class="c1"># MoleculeParSet within the generator, so let's get a handle to it. See the</span>
     <span class="c1"># diffpy.srfit.structure.objcryststructure module for more information</span>
     <span class="c1"># about the MoleculeParSet hierarchy.</span>
     <span class="n">c60</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">phase</span>
 
     <span class="c1"># First, the isotropic thermal displacement factor.</span>
-    <span class="n">Biso</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">&quot;Biso&quot;</span><span class="p">)</span>
+    <span class="n">Biso</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">"Biso"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">c60</span><span class="o">.</span><span class="n">getScatterers</span><span class="p">():</span>
 
-        <span class="c1"># We have defined a &#39;center&#39; atom that is a dummy, which means that it</span>
+        <span class="c1"># We have defined a 'center' atom that is a dummy, which means that it</span>
         <span class="c1"># has no scattering power. It is only used as a reference point for</span>
-        <span class="c1"># our bond length. We don&#39;t want to constrain it.</span>
+        <span class="c1"># our bond length. We don't want to constrain it.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">atom</span><span class="o">.</span><span class="n">isDummy</span><span class="p">():</span>
             <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">atom</span><span class="o">.</span><span class="n">Biso</span><span class="p">,</span> <span class="n">Biso</span><span class="p">)</span>
 
@@ -194,10 +194,10 @@
     <span class="c1"># more difficult to set up.)</span>
     <span class="n">center</span> <span class="o">=</span> <span class="n">c60</span><span class="o">.</span><span class="n">center</span>
     <span class="c1"># Create a new Parameter that represents the radius of the molecule. Note</span>
-    <span class="c1"># that we don&#39;t give it an initial value. Since the variable is being</span>
+    <span class="c1"># that we don't give it an initial value. Since the variable is being</span>
     <span class="c1"># directly constrained to further below, its initial value will be inferred</span>
     <span class="c1"># from the constraint.</span>
-    <span class="n">radius</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">&quot;radius&quot;</span><span class="p">)</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">create_new_variable</span><span class="p">(</span><span class="s2">"radius"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">atom</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">c60</span><span class="o">.</span><span class="n">getScatterers</span><span class="p">()):</span>
 
         <span class="k">if</span> <span class="n">atom</span><span class="o">.</span><span class="n">isDummy</span><span class="p">():</span>
@@ -205,7 +205,7 @@
 
         <span class="c1"># This creates a Parameter that moves the second atom according to the</span>
         <span class="c1"># bond length. Note that each Parameter needs a unique name.</span>
-        <span class="n">par</span> <span class="o">=</span> <span class="n">c60</span><span class="o">.</span><span class="n">addBondLengthParameter</span><span class="p">(</span><span class="s2">&quot;rad</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">atom</span><span class="p">)</span>
+        <span class="n">par</span> <span class="o">=</span> <span class="n">c60</span><span class="o">.</span><span class="n">addBondLengthParameter</span><span class="p">(</span><span class="s2">"rad</span><span class="si">%i</span><span class="s2">"</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">atom</span><span class="p">)</span>
         <span class="n">recipe</span><span class="o">.</span><span class="n">add_constraint</span><span class="p">(</span><span class="n">par</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
 
     <span class="c1"># Add the correlation term, scale. The scale is too short to effectively</span>
@@ -218,8 +218,8 @@
 
 
 <span class="n">plot_styles</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;xlabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$r (\AA)$&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ylabel&quot;</span><span class="p">:</span> <span class="sa">r</span><span class="s2">&quot;$G (\AA^{-2})$&quot;</span><span class="p">,</span>
+    <span class="s2">"xlabel"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"$r (\AA)$"</span><span class="p">,</span>
+    <span class="s2">"ylabel"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"$G (\AA^{-2})$"</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -227,7 +227,7 @@
 
     <span class="n">molecule</span> <span class="o">=</span> <span class="n">makeC60</span><span class="p">()</span>
     <span class="c1"># Make the data and the recipe</span>
-    <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;data/C60.gr&quot;</span><span class="p">)</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">makeRecipe</span><span class="p">(</span><span class="n">molecule</span><span class="p">,</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">"data/C60.gr"</span><span class="p">)</span>
     <span class="c1"># Tell the fithook that we want very verbose output.</span>
     <span class="n">recipe</span><span class="o">.</span><span class="n">fithooks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="mi">3</span>
 
@@ -246,7 +246,7 @@
     <span class="k">return</span>
 
 
-<span class="n">c60xyz</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="n">c60xyz</span> <span class="o">=</span> <span class="s2">"""</span>
 <span class="s2">3.451266498   0.685000000   0.000000000</span>
 <span class="s2">3.451266498  -0.685000000   0.000000000</span>
 <span class="s2">-3.451266498   0.685000000   0.000000000</span>
@@ -307,40 +307,40 @@
 <span class="s2">-2.279809890  -2.580456608   0.724000000</span>
 <span class="s2">2.279809890  -2.580456608  -0.724000000</span>
 <span class="s2">-2.279809890  -2.580456608  -0.724000000</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">"""</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">makeC60</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Make the C60 molecule using pyobjcryst.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Make the C60 molecule using pyobjcryst."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst.crystal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Crystal</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst.molecule</span><span class="w"> </span><span class="kn">import</span> <span class="n">Molecule</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">pyobjcryst.scatteringpower</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScatteringPowerAtom</span>
 
     <span class="c1"># make a crystal box to put the molecule in</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">Crystal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;P1&quot;</span><span class="p">)</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="s2">&quot;c60frame&quot;</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">Crystal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"P1"</span><span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="s2">"c60frame"</span><span class="p">)</span>
 
     <span class="c1"># put a molecule inside the box</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s2">&quot;c60&quot;</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">Molecule</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="s2">"c60"</span><span class="p">)</span>
     <span class="n">c</span><span class="o">.</span><span class="n">AddScatterer</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 
     <span class="c1"># Create a dummy atom at the center.</span>
-    <span class="n">m</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">)</span>
+    <span class="n">m</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"center"</span><span class="p">)</span>
 
     <span class="c1"># Create the scattering power object for the carbon atoms</span>
-    <span class="n">sp</span> <span class="o">=</span> <span class="n">ScatteringPowerAtom</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">)</span>
+    <span class="n">sp</span> <span class="o">=</span> <span class="n">ScatteringPowerAtom</span><span class="p">(</span><span class="s2">"C"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">)</span>
     <span class="n">c</span><span class="o">.</span><span class="n">AddScatteringPower</span><span class="p">(</span><span class="n">sp</span><span class="p">)</span>
     <span class="n">sp</span><span class="o">.</span><span class="n">SetBiso</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
 
     <span class="c1"># Add the other atoms. They will be named C1, C2, ..., C60.</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">c60xyz</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()):</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
-        <span class="n">m</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="s2">&quot;C</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">m</span><span class="o">.</span><span class="n">AddAtom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="s2">"C</span><span class="si">%i</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">m</span>
 
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
 
     <span class="n">main</span><span class="p">()</span>
 

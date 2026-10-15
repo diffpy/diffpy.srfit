@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.literals.abcs &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.literals.abcs &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,9 +91,9 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Abstract Base Classes for Literals.&quot;&quot;&quot;</span>
+<span class="sd">"""Abstract Base Classes for Literals."""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;LiteralABC&quot;</span><span class="p">,</span> <span class="s2">&quot;ArgumentABC&quot;</span><span class="p">,</span> <span class="s2">&quot;OperatorABC&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"LiteralABC"</span><span class="p">,</span> <span class="s2">"ArgumentABC"</span><span class="p">,</span> <span class="s2">"OperatorABC"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
@@ -101,31 +101,31 @@
 <div class="viewcode-block" id="LiteralABC">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.LiteralABC">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LiteralABC</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract Base Class for Literal.</span>
+<span class="w">    </span><span class="sd">"""Abstract Base Class for Literal.</span>
 
 <span class="sd">    See Literal for usage.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="LiteralABC.identify">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.LiteralABC.identify">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visitor</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify this literal using a visitor.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Identify this literal using a visitor."""</span>
         <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="LiteralABC.getValue">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.LiteralABC.getValue">[docs]</a>
+<div class="viewcode-block" id="LiteralABC.get_value">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.LiteralABC.get_value">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the value of the literal.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the value of the literal."""</span>
         <span class="k">pass</span></div>
 
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Name of the literal.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Name of the literal."""</span>
         <span class="k">pass</span></div>
 
 
@@ -136,29 +136,29 @@
 <div class="viewcode-block" id="ArgumentABC">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.ArgumentABC">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ArgumentABC</span><span class="p">(</span><span class="n">LiteralABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract Base Class for Argument.</span>
+<span class="w">    </span><span class="sd">"""Abstract Base Class for Argument.</span>
 
 <span class="sd">    See Argument for usage.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ArgumentABC.set_value">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.ArgumentABC.set_value">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of the argument.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Set the value of the argument."""</span>
         <span class="k">pass</span></div>
 
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">const</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Whether the argument is constant.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Whether the argument is constant."""</span>
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Value of the argument.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Value of the argument."""</span>
         <span class="k">pass</span></div>
 
 
@@ -169,53 +169,53 @@
 <div class="viewcode-block" id="OperatorABC">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.OperatorABC">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">OperatorABC</span><span class="p">(</span><span class="n">LiteralABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract Base Class for Operator.</span>
+<span class="w">    </span><span class="sd">"""Abstract Base Class for Operator.</span>
 
 <span class="sd">    See Operator for usage.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-<div class="viewcode-block" id="OperatorABC.addLiteral">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.OperatorABC.addLiteral">[docs]</a>
+<div class="viewcode-block" id="OperatorABC.add_literal">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.abcs.OperatorABC.add_literal">[docs]</a>
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">addLiteral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a literal argument to the operator.&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Add a literal argument to the operator."""</span>
         <span class="k">pass</span></div>
 
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Arguments of the operator.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Arguments of the operator."""</span>
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">nin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of input arguments.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Number of input arguments."""</span>
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">nout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of outputs.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Number of outputs."""</span>
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">operation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Callable implementing the operator.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Callable implementing the operator."""</span>
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">symbol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Symbol representing the operator.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Symbol representing the operator."""</span>
         <span class="k">pass</span>
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Value produced by the operator.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Value produced by the operator."""</span>
         <span class="k">pass</span></div>
 
 

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.pdf package &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.pdf package &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../_static/documentation_options.js?v=1c984258"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -228,7 +228,7 @@ managed by this generator.</p>
 This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default True).
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default True).
 Note that some structures do not support periodicity, in
 which case this will be ignored.</p></li>
 </ul>
@@ -249,9 +249,9 @@ used. The resulting ParameterSet will be managed by this generator.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stru</strong> – The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
 pyobjcryst.molecule.Molecule instance to adapt (default None).</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – The name to give to the managed ParameterSet that adapts stru
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – The name to give to the managed ParameterSet that adapts stru
 (default “phase”).</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default
 False). Note that some structures do not support
 periodicity, in which case this will have no effect on the
 PDF calculation.</p></li>
@@ -392,7 +392,7 @@ restraints from string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name to give the generator that will manage the PDF
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – A name to give the generator that will manage the PDF
 calculation from the passed parameter phase. The parset
 will be accessible via the name “phase” as an attribute
 of the generator, e.g., contribution.name.phase, where
@@ -402,7 +402,7 @@ name.</p></li>
 This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic.  If this is
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic.  If this is
 True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
 DebyePDFGenerator will be used. Note that some structures
@@ -427,7 +427,7 @@ in parset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name to give the generator that will manage the PDF
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – A name to give the generator that will manage the PDF
 calculation from the passed structure. The adapted
 structure will be accessible via the name “phase” as an
 attribute of the generator, e.g.
@@ -436,7 +436,7 @@ contribution and ‘name’ is passed name.
 (default), then the name will be set as “phase”.</p></li>
 <li><p><strong>stru</strong> – The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
 pyobjcryst.molecule.Molecule instance to adapt (default None).</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic.  If this is
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic.  If this is
 True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
 DebyePDFGenerator will be used. Note that some structures
@@ -463,7 +463,7 @@ in stru.</p>
 <dd class="field-odd"><p>The maximum scattering vector used to generate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -477,7 +477,7 @@ in stru.</p>
 <dd class="field-odd"><p>The minimum scattering vector used to generate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -492,7 +492,7 @@ in stru.</p>
 <dd class="field-odd"><p>The scattering type used to calculate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -505,7 +505,7 @@ in stru.</p>
 the built-in profile with load_parsed_data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>datafile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – The path to the file that contains the data.</p>
+<dd class="field-odd"><p><strong>datafile</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> or </em><em>Path</em>) – The path to the file that contains the data.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -518,7 +518,7 @@ the built-in profile with load_parsed_data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – The file or filename to which the data is saved.</p></li>
+<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> or </em><em>Path</em>) – The file or filename to which the data is saved.</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to numpy.savetxt.</p></li>
 </ul>
 </dd>
@@ -549,8 +549,8 @@ from the data, resample the <code class="docutils literal notranslate"><span cla
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.14)"><strong>AttributeError</strong></a> – If there is no observed data.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#AttributeError" title="(in Python v3.15)"><strong>AttributeError</strong></a> – If there is no observed data.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</p></li>
 </ul>
 </dd>
 </dl>
@@ -562,7 +562,7 @@ from the data, resample the <code class="docutils literal notranslate"><span cla
 <dd><p>Set the qmax value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The maximum scattering vector used to generate the PDF.</p>
+<dd class="field-odd"><p><strong>qmax</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The maximum scattering vector used to generate the PDF.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -573,7 +573,7 @@ from the data, resample the <code class="docutils literal notranslate"><span cla
 <dd><p>Set the qmin value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qmin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The minimum scattering vector used to generate the PDF.</p>
+<dd class="field-odd"><p><strong>qmin</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The minimum scattering vector used to generate the PDF.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -584,10 +584,10 @@ from the data, resample the <code class="docutils literal notranslate"><span cla
 <dd><p>Set the scattering type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – “X” for x-ray or “N” for neutron (default “X”).</p>
+<dd class="field-odd"><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – “X” for x-ray or “N” for neutron (default “X”).</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If type is not “X” or “N”.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If type is not “X” or “N”.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -736,13 +736,11 @@ format handled by the parser.</p>
 <dt class="sig sig-object py" id="diffpy.srfit.pdf.PDFParser._banks">
 <span class="sig-name descname"><span class="pre">_banks</span></span><a class="headerlink" href="#diffpy.srfit.pdf.PDFParser._banks" title="Link to this definition"></a></dt>
 <dd><p>The data from each bank. Each bank contains a
-(x, y, dx, dy) tuple:
-x</p>
-<blockquote>
-<div><p>A numpy array containing the independent
-variable read from the file.</p>
-</div></blockquote>
+(x, y, dx, dy) tuple:</p>
 <dl class="simple">
+<dt>x</dt><dd><p>A numpy array containing the independent
+variable read from the file.</p>
+</dd>
 <dt>y</dt><dd><p>A numpy array containing the profile
 from the file.</p>
 </dd>
@@ -984,7 +982,7 @@ managed by this generator.</p>
 This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default True).
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default True).
 Note that some structures do not support periodicity, in
 which case this will be ignored.</p></li>
 </ul>
@@ -1005,9 +1003,9 @@ used. The resulting ParameterSet will be managed by this generator.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stru</strong> – The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
 pyobjcryst.molecule.Molecule instance to adapt (default None).</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – The name to give to the managed ParameterSet that adapts stru
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – The name to give to the managed ParameterSet that adapts stru
 (default “phase”).</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default
 False). Note that some structures do not support
 periodicity, in which case this will have no effect on the
 PDF calculation.</p></li>
@@ -1075,28 +1073,28 @@ lognormal size distribution.</p>
 distribution (not of the particle size), and s is the width of
 the distribution. This is the characteristic function for the
 lognormal distribution of particle diameter:</p>
-<dl>
-<dt>F(r, mu, s) = 0.5*Erfc((-mu-3*s^2+Log(r))/(sqrt(2)*s))</dt><dd><ul class="simple">
-<li><p>0.25*r^3*Erfc((-mu+Log(r))/(sqrt(2)*s))*exp(-3*mu-4.5*s^2)</p></li>
-</ul>
-<ul class="simple">
-<li><p>0.75*r*Erfc((-mu-2*s^2+Log(r))/(sqrt(2)*s))*exp(-mu-2.5*s^2)</p></li>
-</ul>
-</dd>
-</dl>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">F</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="mf">0.5</span><span class="o">*</span><span class="n">Erfc</span><span class="p">((</span><span class="o">-</span><span class="n">mu</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">s</span><span class="o">^</span><span class="mi">2</span><span class="o">+</span><span class="n">Log</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">s</span><span class="p">))</span>
+    <span class="o">+</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">r</span><span class="o">^</span><span class="mi">3</span><span class="o">*</span><span class="n">Erfc</span><span class="p">((</span><span class="o">-</span><span class="n">mu</span><span class="o">+</span><span class="n">Log</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">s</span><span class="p">))</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="o">*</span><span class="n">mu</span><span class="o">-</span><span class="mf">4.5</span><span class="o">*</span><span class="n">s</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+    <span class="o">-</span> <span class="mf">0.75</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">Erfc</span><span class="p">((</span><span class="o">-</span><span class="n">mu</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">s</span><span class="o">^</span><span class="mi">2</span><span class="o">+</span><span class="n">Log</span><span class="p">(</span><span class="n">r</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">s</span><span class="p">))</span><span class="o">*</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">mu</span><span class="o">-</span><span class="mf">2.5</span><span class="o">*</span><span class="n">s</span><span class="o">^</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
 <p>The expectation value of the distribution gives the average particle
 diameter, particle_diameter. The variance of the distribution gives
 particle_diameter_sigma^2. mu and s can be expressed in terms of these
 as:</p>
-<p>s^2 = log((particle_diameter_sigma/particle_diameter)^2 + 1)
-mu = log(particle_diameter) - s^2/2</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s</span><span class="o">^</span><span class="mi">2</span> <span class="o">=</span> <span class="n">log</span><span class="p">((</span><span class="n">particle_diameter_sigma</span><span class="o">/</span><span class="n">particle_diameter</span><span class="p">)</span><span class="o">^</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">mu</span> <span class="o">=</span> <span class="n">log</span><span class="p">(</span><span class="n">particle_diameter</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span><span class="o">^</span><span class="mi">2</span><span class="o">/</span><span class="mi">2</span>
+</pre></div>
+</div>
 <p>Source unknown.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array_like</em>) – The distance of interaction.</p></li>
-<li><p><strong>particle_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The mean particle diameter.</p></li>
-<li><p><strong>particle_diameter_sigma</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The log-normal width of the particle diameter.</p></li>
+<li><p><strong>particle_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The mean particle diameter.</p></li>
+<li><p><strong>particle_diameter_sigma</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The log-normal width of the particle diameter.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1134,7 +1132,7 @@ instead.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array_like</em>) – The distance of interaction.</p></li>
-<li><p><strong>sheet_thickness</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The thickness of the nanosheet.</p></li>
+<li><p><strong>sheet_thickness</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The thickness of the nanosheet.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1179,8 +1177,8 @@ Phys. Rev. B, 80, 024118 (2009).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array_like</em>) – The distance of interaction.</p></li>
-<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The inner radius.</p></li>
-<li><p><strong>thickness</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The thickness of the shell.</p></li>
+<li><p><strong>radius</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The inner radius.</p></li>
+<li><p><strong>thickness</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The thickness of the shell.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1217,7 +1215,7 @@ radius to diameter).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array_like</em>) – The distance of interaction.</p></li>
-<li><p><strong>particle_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The particle diameter.</p></li>
+<li><p><strong>particle_diameter</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The particle diameter.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1265,8 +1263,8 @@ sphere. From Lei et al., Phys. Rev. B, 80, 024118 (2009).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array_like</em>) – The distance of interaction.</p></li>
-<li><p><strong>equatorial_radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The equatorial radius.</p></li>
-<li><p><strong>polar_radius</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The polar radius.</p></li>
+<li><p><strong>equatorial_radius</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The equatorial radius.</p></li>
+<li><p><strong>polar_radius</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The polar radius.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -1315,13 +1313,11 @@ format handled by the parser.</p>
 <dt class="sig sig-object py" id="diffpy.srfit.pdf.pdfparser.PDFParser._banks">
 <span class="sig-name descname"><span class="pre">_banks</span></span><a class="headerlink" href="#diffpy.srfit.pdf.pdfparser.PDFParser._banks" title="Link to this definition"></a></dt>
 <dd><p>The data from each bank. Each bank contains a
-(x, y, dx, dy) tuple:
-x</p>
-<blockquote>
-<div><p>A numpy array containing the independent
-variable read from the file.</p>
-</div></blockquote>
+(x, y, dx, dy) tuple:</p>
 <dl class="simple">
+<dt>x</dt><dd><p>A numpy array containing the independent
+variable read from the file.</p>
+</dd>
 <dt>y</dt><dd><p>A numpy array containing the profile
 from the file.</p>
 </dd>
@@ -1688,7 +1684,7 @@ setQmin).</p>
 <dd class="field-odd"><p>The maximum scattering vector used to generate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1702,7 +1698,7 @@ setQmin).</p>
 <dd class="field-odd"><p>The minimum scattering vector used to generate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1717,7 +1713,7 @@ setQmin).</p>
 <dd class="field-odd"><p>The scattering type used to calculate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1729,7 +1725,7 @@ setQmin).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ncpu</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – The number of parallel processes. Revert to serial mode
+<li><p><strong>ncpu</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><em>int</em></a>) – The number of parallel processes. Revert to serial mode
 when 1.</p></li>
 <li><p><strong>mapfunc</strong> (<em>callable</em><em>, </em><em>optional</em>) – The mapping function to use. If this is None (default),
 <code class="docutils literal notranslate"><span class="pre">multiprocessing.Pool.imap_unordered</span></code> will be used.</p></li>
@@ -1753,7 +1749,7 @@ managed by this generator.</p>
 This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default True).
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default True).
 Note that some structures do not support periodicity, in
 which case this will be ignored.</p></li>
 </ul>
@@ -1767,7 +1763,7 @@ which case this will be ignored.</p></li>
 <dd><p>Set the qmax value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The maximum scattering vector used to generate the PDF.</p>
+<dd class="field-odd"><p><strong>qmax</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The maximum scattering vector used to generate the PDF.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1778,7 +1774,7 @@ which case this will be ignored.</p></li>
 <dd><p>Set the qmin value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qmin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The minimum scattering vector used to generate the PDF.</p>
+<dd class="field-odd"><p><strong>qmin</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The minimum scattering vector used to generate the PDF.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1789,12 +1785,12 @@ which case this will be ignored.</p></li>
 <dd><p>Set the scattering type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>stype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – “X” for x-ray, “N” for neutron, “E” for electrons,
+<dd class="field-odd"><p><strong>stype</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – “X” for x-ray, “N” for neutron, “E” for electrons,
 or any registered type from diffpy.srreal from
 ScatteringFactorTable.getRegisteredTypes() (default “X”).</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If stype is not a recognized scattering type.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If stype is not a recognized scattering type.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1812,9 +1808,9 @@ used. The resulting ParameterSet will be managed by this generator.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stru</strong> – The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
 pyobjcryst.molecule.Molecule instance to adapt (default None).</p></li>
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – The name to give to the managed ParameterSet that adapts stru
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – The name to give to the managed ParameterSet that adapts stru
 (default “phase”).</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic (default
 True). Note that some structures do not support
 periodicity, in which case this will have no effect on the
 PDF calculation.</p></li>
@@ -1961,7 +1957,7 @@ restraints from string</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name to give the generator that will manage the PDF
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – A name to give the generator that will manage the PDF
 calculation from the passed parameter phase. The parset
 will be accessible via the name “phase” as an attribute
 of the generator, e.g., contribution.name.phase, where
@@ -1971,7 +1967,7 @@ name.</p></li>
 This can be used to share the phase between multiple
 BasePDFGenerators, and have the changes in one reflect in
 another.</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic.  If this is
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic.  If this is
 True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
 DebyePDFGenerator will be used. Note that some structures
@@ -1996,7 +1992,7 @@ in parset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name to give the generator that will manage the PDF
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a>) – A name to give the generator that will manage the PDF
 calculation from the passed structure. The adapted
 structure will be accessible via the name “phase” as an
 attribute of the generator, e.g.
@@ -2005,7 +2001,7 @@ contribution and ‘name’ is passed name.
 (default), then the name will be set as “phase”.</p></li>
 <li><p><strong>stru</strong> – The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
 pyobjcryst.molecule.Molecule instance to adapt (default None).</p></li>
-<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic.  If this is
+<li><p><strong>periodic</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><em>bool</em></a><em>, </em><em>optional</em>) – The structure should be treated as periodic.  If this is
 True (default), then a PDFGenerator will be used to
 calculate the PDF from the phase. Otherwise, a
 DebyePDFGenerator will be used. Note that some structures
@@ -2032,7 +2028,7 @@ in stru.</p>
 <dd class="field-odd"><p>The maximum scattering vector used to generate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2046,7 +2042,7 @@ in stru.</p>
 <dd class="field-odd"><p>The minimum scattering vector used to generate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)">float</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2061,7 +2057,7 @@ in stru.</p>
 <dd class="field-odd"><p>The scattering type used to calculate the PDF.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2074,7 +2070,7 @@ in stru.</p>
 the built-in profile with load_parsed_data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>datafile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – The path to the file that contains the data.</p>
+<dd class="field-odd"><p><strong>datafile</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> or </em><em>Path</em>) – The path to the file that contains the data.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2087,7 +2083,7 @@ the built-in profile with load_parsed_data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><em>Path</em>) – The file or filename to which the data is saved.</p></li>
+<li><p><strong>fname</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em> or </em><em>Path</em>) – The file or filename to which the data is saved.</p></li>
 <li><p><strong>**kwargs</strong> – Additional arguments passed to numpy.savetxt.</p></li>
 </ul>
 </dd>
@@ -2118,8 +2114,8 @@ from the data, resample the <code class="docutils literal notranslate"><span cla
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(in Python v3.14)"><strong>AttributeError</strong></a> – If there is no observed data.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#AttributeError" title="(in Python v3.15)"><strong>AttributeError</strong></a> – If there is no observed data.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – When xmin &gt; xmax or if dx &lt;= 0.  Also if dx &gt; xmax - xmin.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2131,7 +2127,7 @@ from the data, resample the <code class="docutils literal notranslate"><span cla
 <dd><p>Set the qmax value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The maximum scattering vector used to generate the PDF.</p>
+<dd class="field-odd"><p><strong>qmax</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The maximum scattering vector used to generate the PDF.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2142,7 +2138,7 @@ from the data, resample the <code class="docutils literal notranslate"><span cla
 <dd><p>Set the qmin value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qmin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – The minimum scattering vector used to generate the PDF.</p>
+<dd class="field-odd"><p><strong>qmin</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><em>float</em></a>) – The minimum scattering vector used to generate the PDF.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2153,10 +2149,10 @@ from the data, resample the <code class="docutils literal notranslate"><span cla
 <dd><p>Set the scattering type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – “X” for x-ray or “N” for neutron (default “X”).</p>
+<dd class="field-odd"><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><em>str</em></a><em>, </em><em>optional</em>) – “X” for x-ray or “N” for neutron (default “X”).</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If type is not “X” or “N”.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – If type is not “X” or “N”.</p>
 </dd>
 </dl>
 </dd></dl>

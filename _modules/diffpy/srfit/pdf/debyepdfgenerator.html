@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.pdf.debyepdfgenerator &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.pdf.debyepdfgenerator &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,15 +91,15 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;PDF profile generator using the Debye equation.</span>
+<span class="sd">"""PDF profile generator using the Debye equation.</span>
 
 <span class="sd">The DebyePDFGenerator class can take a diffpy.structure,</span>
 <span class="sd">pyobjcryst.crystal.Crystal or pyobjcryst.molecule.Molecule object and</span>
 <span class="sd">calculate the PDF from it. This generator is especially appropriate for</span>
 <span class="sd">isolated scatterers, such as nanoparticles and molecules.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DebyePDFGenerator&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"DebyePDFGenerator"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.pdf.basepdfgenerator</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasePDFGenerator</span>
 
@@ -107,7 +107,7 @@
 <div class="viewcode-block" id="DebyePDFGenerator">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.DebyePDFGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DebyePDFGenerator</span><span class="p">(</span><span class="n">BasePDFGenerator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for calculating the PDF from an isolated scatterer.</span>
+<span class="w">    </span><span class="sd">"""A class for calculating the PDF from an isolated scatterer.</span>
 
 <span class="sd">    This works with diffpy.structure.Structure, pyobjcryst.crystal.Crystal and</span>
 <span class="sd">    pyobjcryst.molecule.Molecule instances. Note that the managed Parameters</span>
@@ -145,8 +145,8 @@
 <span class="sd">    Usable Metadata</span>
 <span class="sd">    ---------------</span>
 <span class="sd">    stype</span>
-<span class="sd">        The scattering type &quot;X&quot; for x-ray, &quot;N&quot; for neutron (see</span>
-<span class="sd">        &#39;setScatteringType&#39;).</span>
+<span class="sd">        The scattering type "X" for x-ray, "N" for neutron (see</span>
+<span class="sd">        'setScatteringType').</span>
 <span class="sd">    qmax</span>
 <span class="sd">        The maximum scattering vector used to generate the PDF (see</span>
 <span class="sd">        setQmax).</span>
@@ -163,12 +163,12 @@
 <span class="sd">        See Managed Parameters.</span>
 <span class="sd">    qdamp</span>
 <span class="sd">        See Managed Parameters.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="DebyePDFGenerator.setStructure">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.DebyePDFGenerator.setStructure">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setStructure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stru</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;phase&quot;</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the structure that will be used to calculate the PDF.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setStructure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stru</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"phase"</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Set the structure that will be used to calculate the PDF.</span>
 
 <span class="sd">        This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or</span>
 <span class="sd">        ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.</span>
@@ -182,20 +182,20 @@
 <span class="sd">            pyobjcryst.molecule.Molecule instance to adapt (default None).</span>
 <span class="sd">        name : str, optional</span>
 <span class="sd">            The name to give to the managed ParameterSet that adapts stru</span>
-<span class="sd">            (default &quot;phase&quot;).</span>
+<span class="sd">            (default "phase").</span>
 <span class="sd">        periodic : bool, optional</span>
 <span class="sd">            The structure should be treated as periodic (default</span>
 <span class="sd">            False). Note that some structures do not support</span>
 <span class="sd">            periodicity, in which case this will have no effect on the</span>
 <span class="sd">            PDF calculation.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">BasePDFGenerator</span><span class="o">.</span><span class="n">setStructure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stru</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">periodic</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DebyePDFGenerator.setPhase">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.pdf.html#diffpy.srfit.pdf.DebyePDFGenerator.setPhase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setPhase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">,</span> <span class="n">periodic</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the phase that will be used to calculate the PDF.</span>
+<span class="w">        </span><span class="sd">"""Set the phase that will be used to calculate the PDF.</span>
 
 <span class="sd">        Set the phase directly with a DiffpyStructureParSet,</span>
 <span class="sd">        ObjCrystCrystalParSet or ObjCrystMoleculeParSet that adapts a structure</span>
@@ -213,18 +213,18 @@
 <span class="sd">            The structure should be treated as periodic (default True).</span>
 <span class="sd">            Note that some structures do not support periodicity, in</span>
 <span class="sd">            which case this will be ignored.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">BasePDFGenerator</span><span class="o">.</span><span class="n">setPhase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parset</span><span class="p">,</span> <span class="n">periodic</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the generator.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"pdf"</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Initialize the generator.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str, optional</span>
-<span class="sd">            The name for this generator (default &quot;pdf&quot;).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            The name for this generator (default "pdf").</span>
+<span class="sd">        """</span>
         <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srreal.pdfcalculator</span><span class="w"> </span><span class="kn">import</span> <span class="n">DebyePDFCalculator</span>
 
         <span class="n">BasePDFGenerator</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>

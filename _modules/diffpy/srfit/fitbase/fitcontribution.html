@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.fitbase.fitcontribution &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.fitbase.fitcontribution &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,7 +91,7 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;FitContribution class.</span>
+<span class="sd">"""FitContribution class.</span>
 
 <span class="sd">FitContributions generate a residual function for a FitRecipe. A</span>
 <span class="sd">FitContribution associates an Equation for generating a signal,</span>
@@ -99,9 +99,9 @@
 <span class="sd">this, and a Profile that holds the observed and calculated signals.</span>
 
 <span class="sd">See the examples in the documentation for how to use a FitContribution.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FitContribution&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"FitContribution"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SrFitError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.parameter</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParameterProxy</span>
@@ -110,57 +110,57 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.fitbase.recipeorganizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_equation_from_string</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
 
-<span class="n">base</span> <span class="o">=</span> <span class="s2">&quot;diffpy.srfit.fitbase.FitContribution&quot;</span>
-<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">&quot;4.0.0&quot;</span>
+<span class="n">base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.fitbase.FitContribution"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
 
 <span class="n">setequation_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">base</span><span class="p">,</span>
-    <span class="s2">&quot;setEquation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;set_equation&quot;</span><span class="p">,</span>
+    <span class="s2">"setEquation"</span><span class="p">,</span>
+    <span class="s2">"set_equation"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <span class="n">setprofile_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">base</span><span class="p">,</span>
-    <span class="s2">&quot;setProfile&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;set_profile&quot;</span><span class="p">,</span>
+    <span class="s2">"setProfile"</span><span class="p">,</span>
+    <span class="s2">"set_profile"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">addprofilegenerator_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">base</span><span class="p">,</span>
-    <span class="s2">&quot;addProfileGenerator&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;add_profile_generator&quot;</span><span class="p">,</span>
+    <span class="s2">"addProfileGenerator"</span><span class="p">,</span>
+    <span class="s2">"add_profile_generator"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">getequation_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">base</span><span class="p">,</span>
-    <span class="s2">&quot;getEquation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_equation&quot;</span><span class="p">,</span>
+    <span class="s2">"getEquation"</span><span class="p">,</span>
+    <span class="s2">"get_equation"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">setresidualequation_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">base</span><span class="p">,</span>
-    <span class="s2">&quot;setResidualEquation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;set_residual_equation&quot;</span><span class="p">,</span>
+    <span class="s2">"setResidualEquation"</span><span class="p">,</span>
+    <span class="s2">"set_residual_equation"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">getresidualequation_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
     <span class="n">base</span><span class="p">,</span>
-    <span class="s2">&quot;getResidualEquation&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;get_residual_equation&quot;</span><span class="p">,</span>
+    <span class="s2">"getResidualEquation"</span><span class="p">,</span>
+    <span class="s2">"get_residual_equation"</span><span class="p">,</span>
     <span class="n">removal_version</span><span class="p">,</span>
 <span class="p">)</span>
 
 
 <div class="viewcode-block" id="FitContribution">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FitContribution</span><span class="p">(</span><span class="n">ParameterSet</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Organize an Equation, a Profile, and their supporting objects.</span>
+<span class="w">    </span><span class="sd">"""Organize an Equation, a Profile, and their supporting objects.</span>
 
 <span class="sd">    FitContributions organize an Equation that calculates the signal, and a</span>
 <span class="sd">    Profile that holds the signal. ProfileGenerators and Calculators can be</span>
@@ -169,56 +169,55 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    name</span>
-<span class="sd">        A name for this FitContribution.</span>
-<span class="sd">    profile</span>
-<span class="sd">        A Profile that holds the measured (and calculated)</span>
-<span class="sd">        signal.</span>
-<span class="sd">    _calculators</span>
-<span class="sd">        A managed dictionary of Calculators, indexed by name.</span>
-<span class="sd">    _constraints</span>
-<span class="sd">        A set of constrained Parameters. Constraints can be</span>
-<span class="sd">        added using the ``constrain`` methods.</span>
-<span class="sd">    _generators</span>
-<span class="sd">        A managed dictionary of ProfileGenerators.</span>
-<span class="sd">    _parameters</span>
-<span class="sd">        A managed OrderedDict of parameters.</span>
-<span class="sd">    _restraints</span>
-<span class="sd">        A set of Restraints. Restraints can be added using the</span>
-<span class="sd">        ``restrain`` method.</span>
-<span class="sd">    _parsets</span>
-<span class="sd">        A managed dictionary of ParameterSets.</span>
-<span class="sd">    _eqfactory</span>
-<span class="sd">        A diffpy.srfit.equation.builder.EquationFactory</span>
-<span class="sd">        instance that is used to create constraints and</span>
-<span class="sd">        restraints from string</span>
-<span class="sd">    _eq</span>
-<span class="sd">        The FitContribution equation that will be optimized.</span>
-<span class="sd">    _reseq</span>
-<span class="sd">        The residual equation.</span>
-<span class="sd">    _xname</span>
-<span class="sd">        Name of the x-variable</span>
-<span class="sd">    _yname</span>
-<span class="sd">        Name of the y-variable</span>
-<span class="sd">    _dyname</span>
-<span class="sd">        Name of the dy-variable</span>
-
-<span class="sd">    Properties</span>
-<span class="sd">    ----------</span>
-<span class="sd">    names</span>
-<span class="sd">        Variable names (read only). See get_names.</span>
-<span class="sd">    values</span>
-<span class="sd">        Variable values (read only). See get_values.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of this FitContribution.</span>
+<span class="sd">    profile : Profile or None</span>
+<span class="sd">        The Profile that holds the measured (and calculated)</span>
+<span class="sd">        signal. It is None until ``set_profile`` is called.</span>
+<span class="sd">    names : list of str</span>
+<span class="sd">        The names of the top-level Parameters (read only). See</span>
+<span class="sd">        ``get_names``.</span>
+<span class="sd">    values : list</span>
+<span class="sd">        The values of the top-level Parameters (read only). See</span>
+<span class="sd">        ``get_values``.</span>
+<span class="sd">    _calculators : dict</span>
+<span class="sd">        The managed dictionary of Calculators, indexed by name.</span>
+<span class="sd">    _constraints : dict</span>
+<span class="sd">        The dictionary of Constraints, indexed by the constrained</span>
+<span class="sd">        Parameter. Constraints can be added using the</span>
+<span class="sd">        ``add_constraint`` method.</span>
+<span class="sd">    _generators : dict</span>
+<span class="sd">        The managed dictionary of ProfileGenerators, indexed by name.</span>
+<span class="sd">    _parameters : OrderedDict</span>
+<span class="sd">        The managed OrderedDict of parameters.</span>
+<span class="sd">    _restraints : set</span>
+<span class="sd">        The set of Restraints. Restraints can be added using the</span>
+<span class="sd">        ``add_soft_bounds`` method.</span>
+<span class="sd">    _parsets : OrderedDict</span>
+<span class="sd">        The managed OrderedDict of ParameterSets.</span>
+<span class="sd">    _eqfactory : diffpy.srfit.equation.builder.EquationFactory</span>
+<span class="sd">        The factory that is used to create constraints and</span>
+<span class="sd">        restraints from strings.</span>
+<span class="sd">    _eq : Equation or None</span>
+<span class="sd">        The profile equation that calculates the signal.</span>
+<span class="sd">    _reseq : Equation or None</span>
+<span class="sd">        The residual equation that will be optimized.</span>
+<span class="sd">    _xname : str or None</span>
+<span class="sd">        The name of the x-variable.</span>
+<span class="sd">    _yname : str or None</span>
+<span class="sd">        The name of the y-variable.</span>
+<span class="sd">    _dyname : str or None</span>
+<span class="sd">        The name of the dy-variable.</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the FitContribution.</span>
+<span class="w">        </span><span class="sd">"""Initialize the FitContribution.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        name : str</span>
 <span class="sd">            The name of this FitContribution.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ParameterSet</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reseq</span> <span class="o">=</span> <span class="kc">None</span>
@@ -232,9 +231,16 @@
         <span class="k">return</span>
 
 <div class="viewcode-block" id="FitContribution.set_profile">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.set_profile">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution.set_profile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dyname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Assign the Profile for this FitContribution.</span>
+<span class="w">        </span><span class="sd">"""Assign the Profile for this FitContribution.</span>
+
+<span class="sd">        The x, y and dy Parameters of the Profile are added to this</span>
+<span class="sd">        FitContribution under the names ``xname``, ``yname`` and</span>
+<span class="sd">        ``dyname``. The Profile is also assigned to every</span>
+<span class="sd">        ProfileGenerator of this FitContribution, and the residual</span>
+<span class="sd">        equation is set to ``"chiv"`` if a profile equation exists but no</span>
+<span class="sd">        residual equation has been set.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -256,10 +262,15 @@
 <span class="sd">            this is None (default), then the name specified by the</span>
 <span class="sd">            Profile for this parameter will be used.  This variable is</span>
 <span class="sd">            usable within string equations with the specified name.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        TypeError</span>
+<span class="sd">            If ``profile`` is not a Profile instance.</span>
+<span class="sd">        """</span>
         <span class="c1"># Enforce type of the profile argument</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">profile</span><span class="p">,</span> <span class="n">Profile</span><span class="p">):</span>
-            <span class="n">emsg</span> <span class="o">=</span> <span class="s2">&quot;Argument must be an instance of the Profile class.&quot;</span>
+            <span class="n">emsg</span> <span class="o">=</span> <span class="s2">"Argument must be an instance of the Profile class."</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">emsg</span><span class="p">)</span>
 
         <span class="c1"># Set the Profile and add its parameters to this organizer.</span>
@@ -279,9 +290,9 @@
         <span class="n">xpar</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="n">xname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">xpar</span><span class="p">)</span>
         <span class="n">ypar</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="n">yname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ypar</span><span class="p">)</span>
         <span class="n">dypar</span> <span class="o">=</span> <span class="n">ParameterProxy</span><span class="p">(</span><span class="n">dyname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">dypar</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">xpar</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">ypar</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addParameter</span><span class="p">(</span><span class="n">dypar</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">xpar</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">ypar</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_parameter</span><span class="p">(</span><span class="n">dypar</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># If we have ProfileGenerators, set their Profiles.</span>
         <span class="k">for</span> <span class="n">gen</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generators</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -289,29 +300,26 @@
 
         <span class="c1"># If we have _eq, but not _reseq, set the residual</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reseq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;chiv&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">"chiv"</span><span class="p">)</span>
 
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="FitContribution.setProfile">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.setProfile">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">setprofile_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setProfile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dyname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.FitContribution.set_profile instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span>
             <span class="n">profile</span><span class="p">,</span> <span class="n">xname</span><span class="o">=</span><span class="n">xname</span><span class="p">,</span> <span class="n">yname</span><span class="o">=</span><span class="n">yname</span><span class="p">,</span> <span class="n">dyname</span><span class="o">=</span><span class="n">dyname</span>
-        <span class="p">)</span></div>
-
+        <span class="p">)</span>
 
 <div class="viewcode-block" id="FitContribution.add_profile_generator">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.add_profile_generator">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution.add_profile_generator">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_profile_generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a ProfileGenerator to be used by this FitContribution.</span>
+<span class="w">        </span><span class="sd">"""Add a ProfileGenerator to be used by this FitContribution.</span>
 
 <span class="sd">        The ProfileGenerator is given a name so that it can be used as part of</span>
 <span class="sd">        the profile equation (see ``set_equation``). This can be different</span>
@@ -327,8 +335,9 @@
 <span class="sd">        gen : ProfileGenerator</span>
 <span class="sd">            The ProfileGenerator instance to add.</span>
 <span class="sd">        name : str, optional</span>
-<span class="sd">            A name for the calculator. If name is None (default), then</span>
-<span class="sd">            the ProfileGenerator&#39;s name attribute will be used.</span>
+<span class="sd">            The name used for the ProfileGenerator in the profile</span>
+<span class="sd">            equation. If name is None (default), then the</span>
+<span class="sd">            ProfileGenerator's name attribute will be used.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -336,20 +345,20 @@
 <span class="sd">            If the ProfileGenerator has no name, or if the</span>
 <span class="sd">            ProfileGenerator has the same name as some other managed</span>
 <span class="sd">            object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">gen</span><span class="o">.</span><span class="n">name</span>
 
         <span class="c1"># Register the generator with the equation factory and add it as a</span>
         <span class="c1"># managed object.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">registerOperator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">gen</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">register_operator</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">gen</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_add_object</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generators</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># If we have a profile, set the profile of the generator.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">gen</span><span class="o">.</span><span class="n">set_profile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">)</span>
 
-        <span class="c1"># Make this our equation if we don&#39;t have one. This will set the</span>
+        <span class="c1"># Make this our equation if we don't have one. This will set the</span>
         <span class="c1"># residual equation if necessary.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -357,88 +366,82 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="FitContribution.addProfileGenerator">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.addProfileGenerator">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">addprofilegenerator_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">addProfileGenerator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use</span>
 <span class="sd">        diffpy.srfit.fitbase.FitContribution.add_profile_generator</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_profile_generator</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
-        <span class="k">return</span></div>
-
+        <span class="k">return</span>
 
 <div class="viewcode-block" id="FitContribution.set_equation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.set_equation">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution.set_equation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{}):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the profile equation for the FitContribution.</span>
+<span class="w">        </span><span class="sd">"""Set the profile equation for the FitContribution.</span>
 
 <span class="sd">        This sets the equation that will be used when generating the residual</span>
 <span class="sd">        for this FitContribution.  The equation will be usable within</span>
-<span class="sd">        ``set_residual_equation`` as ``&quot;eq&quot;``, and it takes no arguments.</span>
+<span class="sd">        ``set_residual_equation`` as ``"eq"``, and it takes no arguments.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        eqstr : str</span>
-<span class="sd">            A string representation of the equation. Any Parameter</span>
-<span class="sd">            registered by ``addParameter`` or ``set_profile``, or function</span>
+<span class="sd">            The string representation of the equation. Any Parameter</span>
+<span class="sd">            registered by ``add_parameter`` or ``set_profile``, or function</span>
 <span class="sd">            registered by ``register_calculator``, ``register_function`` or</span>
 <span class="sd">            ``register_string_function`` can be used in the equation</span>
 <span class="sd">            by name. Other names will be turned into Parameters of this</span>
 <span class="sd">            FitContribution.</span>
 <span class="sd">        ns : dict, optional</span>
-<span class="sd">            A dictionary of Parameters, indexed by name, that are used</span>
+<span class="sd">            The dictionary of Parameters, indexed by name, that are used</span>
 <span class="sd">            in the eqstr, but not registered (default {}).</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If ns uses a name that is already used for a variable.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Build the equation instance.</span>
         <span class="n">eq</span> <span class="o">=</span> <span class="n">get_equation_from_string</span><span class="p">(</span>
             <span class="n">eqstr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="p">,</span> <span class="n">buildargs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="n">ns</span>
         <span class="p">)</span>
-        <span class="n">eq</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;eq&quot;</span>
+        <span class="n">eq</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">"eq"</span>
 
         <span class="c1"># Register any new Parameters.</span>
         <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">newargs</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_add_parameter</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
 
         <span class="c1"># Register eq as an operator</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">registerOperator</span><span class="p">(</span><span class="s2">&quot;eq&quot;</span><span class="p">,</span> <span class="n">eq</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">register_operator</span><span class="p">(</span><span class="s2">"eq"</span><span class="p">,</span> <span class="n">eq</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="o">.</span><span class="n">wipeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="o">=</span> <span class="n">eq</span>
 
         <span class="c1"># Set the residual if we need to</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reseq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">&quot;chiv&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="s2">"chiv"</span><span class="p">)</span>
 
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="FitContribution.setEquation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.setEquation">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">setequation_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="p">{}):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.FitContribution.set_equation</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_equation</span><span class="p">(</span><span class="n">eqstr</span><span class="p">,</span> <span class="n">ns</span><span class="o">=</span><span class="n">ns</span><span class="p">)</span>
-        <span class="k">return</span></div>
-
+        <span class="k">return</span>
 
 <div class="viewcode-block" id="FitContribution.get_equation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.get_equation">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution.get_equation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the math expression string for the active profile</span>
+<span class="w">        </span><span class="sd">"""Get the math expression string for the active profile</span>
 <span class="sd">        equation.</span>
 
 <span class="sd">        Returns</span>
@@ -446,34 +449,31 @@
 <span class="sd">        str</span>
 <span class="sd">            The normalized math expression, or an empty string if the</span>
 <span class="sd">            profile equation has not been set yet.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors</span><span class="w"> </span><span class="kn">import</span> <span class="n">getExpression</span>
+<span class="sd">        """</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_expression</span>
 
-        <span class="n">rv</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">rv</span> <span class="o">=</span> <span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">)</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="n">get_expression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">rv</span></div>
 
 
-<div class="viewcode-block" id="FitContribution.getEquation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.getEquation">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">getequation_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use diffpy.srfit.fitbase.FitContribution.get_equation</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_equation</span><span class="p">()</span></div>
-
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_equation</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FitContribution.set_residual_equation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.set_residual_equation">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution.set_residual_equation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_residual_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the residual equation for the FitContribution.</span>
+<span class="w">        </span><span class="sd">"""Set the residual equation for the FitContribution.</span>
 
-<span class="sd">        Two residuals are preset for convenience, ``&quot;chiv&quot;`` and ``&quot;resv&quot;``.</span>
+<span class="sd">        Two residuals are preset for convenience, ``"chiv"`` and ``"resv"``.</span>
 <span class="sd">        ``chiv`` is defined such that ``dot(chiv, chiv) = chi^2``.</span>
 <span class="sd">        ``resv`` is defined such that ``dot(resv, resv) = Rw^2``.</span>
 <span class="sd">        You can call on these in your residual equation. Note that the quantity</span>
@@ -484,31 +484,29 @@
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        eqstr : str</span>
-<span class="sd">            A string representation of the residual. If eqstr is None</span>
-<span class="sd">            (default), then the previous residual equation will be</span>
-<span class="sd">            used, or the chi2 residual will be used if that does not</span>
-<span class="sd">            exist.</span>
+<span class="sd">            The string representation of the residual, or one of the</span>
+<span class="sd">            preset names ``"chiv"`` and ``"resv"``.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        SrFitError</span>
-<span class="sd">            If the Profile is not yet defined.</span>
+<span class="sd">            If the Profile or the profile equation is not yet defined.</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If eqstr depends on a Parameter that is not part of the</span>
 <span class="sd">            FitContribution.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;Assign the Profile first&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"Assign the Profile first"</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;Assign the Equation first&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"Assign the Equation first"</span><span class="p">)</span>
 
-        <span class="n">chivstr</span> <span class="o">=</span> <span class="s2">&quot;(eq - </span><span class="si">%s</span><span class="s2">)/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_yname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dyname</span><span class="p">)</span>
-        <span class="n">resvstr</span> <span class="o">=</span> <span class="s2">&quot;(eq - </span><span class="si">%s</span><span class="s2">)/sum(</span><span class="si">%s</span><span class="s2">**2)**0.5&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_yname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yname</span><span class="p">)</span>
+        <span class="n">chivstr</span> <span class="o">=</span> <span class="s2">"(eq - </span><span class="si">%s</span><span class="s2">)/</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_yname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dyname</span><span class="p">)</span>
+        <span class="n">resvstr</span> <span class="o">=</span> <span class="s2">"(eq - </span><span class="si">%s</span><span class="s2">)/sum(</span><span class="si">%s</span><span class="s2">**2)**0.5"</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_yname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yname</span><span class="p">)</span>
 
         <span class="c1"># Get the equation string if it is not defined</span>
-        <span class="k">if</span> <span class="n">eqstr</span> <span class="o">==</span> <span class="s2">&quot;chiv&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">eqstr</span> <span class="o">==</span> <span class="s2">"chiv"</span><span class="p">:</span>
             <span class="n">eqstr</span> <span class="o">=</span> <span class="n">chivstr</span>
-        <span class="k">elif</span> <span class="n">eqstr</span> <span class="o">==</span> <span class="s2">&quot;resv&quot;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">eqstr</span> <span class="o">==</span> <span class="s2">"resv"</span><span class="p">:</span>
             <span class="n">eqstr</span> <span class="o">=</span> <span class="n">resvstr</span>
 
         <span class="n">reseq</span> <span class="o">=</span> <span class="n">get_equation_from_string</span><span class="p">(</span><span class="n">eqstr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eqfactory</span><span class="p">)</span>
@@ -518,25 +516,22 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="FitContribution.setResidualEquation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.setResidualEquation">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">setresidualequation_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">setResidualEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eqstr</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use</span>
 <span class="sd">        diffpy.srfit.fitbase.FitContribution.set_residual_equation</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_residual_equation</span><span class="p">(</span><span class="n">eqstr</span><span class="p">)</span>
-        <span class="k">return</span></div>
-
+        <span class="k">return</span>
 
 <div class="viewcode-block" id="FitContribution.get_residual_equation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.get_residual_equation">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution.get_residual_equation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_residual_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the math expression string for the active residual</span>
+<span class="w">        </span><span class="sd">"""Get the math expression string for the active residual</span>
 <span class="sd">        equation.</span>
 
 <span class="sd">        Returns</span>
@@ -544,33 +539,30 @@
 <span class="sd">        str</span>
 <span class="sd">            The normalized math formula, or an empty string if the</span>
 <span class="sd">            residual equation has not been configured yet.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors</span><span class="w"> </span><span class="kn">import</span> <span class="n">getExpression</span>
+<span class="sd">        """</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_expression</span>
 
-        <span class="n">rv</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reseq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">rv</span> <span class="o">=</span> <span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reseq</span><span class="p">,</span> <span class="n">eqskip</span><span class="o">=</span><span class="s2">&quot;eq$&quot;</span><span class="p">)</span>
+            <span class="n">rv</span> <span class="o">=</span> <span class="n">get_expression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reseq</span><span class="p">,</span> <span class="n">eqskip</span><span class="o">=</span><span class="s2">"eq$"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">rv</span></div>
 
 
-<div class="viewcode-block" id="FitContribution.getResidualEquation">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.getResidualEquation">[docs]</a>
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">getresidualequation_dep_msg</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">getResidualEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function has been deprecated and will be removed in version</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in version</span>
 <span class="sd">        4.0.0.</span>
 
 <span class="sd">        Please use</span>
 <span class="sd">        diffpy.srfit.fitbase.FitContribution.get_residual_equation</span>
 <span class="sd">        instead.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_residual_equation</span><span class="p">()</span></div>
-
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_residual_equation</span><span class="p">()</span>
 
 <div class="viewcode-block" id="FitContribution.residual">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.residual">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution.residual">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">residual</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the residual for this FitContribution.</span>
+<span class="w">        </span><span class="sd">"""Calculate the residual for this FitContribution.</span>
 
 <span class="sd">        When this method is called, it is assumed that all parameters have been</span>
 <span class="sd">        assigned their most current values by the FitRecipe. This will be the</span>
@@ -587,7 +579,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        numpy.ndarray</span>
 <span class="sd">            The array of residual values.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Assign the calculated profile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">()</span>
         <span class="c1"># Note that equations only recompute when their inputs are modified, so</span>
@@ -596,15 +588,18 @@
 
 
 <div class="viewcode-block" id="FitContribution.evaluate">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.fitbase.FitContribution.evaluate">[docs]</a>
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.fitbase.html#diffpy.srfit.FitContribution.evaluate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate the contribution equation and update profile.ycalc.</span>
+<span class="w">        </span><span class="sd">"""Evaluate the contribution equation and update profile.ycalc.</span>
+
+<span class="sd">        The calculated signal is stored in ``profile.ycalc`` only if a</span>
+<span class="sd">        Profile has been assigned.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        numpy.ndarray</span>
 <span class="sd">            The calculated signal.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">yc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">ycalc</span> <span class="o">=</span> <span class="n">yc</span>
@@ -612,7 +607,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate my state.</span>
+<span class="w">        </span><span class="sd">"""Validate my state.</span>
 
 <span class="sd">        This performs profile validations. This performs</span>
 <span class="sd">        ProfileGenerator validations. This validates _eq. This validates</span>
@@ -622,7 +617,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        SrFitError</span>
 <span class="sd">            If validation fails.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span>
         <span class="n">ParameterSet</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -634,16 +629,16 @@
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;_eq is None&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"_eq is None"</span><span class="p">)</span>
 
         <span class="n">val</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eq</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;_eq cannot be evaluated: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"_eq cannot be evaluated: </span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;_eq evaluates to None&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"_eq evaluates to None"</span><span class="p">)</span>
 
         <span class="c1"># Try to get the value for residual</span>
         <span class="k">try</span><span class="p">:</span>
@@ -653,9 +648,9 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">residual</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;residual cannot be evaluated&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"residual cannot be evaluated"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">&quot;residual evaluates to None&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">SrFitError</span><span class="p">(</span><span class="s2">"residual evaluates to None"</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 

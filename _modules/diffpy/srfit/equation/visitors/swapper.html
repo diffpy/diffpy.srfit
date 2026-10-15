@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.visitors.swapper &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.visitors.swapper &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,10 +92,10 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Swapper for replacing a Literal in an equation with another</span>
-<span class="sd">Literals.&quot;&quot;&quot;</span>
+<span class="sd">"""Swapper for replacing a Literal in an equation with another</span>
+<span class="sd">Literals."""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Swapper&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Swapper"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors.visitor</span><span class="w"> </span><span class="kn">import</span> <span class="n">Visitor</span>
 
@@ -103,31 +103,28 @@
 <div class="viewcode-block" id="Swapper">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.swapper.Swapper">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Swapper</span><span class="p">(</span><span class="n">Visitor</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Swapper for swapping out one literal for another in a literal</span>
+<span class="w">    </span><span class="sd">"""Swapper for swapping out one literal for another in a literal</span>
 <span class="sd">    tree.</span>
 
 <span class="sd">    Note that this cannot swap out a root node of a literal tree. This case</span>
 <span class="sd">    must be tested for explicitly.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    oldlit : Literal</span>
+<span class="sd">        The literal to be replaced.</span>
+<span class="sd">    newlit : Literal</span>
+<span class="sd">        The literal to be placed into the literal tree.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    newlit</span>
+<span class="sd">    newlit : Literal</span>
 <span class="sd">        The literal to be placed into the literal tree.</span>
-<span class="sd">    oldlit</span>
+<span class="sd">    oldlit : Literal</span>
 <span class="sd">        The literal to be replaced.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oldlit</span><span class="p">,</span> <span class="n">newlit</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        oldlit</span>
-<span class="sd">            The literal to be replaced.</span>
-<span class="sd">        newlit</span>
-<span class="sd">            The literal to be placed into the literal tree. See the</span>
-<span class="sd">            class for how the replacement takes place.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">newlit</span> <span class="o">=</span> <span class="n">newlit</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">oldlit</span> <span class="o">=</span> <span class="n">oldlit</span>
 
@@ -135,30 +132,45 @@
 
         <span class="k">return</span>
 
-<div class="viewcode-block" id="Swapper.onArgument">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.swapper.Swapper.onArgument">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">onArgument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Argument node.</span>
+<div class="viewcode-block" id="Swapper.on_argument">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.swapper.Swapper.on_argument">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Process an Argument node.</span>
 
 <span class="sd">        Tell the parent to swap the old Argument with the replacement</span>
 <span class="sd">        Literal.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        arg : Argument</span>
+<span class="sd">            The Argument to check.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldlit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_swap</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="Swapper.onOperator">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.swapper.Swapper.onOperator">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">onOperator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Operator node.</span>
+<div class="viewcode-block" id="Swapper.on_operator">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.swapper.Swapper.on_operator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Process an Operator node.</span>
 
 <span class="sd">        Tell the parent to swap the old Operator with the replacement</span>
-<span class="sd">        Literal.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Literal, and swap any of its arguments in place.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        op : Operator</span>
+<span class="sd">            The Operator to check and traverse.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the replacement Literal causes a self-reference.</span>
+<span class="sd">        """</span>
         <span class="c1"># Check to see if we need to swap out this Operator. If so, then we</span>
-        <span class="c1"># don&#39;t need to traverse into its arguments.</span>
+        <span class="c1"># don't need to traverse into its arguments.</span>
         <span class="k">if</span> <span class="n">op</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldlit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_swap</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">return</span>
@@ -167,7 +179,7 @@
         <span class="k">for</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">op</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
             <span class="n">literal</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-        <span class="c1"># If we&#39;ve been told to swap out a literal, then we must do it in-place</span>
+        <span class="c1"># If we've been told to swap out a literal, then we must do it in-place</span>
         <span class="c1"># because the order of op.args matters.</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_swap</span><span class="p">:</span>
 
@@ -184,7 +196,7 @@
                 <span class="c1"># attempt to remove the same observer more than once, which</span>
                 <span class="c1"># might happen if the oldlit appears multiple times in op.args.</span>
                 <span class="k">try</span><span class="p">:</span>
-                    <span class="n">oldlit</span><span class="o">.</span><span class="n">removeObserver</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+                    <span class="n">oldlit</span><span class="o">.</span><span class="n">remove_observer</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
                 <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                     <span class="k">pass</span>
 
@@ -195,12 +207,12 @@
                 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                     <span class="c1"># Restore the old literal</span>
                     <span class="n">op</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">oldlit</span><span class="p">)</span>
-                    <span class="n">oldlit</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+                    <span class="n">oldlit</span><span class="o">.</span><span class="n">add_observer</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
                     <span class="k">raise</span>
 
                 <span class="c1"># If we got here, then go on with replacing the literal</span>
                 <span class="n">op</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">newlit</span><span class="p">)</span>
-                <span class="n">newlit</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+                <span class="n">newlit</span><span class="o">.</span><span class="n">add_observer</span><span class="p">(</span><span class="n">op</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
                 <span class="n">op</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">other</span><span class="o">=</span><span class="p">())</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_swap</span> <span class="o">=</span> <span class="kc">False</span>
@@ -208,29 +220,39 @@
         <span class="k">return</span></div>
 
 
-<div class="viewcode-block" id="Swapper.onEquation">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.swapper.Swapper.onEquation">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">onEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process an Equation node.</span>
+<div class="viewcode-block" id="Swapper.on_equation">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.visitors.html#diffpy.srfit.equation.visitors.swapper.Swapper.on_equation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Process an Equation node.</span>
 
 <span class="sd">        This looks at the equation itself as well as the root.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        eq : Equation</span>
+<span class="sd">            The Equation to check and traverse.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If the replacement Literal causes a self-reference.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">eq</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldlit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_swap</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">return</span>
 
         <span class="c1"># If the newlit is the root, then swap that out and move on.</span>
         <span class="k">if</span> <span class="n">eq</span><span class="o">.</span><span class="n">root</span> <span class="ow">is</span> <span class="bp">self</span><span class="o">.</span><span class="n">oldlit</span><span class="p">:</span>
-            <span class="n">eq</span><span class="o">.</span><span class="n">setRoot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newlit</span><span class="p">)</span>
+            <span class="n">eq</span><span class="o">.</span><span class="n">set_root</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newlit</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="c1"># Now move into the equation. We have to do a _loop_check to make sure</span>
-        <span class="c1"># that we won&#39;t have any loops in the equation.</span>
+        <span class="c1"># that we won't have any loops in the equation.</span>
         <span class="n">eq</span><span class="o">.</span><span class="n">_loop_check</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">newlit</span><span class="p">)</span>
         <span class="n">eq</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="c1"># Reset the root in case anything changed underneath.</span>
-        <span class="n">eq</span><span class="o">.</span><span class="n">setRoot</span><span class="p">(</span><span class="n">eq</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+        <span class="n">eq</span><span class="o">.</span><span class="n">set_root</span><span class="p">(</span><span class="n">eq</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
 
         <span class="k">return</span></div>
 </div>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.equationmod &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.equationmod &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,38 +91,53 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;The Equation class for holding and evaluating an equation.</span>
+<span class="sd">"""The Equation class for holding and evaluating an equation.</span>
 
 <span class="sd">Equation is a functor that holds a Literal tree that defines an</span>
-<span class="sd">equation. It&#39;s __call__ method evaluates the equation at the most recent</span>
+<span class="sd">equation. Its __call__ method evaluates the equation at the most recent</span>
 <span class="sd">value of its Arguments. The non-constant arguments are accessible as</span>
 <span class="sd">attributes of the Equation instance and can be passed as arguments to</span>
 <span class="sd">__call__.</span>
 
-<span class="sd">Example &gt; # make a Literal tree. Here&#39;s a simple one &gt; add =</span>
-<span class="sd">AdditionOperator() &gt; a = Argument(name=&quot;a&quot;) # Don&#39;t forget to name</span>
-<span class="sd">these! &gt; b = Argument(name=&quot;b&quot;) &gt; add.addLiteral(a) &gt; add.addLiteral(b)</span>
-<span class="sd">&gt; # make an Equation instance and pass the root &gt; eq = Equation(root =</span>
-<span class="sd">add) &gt; eq(a=3, b=4) # returns 7 &gt; eq(a=2) # remembers b=4, returns 6 &gt;</span>
-<span class="sd">eq.a.set_value(-3) &gt; eq.b.set_value(3) &gt; eq() # uses last assignment of</span>
-<span class="sd">a and b, returns 0</span>
+<span class="sd">Example::</span>
+
+<span class="sd">    # make a Literal tree. Here's a simple one</span>
+<span class="sd">    add = AdditionOperator()</span>
+<span class="sd">    a = Argument(name="a")  # Don't forget to name these!</span>
+<span class="sd">    b = Argument(name="b")</span>
+<span class="sd">    add.add_literal(a)</span>
+<span class="sd">    add.add_literal(b)</span>
+<span class="sd">    # make an Equation instance and pass the root</span>
+<span class="sd">    eq = Equation(root=add)</span>
+<span class="sd">    eq(a=3, b=4)  # returns 7</span>
+<span class="sd">    eq(a=2)  # remembers b=4, returns 6</span>
+<span class="sd">    eq.a.set_value(-3)</span>
+<span class="sd">    eq.b.set_value(3)</span>
+<span class="sd">    eq()  # uses last assignment of a and b, returns 0</span>
 
 <span class="sd">See the class documentation for more information.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Equation&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Equation"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals.literal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.literals.operators</span><span class="w"> </span><span class="kn">import</span> <span class="n">Operator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors</span><span class="w"> </span><span class="kn">import</span> <span class="n">getArgs</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">validate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.srfit.equation.visitors</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">swap</span><span class="p">,</span> <span class="n">validate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">diffpy.utils._deprecator</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_deprecation_message</span><span class="p">,</span> <span class="n">deprecated</span>
+
+<span class="n">equation_base</span> <span class="o">=</span> <span class="s2">"diffpy.srfit.equation.Equation"</span>
+<span class="n">removal_version</span> <span class="o">=</span> <span class="s2">"4.0.0"</span>
+<span class="n">setRoot_dep_msg</span> <span class="o">=</span> <span class="n">build_deprecation_message</span><span class="p">(</span>
+    <span class="n">equation_base</span><span class="p">,</span> <span class="s2">"setRoot"</span><span class="p">,</span> <span class="s2">"set_root"</span><span class="p">,</span> <span class="n">removal_version</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="Equation">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.Equation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Equation</span><span class="p">(</span><span class="n">Operator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for holding and evaluating a Literal tree.</span>
+<span class="w">    </span><span class="sd">"""Class for holding and evaluating a Literal tree.</span>
 
 <span class="sd">    Instances have attributes that are the non-const Arguments of the tree</span>
 <span class="sd">    (accessed by name) and a __call__ method that evaluates the tree.  It is</span>
@@ -136,60 +151,49 @@
 <span class="sd">    they evaluate as the root node, but provide a calling interface that</span>
 <span class="sd">    accepts new argument values for the literal tree.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        The name of the Equation. If None (default) and ``root`` is</span>
+<span class="sd">        given, the name is "eq_&lt;root name&gt;".</span>
+<span class="sd">    root : Literal, optional</span>
+<span class="sd">        The root node of the Literal tree. If None (default), call</span>
+<span class="sd">        ``set_root`` to set it.</span>
+
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    root</span>
-<span class="sd">        The root Literal of the equation tree</span>
-<span class="sd">    argdict</span>
-<span class="sd">        An OrderedDict of Arguments from the root.</span>
-<span class="sd">    args</span>
-<span class="sd">        Property that gets the values of argdict.</span>
-
-<span class="sd">    Operator Attributes</span>
-<span class="sd">    -------------------</span>
-<span class="sd">    args</span>
-<span class="sd">        List of Literal arguments, set with &#39;addLiteral&#39;</span>
-<span class="sd">    name</span>
-<span class="sd">        A name for this operator. e.g. &quot;add&quot; or &quot;sin&quot;</span>
-<span class="sd">    nin</span>
-<span class="sd">        Number of inputs (&lt;1 means this is variable)</span>
-<span class="sd">    nout</span>
-<span class="sd">        Number of outputs</span>
-<span class="sd">    operation</span>
-<span class="sd">        Function that performs the operation. e.g. numpy.add.</span>
-<span class="sd">    symbol</span>
-<span class="sd">        The symbolic representation. e.g. &quot;+&quot; or &quot;sin&quot;.</span>
-<span class="sd">    _value</span>
-<span class="sd">        The value of the Operator.</span>
-<span class="sd">    value</span>
-<span class="sd">        Property for &#39;getValue&#39;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    root : Literal or None</span>
+<span class="sd">        The root Literal of the equation tree.</span>
+<span class="sd">    argdict : OrderedDict</span>
+<span class="sd">        The non-constant Arguments of the tree, indexed by name.</span>
+<span class="sd">    args : list</span>
+<span class="sd">        The values of ``argdict``, in the same order.</span>
+<span class="sd">    name : str</span>
+<span class="sd">        The name of the Equation.</span>
+<span class="sd">    nin : int</span>
+<span class="sd">        The number of non-constant Arguments.</span>
+<span class="sd">    nout : int</span>
+<span class="sd">        The number of outputs, which is always 1.</span>
+<span class="sd">    symbol : str</span>
+<span class="sd">        The symbolic representation, which is the same as ``name``.</span>
+<span class="sd">    value : object</span>
+<span class="sd">        The value of the Equation, read with ``get_value``.</span>
+<span class="sd">    """</span>
 
     <span class="c1"># define abstract attributes from the Operator base.</span>
     <span class="n">nin</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">nout</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        name</span>
-<span class="sd">            A name for this Equation.</span>
-<span class="sd">        root</span>
-<span class="sd">            The root node of the Literal tree (default None). If root</span>
-<span class="sd">            is not passed here, you must call the &#39;setRoot&#39; method to</span>
-<span class="sd">            set or change the root node.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Operator stuff. We circumvent Operator.__init__ since we&#39;re using</span>
+        <span class="c1"># Operator stuff. We circumvent Operator.__init__ since we're using</span>
         <span class="c1"># args as a property. We cannot set it, as the Operator tries to do.</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">root</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;eq_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">root</span><span class="o">.</span><span class="n">name</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="s2">"eq_</span><span class="si">%s</span><span class="s2">"</span> <span class="o">%</span> <span class="n">root</span><span class="o">.</span><span class="n">name</span>
         <span class="n">Literal</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">argdict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">root</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setRoot</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_root</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="nd">@property</span>
@@ -199,13 +203,23 @@
 <div class="viewcode-block" id="Equation.operation">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.Equation.operation">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">operation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate this Equation object.</span>
+<span class="w">        </span><span class="sd">"""Evaluate this Equation object.</span>
 
 <span class="sd">        Same as the __call__ method.  This method is used via the</span>
 <span class="sd">        Operator interface.</span>
 
-<span class="sd">        Return the result of __call__(*args, **kw).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *args</span>
+<span class="sd">            The new values of the arguments, in the order of ``args``.</span>
+<span class="sd">        **kw</span>
+<span class="sd">            The new values of the arguments, by name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            The value of the Equation.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span></div>
 
 
@@ -215,47 +229,54 @@
     <span class="n">args</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_args</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gives access to the Arguments as attributes.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Gives access to the Arguments as attributes."""</span>
         <span class="c1"># Avoid infinite loop on argdict lookup.</span>
-        <span class="n">argdict</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;argdict&quot;</span><span class="p">)</span>
+        <span class="n">argdict</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__getattribute__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"argdict"</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">argdict</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;No argument named &#39;</span><span class="si">%s</span><span class="s2">&#39; here&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"No argument named '</span><span class="si">%s</span><span class="s2">' here"</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">argdict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
 
     <span class="c1"># Ensure there is no __dir__ override in the base class.</span>
-    <span class="k">assert</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="s2">&quot;__dir__&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">getattr</span><span class="p">(</span>
-        <span class="nb">object</span><span class="p">,</span> <span class="s2">&quot;__dir__&quot;</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Operator</span><span class="p">,</span> <span class="s2">"__dir__"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">getattr</span><span class="p">(</span>
+        <span class="nb">object</span><span class="p">,</span> <span class="s2">"__dir__"</span><span class="p">,</span> <span class="kc">None</span>
     <span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__dir__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return sorted list of attributes for this object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return sorted list of attributes for this object."""</span>
         <span class="n">rv</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)))</span>
         <span class="n">rv</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">argdict</span><span class="p">)</span>
         <span class="n">rv</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">rv</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">rv</span>
 
-<div class="viewcode-block" id="Equation.setRoot">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.Equation.setRoot">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the root of the Literal tree.</span>
+<div class="viewcode-block" id="Equation.set_root">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.Equation.set_root">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_root</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Set the root of the Literal tree.</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">        ValueError if errors are found in the Literal tree.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        root : Literal</span>
+<span class="sd">            The new root of the Literal tree.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If errors are found in the Literal tree.</span>
+<span class="sd">        """</span>
         <span class="c1"># Validate the new root</span>
         <span class="n">validate</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 
         <span class="c1"># Stop observing the old root</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">removeObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">remove_observer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
 
         <span class="c1"># Add the new root</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">addObserver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">add_observer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_flush</span><span class="p">(</span><span class="n">other</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="p">,))</span>
 
         <span class="c1"># Get the args</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="n">getArgs</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">getconsts</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">getconsts</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">argdict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">([(</span><span class="n">arg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">])</span>
 
         <span class="c1"># Set Operator attributes</span>
@@ -264,20 +285,45 @@
         <span class="k">return</span></div>
 
 
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">setRoot_dep_msg</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setRoot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""This function has been deprecated and will be removed in</span>
+<span class="sd">        version 4.0.0.</span>
+
+<span class="sd">        Please use diffpy.srfit.equation.Equation.set_root instead.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_root</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the equation.</span>
+<span class="w">        </span><span class="sd">"""Call the equation.</span>
 
 <span class="sd">        New Argument values are accepted as arguments or keyword</span>
 <span class="sd">        assignments (or both).  The order of accepted arguments is given</span>
 <span class="sd">        by the args attribute. The Equation will remember values set in</span>
 <span class="sd">        this way.</span>
 
-<span class="sd">        Raises ValueError when a passed argument cannot be found</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        *args</span>
+<span class="sd">            The new values of the arguments, in the order of ``args``.</span>
+<span class="sd">        **kw</span>
+<span class="sd">            The new values of the arguments, by name.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            The value of the Equation.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If there are more positional values than arguments, or a</span>
+<span class="sd">            keyword does not name an argument.</span>
+<span class="sd">        """</span>
         <span class="c1"># Process args</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">argdict</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Too many arguments&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Too many arguments"</span><span class="p">)</span>
             <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
             <span class="n">arg</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
@@ -285,31 +331,55 @@
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">arg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">argdict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">arg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No argument named &#39;</span><span class="si">%s</span><span class="s2">&#39; here&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No argument named '</span><span class="si">%s</span><span class="s2">' here"</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
             <span class="n">arg</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">get_value</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
 
 <div class="viewcode-block" id="Equation.swap">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.Equation.swap">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">swap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oldlit</span><span class="p">,</span> <span class="n">newlit</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Swap a literal in the equation for another.</span>
+<span class="w">        </span><span class="sd">"""Swap a literal in the equation for another.</span>
 
-<span class="sd">        Note that this may change the root and the operation interface</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        Note that this may change the root and the operation interface.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        oldlit : Literal</span>
+<span class="sd">            The literal to replace.</span>
+<span class="sd">        newlit : Literal</span>
+<span class="sd">            The literal to put in its place.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If ``newlit`` causes a self-reference.</span>
+<span class="sd">        """</span>
         <span class="n">newroot</span> <span class="o">=</span> <span class="n">swap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">oldlit</span><span class="p">,</span> <span class="n">newlit</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setRoot</span><span class="p">(</span><span class="n">newroot</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_root</span><span class="p">(</span><span class="n">newroot</span><span class="p">)</span>
         <span class="k">return</span></div>
 
 
     <span class="c1"># Operator methods</span>
 
-<div class="viewcode-block" id="Equation.addLiteral">
-<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.Equation.addLiteral">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">addLiteral</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cannot add a literal to an Equation.&quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Cannot add literals to an Equation.&quot;</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Equation.add_literal">
+<a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.Equation.add_literal">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_literal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">literal</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Raise a RuntimeError, because an Equation takes its literals</span>
+<span class="sd">        from its root.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        literal : Literal</span>
+<span class="sd">            The literal that cannot be added.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        RuntimeError</span>
+<span class="sd">            Always.</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Cannot add literals to an Equation."</span><span class="p">)</span></div>
 
 
     <span class="c1"># Visitors can treat us differently than an Operator.</span>
@@ -317,8 +387,19 @@
 <div class="viewcode-block" id="Equation.identify">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.equation.html#diffpy.srfit.equation.Equation.identify">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visitor</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify self to a visitor.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">onEquation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Identify this Equation to a visitor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        visitor : Visitor</span>
+<span class="sd">            The visitor to identify to.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            The result of ``visitor.on_equation(self)``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">on_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 </div>
 
 

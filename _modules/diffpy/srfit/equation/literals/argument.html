@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.equation.literals.argument &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.equation.literals.argument &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -91,13 +91,13 @@
 <span class="c1"># See LICENSE_DANSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Argument class.</span>
+<span class="sd">"""Argument class.</span>
 
 <span class="sd">Arguments are the leaves of an equation tree, in essence a variable or a</span>
 <span class="sd">constant.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Argument&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Argument"</span><span class="p">]</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">array_equal</span><span class="p">,</span> <span class="n">ndarray</span>
 
@@ -108,25 +108,33 @@
 <div class="viewcode-block" id="Argument">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Argument</span><span class="p">(</span><span class="n">Literal</span><span class="p">,</span> <span class="n">ArgumentABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Argument class.</span>
+<span class="w">    </span><span class="sd">"""A leaf of an equation tree, holding a variable or a constant.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name : str, optional</span>
+<span class="sd">        The name of the Argument. Default is None.</span>
+<span class="sd">    value : object, optional</span>
+<span class="sd">        The initial value of the Argument. Default is None.</span>
+<span class="sd">    const : bool, optional</span>
+<span class="sd">        The flag that is True if the Argument is a constant. Default is</span>
+<span class="sd">        False.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    name</span>
-<span class="sd">        A name for this Argument.</span>
-<span class="sd">    const</span>
-<span class="sd">        A flag indicating whether this is considered a constant.</span>
-<span class="sd">        Constants may be given special treatment by the Visitors.</span>
-<span class="sd">    _value</span>
-<span class="sd">        The value of the Argument. Modified with &#39;set_value&#39;.</span>
-<span class="sd">    value</span>
-<span class="sd">        Property for &#39;getValue&#39; and &#39;set_value&#39;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    name : str or None</span>
+<span class="sd">        The name of the Argument.</span>
+<span class="sd">    const : bool</span>
+<span class="sd">        The flag that is True if the Argument is a constant. Visitors</span>
+<span class="sd">        may treat constants differently.</span>
+<span class="sd">    value : object</span>
+<span class="sd">        The value of the Argument, read with ``get_value`` and changed</span>
+<span class="sd">        with ``set_value``.</span>
+<span class="sd">    """</span>
 
     <span class="n">const</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">const</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization.&quot;&quot;&quot;</span>
         <span class="n">Literal</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">const</span> <span class="o">=</span> <span class="n">const</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
@@ -135,27 +143,47 @@
 <div class="viewcode-block" id="Argument.identify">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument.identify">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">identify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">visitor</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identify self to a visitor.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">onArgument</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">"""Identify this Argument to a visitor.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        visitor : Visitor</span>
+<span class="sd">            The visitor to identify to.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            The result of ``visitor.on_argument(self)``.</span>
+<span class="sd">        """</span>
+        <span class="k">return</span> <span class="n">visitor</span><span class="o">.</span><span class="n">on_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Argument.getValue">
-<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument.getValue">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of this Literal.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Argument.get_value">
+<a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument.get_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Get the value of this Argument.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            The current value of the Argument.</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span></div>
 
 
 <div class="viewcode-block" id="Argument.set_value">
 <a class="viewcode-back" href="../../../../../api/diffpy.srfit.equation.literals.html#diffpy.srfit.equation.literals.Argument.set_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the value of the Literal.</span>
+<span class="w">        </span><span class="sd">"""Set the value of this Argument.</span>
+
+<span class="sd">        Observers are notified only if the new value differs from the</span>
+<span class="sd">        current one.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        val</span>
-<span class="sd">            The value to assign</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        val : object</span>
+<span class="sd">            The value to assign.</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">):</span>
             <span class="n">notequiv</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">array_equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -167,7 +195,7 @@
 
 
     <span class="n">value</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span>
-        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">lambda</span> <span class="bp">self</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_value</span><span class="p">(),</span> <span class="k">lambda</span> <span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
     <span class="p">)</span></div>
 
 

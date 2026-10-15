@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>diffpy.srfit.util.weakrefcallable &mdash; diffpy.srfit 3.3.1 documentation</title>
+  <title>diffpy.srfit.util.weakrefcallable &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
@@ -13,7 +13,7 @@
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=6f23fdb8"></script>
+      <script src="../../../../_static/documentation_options.js?v=1c984258"></script>
       <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -92,87 +92,86 @@
 <span class="c1"># See LICENSE.txt for license information.</span>
 <span class="c1">#</span>
 <span class="c1">##############################################################################</span>
-<span class="sd">&quot;&quot;&quot;Picklable storage of callable objects using weak references.&quot;&quot;&quot;</span>
+<span class="sd">"""Picklable storage of callable objects using weak references."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">weakref</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">six</span>
 
 
 <div class="viewcode-block" id="WeakBoundMethod">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.weakrefcallable.WeakBoundMethod">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WeakBoundMethod</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Callable wrapper to a bound method stored as a weak reference.</span>
+<span class="w">    </span><span class="sd">"""Callable wrapper to a bound method stored as a weak reference.</span>
 
-<span class="sd">    Support storage of bound methods without keeping the associated objects</span>
-<span class="sd">    alive forever.  Provide facility for a fallback function to be used</span>
-<span class="sd">    when method-related object is deleted.</span>
+<span class="sd">    This stores a bound method without keeping its object alive, and can</span>
+<span class="sd">    call a fallback function once that object has been deleted.</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    function : MethodType</span>
-<span class="sd">        the unbound function extracted from the wrapped bound method.</span>
-<span class="sd">    fallback : FunctionType, optional</span>
-<span class="sd">        plain function to be called when object holding the bound method</span>
-<span class="sd">        gets deallocated.  The fallback function is called with this</span>
-<span class="sd">        object as the first argument followed by any positional and</span>
-<span class="sd">        keyword arguments passed for the bound method.  The fallback</span>
-<span class="sd">        function can be used to deregister this wrapper.</span>
-<span class="sd">    _wref : weakref</span>
-<span class="sd">        weak reference to the object the wrapped method is bound to.</span>
+<span class="sd">    function : FunctionType</span>
+<span class="sd">        The unbound function extracted from the wrapped bound method.</span>
+<span class="sd">    fallback : FunctionType or None</span>
+<span class="sd">        The plain function called when the object holding the bound method</span>
+<span class="sd">        has been deleted. It is called with this wrapper as the first</span>
+<span class="sd">        argument, followed by any positional and keyword arguments passed</span>
+<span class="sd">        for the bound method, and can be used to deregister this wrapper.</span>
+<span class="sd">    _wref : weakref.ref</span>
+<span class="sd">        The weak reference to the object the wrapped method is bound to.</span>
 <span class="sd">    _class : type</span>
-<span class="sd">        the type of the object to which the method is bound.</span>
-<span class="sd">        This is only used for pickling.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">        The type of the object the method is bound to. This is only used</span>
+<span class="sd">        for pickling.</span>
+<span class="sd">    """</span>
 
-    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">,</span> <span class="s2">&quot;fallback&quot;</span><span class="p">,</span> <span class="s2">&quot;_wref&quot;</span><span class="p">,</span> <span class="s2">&quot;_class&quot;</span><span class="p">)</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"function"</span><span class="p">,</span> <span class="s2">"fallback"</span><span class="p">,</span> <span class="s2">"_wref"</span><span class="p">,</span> <span class="s2">"_class"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a weak reference wrapper to bound method.</span>
+<span class="w">        </span><span class="sd">"""Create a weak reference wrapper to a bound method.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        f : bound MethodType</span>
-<span class="sd">            instance-bound method to be wrapped.</span>
+<span class="sd">        f : MethodType</span>
+<span class="sd">            The instance-bound method to wrap.</span>
 <span class="sd">        fallback : FunctionType, optional</span>
-<span class="sd">            plain function to be called instead of the bound method when</span>
-<span class="sd">            the method associated object gets deallocated.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            The plain function called instead of the bound method once the</span>
+<span class="sd">            method's object has been deleted. Default is None.</span>
+<span class="sd">        """</span>
         <span class="c1"># This does not handle builtin methods, but that can be added</span>
         <span class="c1"># if necessary.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__func__</span>
-        <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="vm">__func__</span><span class="o">.</span><span class="fm">__get__</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">im_class</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fallback</span> <span class="o">=</span> <span class="n">fallback</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_class</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__self__</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_wref</span> <span class="o">=</span> <span class="n">weakref</span><span class="o">.</span><span class="n">ref</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="vm">__self__</span><span class="p">)</span>
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call the wrapped method if the weak-referenced object is</span>
-<span class="sd">        alive.</span>
+<span class="w">        </span><span class="sd">"""Call the wrapped method if its object is still alive.</span>
 
-<span class="sd">        If that object does not exist and the fallback function is defined,</span>
+<span class="sd">        If that object has been deleted and a fallback function is set,</span>
 <span class="sd">        call the fallback function instead.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        *args, **kwargs</span>
-<span class="sd">            same arguments as for the wrapped bound method.</span>
+<span class="sd">            The arguments passed to the wrapped bound method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        object</span>
+<span class="sd">            The return value of the bound method, or of the fallback</span>
+<span class="sd">            function once the object has been deleted.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ReferenceError</span>
-<span class="sd">            when the method-bound object does not exist and the fallback</span>
-<span class="sd">            function is not defined.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">            If the method's object has been deleted and no fallback</span>
+<span class="sd">            function is set.</span>
+<span class="sd">        """</span>
         <span class="n">mobj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wref</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">mobj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">mobj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">emsg</span> <span class="o">=</span> <span class="s2">&quot;Object bound to </span><span class="si">{}</span><span class="s2"> does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">)</span>
+        <span class="n">emsg</span> <span class="o">=</span> <span class="s2">"Object bound to </span><span class="si">{}</span><span class="s2"> does not exist."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">ReferenceError</span><span class="p">(</span><span class="n">emsg</span><span class="p">)</span>
 
     <span class="c1"># support use of this class in hashed collections</span>
@@ -192,20 +191,17 @@
     <span class="c1"># support pickling of this type</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return state with a resolved weak reference.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Return state with a resolved weak reference."""</span>
         <span class="n">mobj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wref</span><span class="p">()</span>
         <span class="n">nm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span>
-        <span class="n">amsg</span> <span class="o">=</span> <span class="s2">&quot;Unable to pickle this unbound function by name.&quot;</span>
-        <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">==</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_class</span><span class="p">,</span> <span class="n">nm</span><span class="p">),</span> <span class="n">amsg</span>
-        <span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY3</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="ow">is</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_class</span><span class="p">,</span> <span class="n">nm</span><span class="p">),</span> <span class="n">amsg</span>
+        <span class="n">amsg</span> <span class="o">=</span> <span class="s2">"Unable to pickle this unbound function by name."</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="ow">is</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_class</span><span class="p">,</span> <span class="n">nm</span><span class="p">),</span> <span class="n">amsg</span>
         <span class="n">state</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_class</span><span class="p">,</span> <span class="n">nm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback</span><span class="p">,</span> <span class="n">mobj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">state</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Restore the weak reference in this wrapper upon</span>
-<span class="sd">        unpickling.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Restore the weak reference in this wrapper upon</span>
+<span class="sd">        unpickling."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_class</span><span class="p">,</span> <span class="n">nm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback</span><span class="p">,</span> <span class="n">mobj</span> <span class="o">=</span> <span class="n">state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">function</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_class</span><span class="p">,</span> <span class="n">nm</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mobj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -228,26 +224,26 @@
 <div class="viewcode-block" id="weak_ref">
 <a class="viewcode-back" href="../../../../api/diffpy.srfit.util.html#diffpy.srfit.util.weakrefcallable.weak_ref">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">weak_ref</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create weak-reference wrapper to a bound method.</span>
+<span class="w">    </span><span class="sd">"""Create weak-reference wrapper to a bound method.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    f : callable</span>
-<span class="sd">        object-bound method or a plain function.</span>
+<span class="sd">        The object-bound method or plain function to wrap.</span>
 <span class="sd">    fallback : FunctionType, optional</span>
-<span class="sd">        plain function to be called when object holding ``f`` gets</span>
-<span class="sd">        deallocated.  The fallback function is called with the</span>
-<span class="sd">        wrapper object as the first argument followed by positional</span>
-<span class="sd">        and keyword arguments passed for the bound method.  The</span>
-<span class="sd">        fallback function can be used to deregister the wrapper.</span>
+<span class="sd">        The plain function called when the object holding ``f`` has been</span>
+<span class="sd">        deleted. It is called with the wrapper as the first argument,</span>
+<span class="sd">        followed by the positional and keyword arguments passed for the</span>
+<span class="sd">        bound method, and can be used to deregister the wrapper. Default</span>
+<span class="sd">        is None.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    WeakBoundMethod</span>
-<span class="sd">        when `f` is a bound method.  If `f` is a plain function or</span>
-<span class="sd">        already of WeakBoundMethod type, return `f` and ignore the</span>
-<span class="sd">        `fallback` argument.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    WeakBoundMethod or callable</span>
+<span class="sd">        The weak wrapper when ``f`` is a bound method. When ``f`` is a</span>
+<span class="sd">        plain function or already a WeakBoundMethod, ``f`` itself, and</span>
+<span class="sd">        ``fallback`` is ignored.</span>
+<span class="sd">    """</span>
     <span class="c1"># NOTE Weak referencing plain functions is probably not needed,</span>
     <span class="c1"># because they are already bound to the defining modules.</span>
     <span class="n">rv</span> <span class="o">=</span> <span class="n">f</span>

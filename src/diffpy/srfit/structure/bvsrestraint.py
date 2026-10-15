@@ -66,6 +66,13 @@ class BVSRestraint(Restraint):
         self.scaled = bool(scaled)
         return
 
+    def __str__(self):
+        """Return the structure name with the restraint settings."""
+        return (
+            f"BVS of {self._parset.name}: sig = {self.sig:f}, "
+            f"scaled = {self.scaled}"
+        )
+
     def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.
 

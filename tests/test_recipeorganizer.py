@@ -21,6 +21,7 @@ import numpy
 import pytest
 
 from diffpy.srfit import Calculator
+from diffpy.srfit.equation import Equation
 from diffpy.srfit.equation.builder import EquationFactory
 from diffpy.srfit.fitbase.parameter import Parameter
 from diffpy.srfit.fitbase.recipeorganizer import (
@@ -28,6 +29,7 @@ from diffpy.srfit.fitbase.recipeorganizer import (
     RecipeOrganizer,
     get_equation_from_string,
 )
+from diffpy.srfit.fitbase.restraint import Restraint
 from diffpy.utils._deprecator import deprecated
 
 
@@ -899,6 +901,38 @@ def test_show_pattern(capturestdout, input_stage, input_pattern):
     actual_output = capturestdout(organizer.show, input_pattern)
     expected_output = capturestdout(_make_show_organizer("restraints").show)
     assert actual_output == expected_output
+
+
+def test_show_added_soft_bounds(capturestdout):
+    # C1: The soft bound 0 < p < 2 is added with add_soft_bounds.
+    # Expected: The Restraints section lists it by the Parameter name p.
+    organizer = _make_organizer()
+    organizer._new_parameter("p", 1)
+    organizer.add_soft_bounds("p", lower_bound=0, upper_bound=2)
+    lines = capturestdout(organizer.show, textwidth=0).splitlines()
+    actual_restraint_lines = lines[lines.index("Restraints") + 2 :]
+    expected_restraint_lines = [
+        "p: lower_bound = 0.000000, upper_bound = 2.000000, "
+        "sig = 1.000000, scaled = False"
+    ]
+    assert actual_restraint_lines == expected_restraint_lines
+
+
+def test_show_registered_soft_bounds(capturestdout):
+    # C1: A Restraint 0 < p < 2 made directly from an Equation on p is
+    # added with register_soft_bounds.
+    # Expected: The Restraints section lists it by its equation name eq_p.
+    organizer = _make_organizer()
+    parameter = organizer._new_parameter("p", 1)
+    restraint = Restraint(Equation(root=parameter), 0, 2)
+    organizer.register_soft_bounds(restraint)
+    lines = capturestdout(organizer.show, textwidth=0).splitlines()
+    actual_restraint_lines = lines[lines.index("Restraints") + 2 :]
+    expected_restraint_lines = [
+        "eq_p: lower_bound = 0.000000, upper_bound = 2.000000, "
+        "sig = 1.000000, scaled = False"
+    ]
+    assert actual_restraint_lines == expected_restraint_lines
 
 
 def _make_iterpars_tree():

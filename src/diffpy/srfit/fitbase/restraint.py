@@ -41,6 +41,9 @@ class Restraint(Validatable):
     eq : Equation
         The equation whose evaluation is compared against the restraint
         bounds.
+    eqstr : str
+        The text shown for the restrained equation. It is the name of
+        ``eq`` unless set otherwise, as ``add_soft_bounds`` does.
     lower_bound : float
         The lower bound on the restraint evaluation (default -inf).
     upper_bound : float
@@ -75,11 +78,20 @@ class Restraint(Validatable):
             (default False).
         """
         self.eq = eq
+        self.eqstr = eq.name
         self.lower_bound = float(lower_bound)
         self.upper_bound = float(upper_bound)
         self.sig = float(sig)
         self.scaled = bool(scaled)
         return
+
+    def __str__(self):
+        """Return the equation with its bounds and settings."""
+        return (
+            f"{self.eqstr}: lower_bound = {self.lower_bound:f}, "
+            f"upper_bound = {self.upper_bound:f}, sig = {self.sig:f}, "
+            f"scaled = {self.scaled}"
+        )
 
     def penalty(self, w=1.0):
         """Calculate the penalty of the restraint.

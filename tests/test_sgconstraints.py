@@ -187,12 +187,12 @@ def test_constrain_as_space_group_args(pyobjcryst_available, datafile):
 
     from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
     from diffpy.srfit.structure.sgconstraints import constrain_as_space_group
-    from diffpy.structure.spacegroups import GetSpaceGroup
+    from diffpy.structure.spacegroups import get_space_group
 
     stru = makeLaMnO3_P1(datafile)
     parset = DiffpyStructureParSet("LaMnO3", stru)
     sgpars = constrain_as_space_group(parset, "P b n m")
-    sg = GetSpaceGroup("P b n m")
+    sg = get_space_group("P b n m")
     parset2 = DiffpyStructureParSet("LMO", makeLaMnO3_P1(datafile))
     sgpars2 = constrain_as_space_group(parset2, sg)
     list(sgpars)

@@ -1,6 +1,6 @@
 **Added:**
 
-* <news item>
+* Document the ``*=``, ``%=``, ``+=``, ``|=``, and ``<<`` shorthand operators in the ``diffpy.srfit.interface`` API reference.
 
 **Changed:**
 

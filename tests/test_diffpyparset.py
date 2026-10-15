@@ -83,7 +83,7 @@ def testDiffpyStructureParSet():
     a1.xyz[1] = 0.123
     a1.U11 = 0.321
     a1.B32 = 0.111
-    dsstru.lattice.setLatPar(a=3.0, gamma=121)
+    dsstru.lattice.set_latt_parms(a=3.0, gamma=121)
     _testAtoms()
     _testLattice()
 

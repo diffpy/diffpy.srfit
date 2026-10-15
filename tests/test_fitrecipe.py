@@ -628,9 +628,13 @@ def test_initialize_recipe_from_results_object(build_recipes_one_contribution):
     assert actual_names_before_init == expected_names_before_init
     recipe2.initialize_recipe_with_results(results1)
     optimize_recipe(recipe2)
+    # Fix extra_var to prevent divide by zero warnings when tests run.
+    recipe2.fix("extra_var")
     results2 = FitResults(recipe2)
-    actual_values = sorted(np.round(results2.varvals, 5).tolist())
-    actual_names = sorted(results2.varnames)
+    actual_values = sorted(
+        np.round(np.append(results2.varvals, results2.fixedvals), 5).tolist()
+    )
+    actual_names = sorted(results2.varnames + results2.fixednames)
 
     # Add the name and value of the new variable to the expected ones.
     expected_names = sorted(expected_names + ["extra_var"])

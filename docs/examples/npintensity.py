@@ -493,7 +493,7 @@ def makeData(strufile, q, datname, scale, a, Uiso, sig, bkgc, nl=1):
     S.read(str(strufile))
 
     # Set the lattice parameters
-    S.lattice.setLatPar(a, a, a)
+    S.lattice.set_latt_parms(a, a, a)
 
     # Set a DW factor
     for a in S:

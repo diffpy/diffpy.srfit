@@ -105,14 +105,12 @@ def test_parse_file(
     actual_dx = as_list(parser._dx)
     actual_dy = as_list(parser._dy)
     actual_metadata = parser._meta
-    actual_metadata["filename"] = actual_metadata["filename"].split("/")[-1]
-
-    EXPECTED_META["filename"] = str(input_file).split("/")[-1]
+    actual_metadata["filename"] = Path(actual_metadata["filename"]).name
+    expected_metadata = {**EXPECTED_META, "filename": input_file.name}
     assert actual_x == expected_x
     assert actual_y == expected_y
     assert actual_dx == expected_dx
     assert actual_dy == expected_dy
-    expected_metadata = EXPECTED_META
     assert actual_metadata == expected_metadata
 
 

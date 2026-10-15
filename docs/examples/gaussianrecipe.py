@@ -172,7 +172,7 @@ def scipyOptimize(recipe):
     # scipy. We simply have to give it the function to minimize
     # (recipe.residual) and the starting values of the Variables
     # (recipe.get_values()).
-    from scipy.optimize.minpack import leastsq
+    from scipy.optimize import leastsq
 
     print("Fit using scipy's LM optimizer")
     leastsq(recipe.residual, recipe.get_values())

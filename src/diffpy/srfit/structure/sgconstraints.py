@@ -112,11 +112,11 @@ def constrain_as_space_group(
             b and c are constrained to a, and alpha, beta and
             gamma are fixed to 90.
     """
-    from diffpy.structure.spacegroups import GetSpaceGroup, SpaceGroup
+    from diffpy.structure.spacegroups import SpaceGroup, get_space_group
 
     sg = spacegroup
     if not isinstance(spacegroup, SpaceGroup):
-        sg = GetSpaceGroup(spacegroup)
+        sg = get_space_group(spacegroup)
     sgp = _constrain_as_space_group(
         phase,
         sg,
@@ -309,7 +309,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             A BaseStructure object to be constrained.
         sg
             The space group number or symbol (compatible with
-            diffpy.structure.spacegroups.GetSpaceGroup.
+            diffpy.structure.spacegroups.get_space_group.
         sgoffset
             Optional offset for sg origin.
         scatterers
@@ -533,7 +533,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             self._xyzpars.addParameter(newpar)
 
         # Constrain non-free xyz parameters
-        fpos = g.positionFormulas(xyznames)
+        fpos = g.position_formulas(xyznames)
         for idx, tmp in enumerate(zip(scatterers, fpos)):
             scatterer, fp = tmp
 
@@ -634,7 +634,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                     isosymbol, isoname, params=self._parameters
                 )
 
-        fadp = g.UFormulas(adpnames)
+        fadp = g.u_formulas(adpnames)
 
         # Constrain dependent anisotropics. We use the fact that an
         # anisotropic cannot be dependent on an isotropic.

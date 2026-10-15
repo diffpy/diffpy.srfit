@@ -46,7 +46,7 @@ def testGenerator(diffpy_srreal_available, datafile):
 
     calc = gen._calc
     # Test parameters
-    for par in gen.iterPars(recurse=False):
+    for par in gen.iterate_over_parameters(recurse=False):
         pname = par.name
         defval = calc._getDoubleAttr(pname)
         assert defval == par.get_value()

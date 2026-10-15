@@ -22,7 +22,7 @@ different phases, each with an appropriate characteristic function.
 
 from pathlib import Path
 
-from pyobjcryst import loadCrystal
+from pyobjcryst.crystal import create_crystal_from_cif
 from scipy.optimize import leastsq
 
 from diffpy.srfit.fitbase import (
@@ -94,7 +94,7 @@ def makeRecipe(stru1, stru2, datname):
     # diameter to twice the shell radius.
     recipe.add_variable(contribution.radius, 15)
     recipe.add_variable(contribution.thickness, 11)
-    recipe.add_constraint(contribution.psize, "2 * radius")
+    recipe.add_constraint(contribution.particle_diameter, "2 * radius")
 
     # Configure the fit variables
     # Start by configuring the scale factor and resolution factors.
@@ -152,8 +152,8 @@ def main():
     data = Path(__file__).parent / "data/CdS_ZnS_nano.gr"
 
     # Make the recipe
-    stru1 = loadCrystal(cdsciffile)
-    stru2 = loadCrystal(znsciffile)
+    stru1 = create_crystal_from_cif(str(cdsciffile))
+    stru2 = create_crystal_from_cif(str(znsciffile))
     recipe = makeRecipe(stru1, stru2, data)
     from diffpy.srfit.fitbase.fithook import PlotFitHook
 

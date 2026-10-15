@@ -23,7 +23,7 @@ underlying ObjCrystCrystalParSet.
 from pathlib import Path
 
 from gaussianrecipe import scipyOptimize
-from pyobjcryst import loadCrystal
+from pyobjcryst.crystal import create_crystal_from_cif
 
 from diffpy.srfit.fitbase import (
     FitContribution,
@@ -59,7 +59,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # The ProfileGenerators
     # We need one of these for the x-ray data.
     xgenerator = PDFGenerator("G")
-    stru = loadCrystal(ciffile)
+    stru = create_crystal_from_cif(str(ciffile))
     xgenerator.setStructure(stru)
 
     # And we need one for the neutron data. We want to refine the same

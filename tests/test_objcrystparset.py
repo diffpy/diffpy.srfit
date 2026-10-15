@@ -723,7 +723,7 @@ class TestCreateSpaceGroup:
             shn = smbls.hermann_mauguin()
             short_name = shn.replace(" ", "")
             if spacegroups.IsSpaceGroupIdentifier(short_name):
-                sg = spacegroups.GetSpaceGroup(shn)
+                sg = spacegroups.get_space_group(shn)
                 sgnew = self.getObjCrystParSetSpaceGroup(sg)
                 # print("dbsg: " + repr(self.sgsEquivalent(sg, sgnew)))
                 assert self.sgsEquivalent(sg, sgnew)

@@ -21,7 +21,7 @@ structure to all the available data.
 from pathlib import Path
 
 from gaussianrecipe import scipyOptimize
-from pyobjcryst import loadCrystal
+from pyobjcryst.crystal import create_crystal_from_cif
 
 from diffpy.srfit.fitbase import (
     FitContribution,
@@ -67,12 +67,12 @@ def makeRecipe(
     # The ProfileGenerators
     # We create one for each phase and share the phases.
     xgenerator_ni = PDFGenerator("xG_ni")
-    stru = loadCrystal(ciffile_ni)
+    stru = create_crystal_from_cif(str(ciffile_ni))
     xgenerator_ni.setStructure(stru)
     phase_ni = xgenerator_ni.phase
 
     xgenerator_si = PDFGenerator("xG_si")
-    stru = loadCrystal(ciffile_si)
+    stru = create_crystal_from_cif(str(ciffile_si))
     xgenerator_si.setStructure(stru)
     phase_si = xgenerator_si.phase
 

@@ -72,14 +72,14 @@ class RecipeOrganizerInterface(object):
         Parameters
         ----------
         args : tuple
-            The arguments to pass to `constrain`.
+            The arguments to pass to `add_constraint`.
 
         Returns
         -------
         RecipeOrganizerInterface
             Return self after applying the constraint.
         """
-        _applyargs(args, self.constrain)
+        _applyargs(args, self.add_constraint)
         return self
 
     def __imod__(self, args):
@@ -91,14 +91,14 @@ class RecipeOrganizerInterface(object):
         Parameters
         ----------
         args : tuple
-            The arguments to pass to `restrain`.
+            The arguments to pass to `add_soft_bounds`.
 
         Returns
         -------
         RecipeOrganizerInterface
             Return self after applying the restraint.
         """
-        _applyargs(args, self.restrain)
+        _applyargs(args, self.add_soft_bounds)
         return self
 
     def __iadd__(self, args):

@@ -124,7 +124,7 @@ def test_savetxt(diffpy_srreal_available, datafile):
 
 def test_pickling(diffpy_srreal_available, datafile):
     "validate PDFContribution.residual() after pickling."
-    from diffpy.structure import loadStructure
+    from diffpy.structure import load_structure
 
     if not diffpy_srreal_available:
         pytest.skip("diffpy.srreal package not available")
@@ -133,7 +133,7 @@ def test_pickling(diffpy_srreal_available, datafile):
     pc.loadData(datafile("ni-q27r100-neutron.gr"))
     ciffile = datafile("ni.cif")
     cif_path = str(ciffile)
-    ni = loadStructure(cif_path)
+    ni = load_structure(cif_path)
     ni.Uisoequiv = 0.003
     pc.addStructure("ni", ni)
     pc.setCalculationRange(0, 10)

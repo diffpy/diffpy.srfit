@@ -17,7 +17,7 @@
 from pathlib import Path
 
 from gaussianrecipe import scipyOptimize
-from pyobjcryst import loadCrystal
+from pyobjcryst.crystal import create_crystal_from_cif
 
 from diffpy.srfit.fitbase import FitRecipe, FitResults
 from diffpy.srfit.pdf import PDFContribution
@@ -33,10 +33,10 @@ def makeRecipe(niciffile, siciffile, datname):
     contribution.loadData(datname)
     contribution.set_calculation_range(xmax=20)
 
-    stru = loadCrystal(niciffile)
+    stru = create_crystal_from_cif(str(niciffile))
     contribution.addStructure("ni", stru)
 
-    stru = loadCrystal(siciffile)
+    stru = create_crystal_from_cif(str(siciffile))
     contribution.addStructure("si", stru)
 
     # Make the FitRecipe and add the FitContribution.

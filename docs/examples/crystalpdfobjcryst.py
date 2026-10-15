@@ -22,7 +22,7 @@ provided by the ObjCrystCrystalParSet structure adapter.
 from pathlib import Path
 
 from gaussianrecipe import scipyOptimize
-from pyobjcryst import loadCrystal
+from pyobjcryst.crystal import create_crystal_from_cif
 
 from diffpy.srfit.fitbase import (
     FitContribution,
@@ -56,7 +56,7 @@ def makeRecipe(ciffile, datname):
     # create a Crystal object. That object is passed to the PDFGenerator as in
     # the previous example.
     generator = PDFGenerator("G")
-    stru = loadCrystal(ciffile)
+    stru = create_crystal_from_cif(str(ciffile))
     generator.setStructure(stru)
     generator.setQmax(40.0)
 

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Release notes &mdash; diffpy.srfit 3.4.0rc0 documentation</title>
+  <title>Release notes &mdash; diffpy.srfit 3.4.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1c984258"></script>
+      <script src="_static/documentation_options.js?v=237dbe43"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -81,14 +81,107 @@
   <section id="release-notes">
 <span id="index-0"></span><h1>Release notes<a class="headerlink" href="#release-notes" title="Link to this heading"></a></h1>
 <section id="id1">
-<h2>3.3.1<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<h2>3.4.0<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p><strong>Added:</strong></p>
+<ul class="simple">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">make_equation</span></code>, <code class="docutils literal notranslate"><span class="pre">register_constant</span></code>, <code class="docutils literal notranslate"><span class="pre">register_argument</span></code>,</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">register_operator</span></code>, <code class="docutils literal notranslate"><span class="pre">register_builder</span></code> and <code class="docutils literal notranslate"><span class="pre">deregister_builder</span></code> to
+<code class="docutils literal notranslate"><span class="pre">EquationFactory</span></code>, and <code class="docutils literal notranslate"><span class="pre">wrap_argument</span></code>, <code class="docutils literal notranslate"><span class="pre">wrap_operator</span></code>,
+<code class="docutils literal notranslate"><span class="pre">wrap_function</span></code> and <code class="docutils literal notranslate"><span class="pre">get_builder</span></code> to <code class="docutils literal notranslate"><span class="pre">diffpy.srfit.equation.builder</span></code>.
+* Add <code class="docutils literal notranslate"><span class="pre">Equation.set_root</span></code>, <code class="docutils literal notranslate"><span class="pre">Operator.add_literal</span></code> and <code class="docutils literal notranslate"><span class="pre">make_operator</span></code> to
+<code class="docutils literal notranslate"><span class="pre">diffpy.srfit.equation</span></code>.
+* Add <code class="docutils literal notranslate"><span class="pre">get_args</span></code>, <code class="docutils literal notranslate"><span class="pre">get_expression</span></code> and <code class="docutils literal notranslate"><span class="pre">pretty_print</span></code> to
+<code class="docutils literal notranslate"><span class="pre">diffpy.srfit.equation.visitors</span></code>, and <code class="docutils literal notranslate"><span class="pre">on_argument</span></code>, <code class="docutils literal notranslate"><span class="pre">on_operator</span></code> and
+<code class="docutils literal notranslate"><span class="pre">on_equation</span></code> to <code class="docutils literal notranslate"><span class="pre">Visitor</span></code>.
+* Add parallel fitting example.
+* Add <code class="docutils literal notranslate"><span class="pre">add_observer</span></code>, <code class="docutils literal notranslate"><span class="pre">remove_observer</span></code> and <code class="docutils literal notranslate"><span class="pre">has_observer</span></code> to
+<code class="docutils literal notranslate"><span class="pre">Observable</span></code>, and <code class="docutils literal notranslate"><span class="pre">has_tags</span></code> and <code class="docutils literal notranslate"><span class="pre">verify_tags</span></code> to <code class="docutils literal notranslate"><span class="pre">TagManager</span></code>.
+* Add <code class="docutils literal notranslate"><span class="pre">is_identifier</span></code> and <code class="docutils literal notranslate"><span class="pre">validate_name</span></code> to <code class="docutils literal notranslate"><span class="pre">diffpy.srfit.util.nameutils</span></code>,
+<code class="docutils literal notranslate"><span class="pre">convert_input_to_string</span></code> to <code class="docutils literal notranslate"><span class="pre">diffpy.srfit.util.inpututils</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">sort_key_for_numeric_string</span></code> to <code class="docutils literal notranslate"><span class="pre">diffpy.srfit.util</span></code>.
+* Document the <code class="docutils literal notranslate"><span class="pre">*=</span></code>, <code class="docutils literal notranslate"><span class="pre">%=</span></code>, <code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">|=</span></code>, and <code class="docutils literal notranslate"><span class="pre">&lt;&lt;</span></code> shorthand operators in the <code class="docutils literal notranslate"><span class="pre">diffpy.srfit.interface</span></code> API reference.
+* The public <code class="docutils literal notranslate"><span class="pre">fitbase</span></code> classes can now be imported directly from
+<code class="docutils literal notranslate"><span class="pre">diffpy.srfit</span></code>, for example <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">diffpy.srfit</span> <span class="pre">import</span> <span class="pre">FitRecipe</span></code>.
+* The test suite now fails if srfit’s own source code calls one of srfit’s
+deprecated names, so an internal caller missed during a deprecation is
+caught in CI.</p>
+<p><strong>Changed:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">OperatorABC</span></code> now requires <code class="docutils literal notranslate"><span class="pre">add_literal</span></code> instead of <code class="docutils literal notranslate"><span class="pre">addLiteral</span></code>, and</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">Visitor</span></code> subclasses now override <code class="docutils literal notranslate"><span class="pre">on_argument</span></code>, <code class="docutils literal notranslate"><span class="pre">on_operator</span></code> and
+<code class="docutils literal notranslate"><span class="pre">on_equation</span></code> instead of <code class="docutils literal notranslate"><span class="pre">onArgument</span></code>, <code class="docutils literal notranslate"><span class="pre">onOperator</span></code> and
+<code class="docutils literal notranslate"><span class="pre">onEquation</span></code>.
+* Rewrite the <code class="docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase</span></code> docstrings in NumPy style, and correct
+those that described the wrong types, defaults or raised exceptions.
+* The error raised for an invalid name now says how to fix it.
+* Importing <code class="docutils literal notranslate"><span class="pre">diffpy.srfit</span></code> no longer imports <code class="docutils literal notranslate"><span class="pre">matplotlib.pyplot</span></code> or
+changes the global matplotlib style. <code class="docutils literal notranslate"><span class="pre">FitRecipe.plot_recipe</span></code> still uses
+the <code class="docutils literal notranslate"><span class="pre">bg-style</span></code> stylesheet, but only for the figures it creates.</p>
+<p><strong>Deprecated:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EquationFactory.makeEquation</span></code>, <code class="docutils literal notranslate"><span class="pre">registerConstant</span></code>, <code class="docutils literal notranslate"><span class="pre">registerArgument</span></code>,</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">registerOperator</span></code>, <code class="docutils literal notranslate"><span class="pre">registerBuilder</span></code> and <code class="docutils literal notranslate"><span class="pre">deRegisterBuilder</span></code>,
+<code class="docutils literal notranslate"><span class="pre">wrapArgument</span></code>, <code class="docutils literal notranslate"><span class="pre">wrapOperator</span></code>, <code class="docutils literal notranslate"><span class="pre">wrapFunction</span></code>, <code class="docutils literal notranslate"><span class="pre">getBuilder</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Equation.setRoot</span></code>, <code class="docutils literal notranslate"><span class="pre">Operator.addLiteral</span></code>, <code class="docutils literal notranslate"><span class="pre">makeOperator</span></code>,
+<code class="docutils literal notranslate"><span class="pre">getArgs</span></code>, <code class="docutils literal notranslate"><span class="pre">getExpression</span></code>, <code class="docutils literal notranslate"><span class="pre">prettyPrint</span></code> and <code class="docutils literal notranslate"><span class="pre">Visitor.onArgument</span></code>,
+<code class="docutils literal notranslate"><span class="pre">onOperator</span></code> and <code class="docutils literal notranslate"><span class="pre">onEquation</span></code> are deprecated in favor of their
+snake_case replacements. The old names still work and warn, and will be
+removed in version 4.0.0.
+* <code class="docutils literal notranslate"><span class="pre">getValue</span></code> is deprecated in favour of <code class="docutils literal notranslate"><span class="pre">get_value</span></code> on <code class="docutils literal notranslate"><span class="pre">Parameter</span></code> and on
+the <code class="docutils literal notranslate"><span class="pre">Literal</span></code> hierarchy (<code class="docutils literal notranslate"><span class="pre">Argument</span></code>, <code class="docutils literal notranslate"><span class="pre">Operator</span></code>, <code class="docutils literal notranslate"><span class="pre">Equation</span></code>). The old
+name still works and warns, and will be removed in version 4.0.0.
+* <code class="docutils literal notranslate"><span class="pre">Observable.addObserver</span></code>, <code class="docutils literal notranslate"><span class="pre">removeObserver</span></code> and <code class="docutils literal notranslate"><span class="pre">hasObserver</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TagManager.hasTags</span></code> and <code class="docutils literal notranslate"><span class="pre">verifyTags</span></code>, <code class="docutils literal notranslate"><span class="pre">isIdentifier</span></code>,
+<code class="docutils literal notranslate"><span class="pre">validateName</span></code>, <code class="docutils literal notranslate"><span class="pre">inputToString</span></code> and <code class="docutils literal notranslate"><span class="pre">sortKeyForNumericString</span></code> are
+deprecated in favour of their snake_case replacements. The old names still
+work and warn, and will be removed in version 4.0.0.
+* <code class="docutils literal notranslate"><span class="pre">ParameterSet.addParameter</span></code>, <code class="docutils literal notranslate"><span class="pre">ParameterSet.newParameter</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ParameterSet.removeParameter</span></code> are deprecated in favour of
+<code class="docutils literal notranslate"><span class="pre">add_parameter</span></code>, <code class="docutils literal notranslate"><span class="pre">new_parameter</span></code> and <code class="docutils literal notranslate"><span class="pre">remove_parameter</span></code>. The old names
+still work and warn, and will be removed in version 4.0.0.</p>
+<p><strong>Fixed:</strong></p>
+<ul class="simple">
+<li><p>Fix the test check for observers left on global equation builders.</p></li>
+<li><p>Fix the <code class="docutils literal notranslate"><span class="pre">equationFromString</span></code> deprecation warning, which pointed to a</p></li>
+</ul>
+<p>nonexistent <code class="docutils literal notranslate"><span class="pre">RecipeOrganizer.get_equation_from_string</span></code> instead of
+<code class="docutils literal notranslate"><span class="pre">diffpy.srfit.fitbase.recipeorganizer.get_equation_from_string</span></code>.
+* <code class="docutils literal notranslate"><span class="pre">show()</span></code> no longer fails when the recipe holds BVS or ObjCryst molecule restraints, or a <code class="docutils literal notranslate"><span class="pre">Restraint</span></code> added with <code class="docutils literal notranslate"><span class="pre">register_soft_bounds</span></code>.
+* Set the scattering factor table through the <code class="docutils literal notranslate"><span class="pre">scatteringfactortable</span></code> property in <code class="docutils literal notranslate"><span class="pre">setScatteringType</span></code> instead of the <code class="docutils literal notranslate"><span class="pre">setScatteringFactorTableByType</span></code> method deprecated in diffpy.srreal.
+* <code class="docutils literal notranslate"><span class="pre">SASProfile</span></code> now updates its wrapped SAS <code class="docutils literal notranslate"><span class="pre">DataInfo</span></code> object when the
+observed profile is set through <code class="docutils literal notranslate"><span class="pre">set_observed_profile</span></code> or
+<code class="docutils literal notranslate"><span class="pre">load_parsed_data</span></code>. Previously only the deprecated <code class="docutils literal notranslate"><span class="pre">setObservedProfile</span></code>
+did this.
+* <code class="docutils literal notranslate"><span class="pre">FitRecipe</span></code> tests no longer depend on the <code class="docutils literal notranslate"><span class="pre">diffpy.srfit.pdf</span></code> package.
+* Apply restraints and constraints added to a <code class="docutils literal notranslate"><span class="pre">FitContribution</span></code> or <code class="docutils literal notranslate"><span class="pre">ParameterSet</span></code> after its <code class="docutils literal notranslate"><span class="pre">FitRecipe</span></code> has been evaluated. Before, they were ignored until the recipe was reset.
+* Point the README CI badge at the matrix-and-codecov.yml workflow so it renders.
+* Use <code class="docutils literal notranslate"><span class="pre">get_space_group</span></code>, <code class="docutils literal notranslate"><span class="pre">position_formulas</span></code>, and <code class="docutils literal notranslate"><span class="pre">u_formulas</span></code> in place of the deprecated <code class="docutils literal notranslate"><span class="pre">diffpy.structure</span></code> functions <code class="docutils literal notranslate"><span class="pre">GetSpaceGroup</span></code>, <code class="docutils literal notranslate"><span class="pre">positionFormulas</span></code>, and <code class="docutils literal notranslate"><span class="pre">UFormulas</span></code> to silence deprecation warnings.
+* Use <code class="docutils literal notranslate"><span class="pre">add_constraint</span></code> and <code class="docutils literal notranslate"><span class="pre">add_soft_bounds</span></code> in the <code class="docutils literal notranslate"><span class="pre">*=</span></code> and <code class="docutils literal notranslate"><span class="pre">%=</span></code> operators of <code class="docutils literal notranslate"><span class="pre">RecipeOrganizerInterface</span></code> so they no longer raise deprecation warnings for <code class="docutils literal notranslate"><span class="pre">constrain</span></code> and <code class="docutils literal notranslate"><span class="pre">restrain</span></code>.
+* Use <code class="docutils literal notranslate"><span class="pre">pyobjcryst.crystal.create_crystal_from_cif</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy.optimize.leastsq</span></code>, and the <code class="docutils literal notranslate"><span class="pre">particle_diameter</span></code> argument of <code class="docutils literal notranslate"><span class="pre">spherical_particle</span></code> in the examples in place of deprecated or renamed APIs.
+* Creating a <code class="docutils literal notranslate"><span class="pre">FitRecipe</span></code> no longer emits a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> about
+<code class="docutils literal notranslate"><span class="pre">pushFitHook</span></code>.
+* <code class="docutils literal notranslate"><span class="pre">initializeRecipe</span></code> now emits only its own <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> instead of
+also warning about <code class="docutils literal notranslate"><span class="pre">resultsDictionary</span></code>.
+* Fix API docstrings so code examples in <code class="docutils literal notranslate"><span class="pre">RecipeOrganizer.add_soft_bounds</span></code> and <code class="docutils literal notranslate"><span class="pre">iterate_over_parameters</span></code> render, and fix docstring formatting errors in <code class="docutils literal notranslate"><span class="pre">ProfileParser</span></code>, <code class="docutils literal notranslate"><span class="pre">PDFParser</span></code>, <code class="docutils literal notranslate"><span class="pre">lognormal_spherical_particle</span></code>, and the <code class="docutils literal notranslate"><span class="pre">interface</span></code> module.
+* Fix broken include of the examples README in the examples documentation page.</p>
+<p><strong>Removed:</strong></p>
+<ul class="simple">
+<li><p>Removed the undeclared <code class="docutils literal notranslate"><span class="pre">six</span></code> dependency and the leftover Python 2</p></li>
+</ul>
+<p>compatibility code that used it.</p>
+</section>
+<section id="id2">
+<h2>3.3.1<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <p><strong>Added:</strong></p>
 <ul class="simple">
 <li><p>Add regex parsing ability in <code class="docutils literal notranslate"><span class="pre">PDFParser</span></code> for file headers that do not have the structure output by xPDFsuite and PDFgetX.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>3.3.0<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="id3">
+<h2>3.3.0<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
 <p><strong>Added:</strong></p>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">add_parameter_set</span></code> method to replace deprecated <code class="docutils literal notranslate"><span class="pre">FitRecipe.addParameterSet</span></code>.</p></li>
@@ -253,8 +346,8 @@
 <li><p>Support for Python 3.11</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>3.2.0<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h2>3.2.0<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
 <p><strong>Changed:</strong></p>
 <ul class="simple">
 <li><p>Temporarily removed support for SAS characteristic functions until we can migrate to the new sasview api.</p></li>
@@ -266,8 +359,8 @@
 <li><p>Better license designation in <cite>pyproject.toml</cite></p></li>
 </ul>
 </section>
-<section id="id4">
-<h2>3.1.0<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="id5">
+<h2>3.1.0<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
 <section id="version-3-0-0-2019-03-14">
 <h3>Version 3.0.0 – 2019-03-14<a class="headerlink" href="#version-3-0-0-2019-03-14" title="Link to this heading"></a></h3>
 <p><strong>Added:</strong></p>

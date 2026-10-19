@@ -4,6 +4,100 @@ Release notes
 
 .. current developments
 
+3.4.0
+=====
+
+**Added:**
+
+* Add ``make_equation``, ``register_constant``, ``register_argument``,
+``register_operator``, ``register_builder`` and ``deregister_builder`` to
+``EquationFactory``, and ``wrap_argument``, ``wrap_operator``,
+``wrap_function`` and ``get_builder`` to ``diffpy.srfit.equation.builder``.
+* Add ``Equation.set_root``, ``Operator.add_literal`` and ``make_operator`` to
+``diffpy.srfit.equation``.
+* Add ``get_args``, ``get_expression`` and ``pretty_print`` to
+``diffpy.srfit.equation.visitors``, and ``on_argument``, ``on_operator`` and
+``on_equation`` to ``Visitor``.
+* Add parallel fitting example.
+* Add ``add_observer``, ``remove_observer`` and ``has_observer`` to
+``Observable``, and ``has_tags`` and ``verify_tags`` to ``TagManager``.
+* Add ``is_identifier`` and ``validate_name`` to ``diffpy.srfit.util.nameutils``,
+``convert_input_to_string`` to ``diffpy.srfit.util.inpututils``, and
+``sort_key_for_numeric_string`` to ``diffpy.srfit.util``.
+* Document the ``*=``, ``%=``, ``+=``, ``|=``, and ``<<`` shorthand operators in the ``diffpy.srfit.interface`` API reference.
+* The public ``fitbase`` classes can now be imported directly from
+``diffpy.srfit``, for example ``from diffpy.srfit import FitRecipe``.
+* The test suite now fails if srfit's own source code calls one of srfit's
+deprecated names, so an internal caller missed during a deprecation is
+caught in CI.
+
+**Changed:**
+
+* ``OperatorABC`` now requires ``add_literal`` instead of ``addLiteral``, and
+``Visitor`` subclasses now override ``on_argument``, ``on_operator`` and
+``on_equation`` instead of ``onArgument``, ``onOperator`` and
+``onEquation``.
+* Rewrite the ``diffpy.srfit.fitbase`` docstrings in NumPy style, and correct
+those that described the wrong types, defaults or raised exceptions.
+* The error raised for an invalid name now says how to fix it.
+* Importing ``diffpy.srfit`` no longer imports ``matplotlib.pyplot`` or
+changes the global matplotlib style. ``FitRecipe.plot_recipe`` still uses
+the ``bg-style`` stylesheet, but only for the figures it creates.
+
+**Deprecated:**
+
+* ``EquationFactory.makeEquation``, ``registerConstant``, ``registerArgument``,
+``registerOperator``, ``registerBuilder`` and ``deRegisterBuilder``,
+``wrapArgument``, ``wrapOperator``, ``wrapFunction``, ``getBuilder``,
+``Equation.setRoot``, ``Operator.addLiteral``, ``makeOperator``,
+``getArgs``, ``getExpression``, ``prettyPrint`` and ``Visitor.onArgument``,
+``onOperator`` and ``onEquation`` are deprecated in favor of their
+snake_case replacements. The old names still work and warn, and will be
+removed in version 4.0.0.
+* ``getValue`` is deprecated in favour of ``get_value`` on ``Parameter`` and on
+the ``Literal`` hierarchy (``Argument``, ``Operator``, ``Equation``). The old
+name still works and warns, and will be removed in version 4.0.0.
+* ``Observable.addObserver``, ``removeObserver`` and ``hasObserver``,
+``TagManager.hasTags`` and ``verifyTags``, ``isIdentifier``,
+``validateName``, ``inputToString`` and ``sortKeyForNumericString`` are
+deprecated in favour of their snake_case replacements. The old names still
+work and warn, and will be removed in version 4.0.0.
+* ``ParameterSet.addParameter``, ``ParameterSet.newParameter`` and
+``ParameterSet.removeParameter`` are deprecated in favour of
+``add_parameter``, ``new_parameter`` and ``remove_parameter``. The old names
+still work and warn, and will be removed in version 4.0.0.
+
+**Fixed:**
+
+* Fix the test check for observers left on global equation builders.
+* Fix the ``equationFromString`` deprecation warning, which pointed to a
+nonexistent ``RecipeOrganizer.get_equation_from_string`` instead of
+``diffpy.srfit.fitbase.recipeorganizer.get_equation_from_string``.
+* ``show()`` no longer fails when the recipe holds BVS or ObjCryst molecule restraints, or a ``Restraint`` added with ``register_soft_bounds``.
+* Set the scattering factor table through the ``scatteringfactortable`` property in ``setScatteringType`` instead of the ``setScatteringFactorTableByType`` method deprecated in diffpy.srreal.
+* ``SASProfile`` now updates its wrapped SAS ``DataInfo`` object when the
+observed profile is set through ``set_observed_profile`` or
+``load_parsed_data``. Previously only the deprecated ``setObservedProfile``
+did this.
+* ``FitRecipe`` tests no longer depend on the ``diffpy.srfit.pdf`` package.
+* Apply restraints and constraints added to a ``FitContribution`` or ``ParameterSet`` after its ``FitRecipe`` has been evaluated. Before, they were ignored until the recipe was reset.
+* Point the README CI badge at the matrix-and-codecov.yml workflow so it renders.
+* Use ``get_space_group``, ``position_formulas``, and ``u_formulas`` in place of the deprecated ``diffpy.structure`` functions ``GetSpaceGroup``, ``positionFormulas``, and ``UFormulas`` to silence deprecation warnings.
+* Use ``add_constraint`` and ``add_soft_bounds`` in the ``*=`` and ``%=`` operators of ``RecipeOrganizerInterface`` so they no longer raise deprecation warnings for ``constrain`` and ``restrain``.
+* Use ``pyobjcryst.crystal.create_crystal_from_cif``, ``scipy.optimize.leastsq``, and the ``particle_diameter`` argument of ``spherical_particle`` in the examples in place of deprecated or renamed APIs.
+* Creating a ``FitRecipe`` no longer emits a ``DeprecationWarning`` about
+``pushFitHook``.
+* ``initializeRecipe`` now emits only its own ``DeprecationWarning`` instead of
+also warning about ``resultsDictionary``.
+* Fix API docstrings so code examples in ``RecipeOrganizer.add_soft_bounds`` and ``iterate_over_parameters`` render, and fix docstring formatting errors in ``ProfileParser``, ``PDFParser``, ``lognormal_spherical_particle``, and the ``interface`` module.
+* Fix broken include of the examples README in the examples documentation page.
+
+**Removed:**
+
+* Removed the undeclared ``six`` dependency and the leftover Python 2
+compatibility code that used it.
+
+
 3.3.1
 =====
 

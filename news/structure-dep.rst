@@ -4,7 +4,7 @@
 
 **Changed:**
 
-* <news item>
+* The deprecation messages of ``constrainAsSpaceGroup`` and of ``setConst`` on the ObjCrystParSet bond length, bond angle and dihedral angle parameters now point to ``diffpy.cmistructure`` instead of ``diffpy.srfit.structure``.
 
 **Deprecated:**
 

@@ -22,6 +22,12 @@ from diffpy.srfit.structure import (
 )
 from diffpy.srfit.structure.basestructureparset import stru_dep_msg
 from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
+from diffpy.srfit.structure.objcrystparset import (
+    ba_setConst_dep_msg,
+    bl_setConst_dep_msg,
+    da_setConst_dep_msg,
+)
+from diffpy.srfit.structure.sgconstraints import constrainAsSpaceGroup_dep_msg
 from diffpy.srfit.structure.srrealparset import restrainBVS_dep_msg
 from diffpy.structure import Atom, Lattice, Structure
 
@@ -198,6 +204,17 @@ def test_stru_attribute_set():
         # Expected: diffpy.cmistructure.srrealparset.SrRealParSet.restrain_bvs
         # exists.
         restrainBVS_dep_msg,
+        # C3: The message of sgconstraints.constrainAsSpaceGroup.
+        # Expected: diffpy.cmistructure.sgconstraints.constrain_as_space_group
+        # exists.
+        constrainAsSpaceGroup_dep_msg,
+        # C4: The setConst messages of the ObjCryst bond length, bond angle
+        # and dihedral angle parameters.
+        # Expected: set_constant exists on each matching class in
+        # diffpy.cmistructure.objcrystparset.
+        bl_setConst_dep_msg,
+        ba_setConst_dep_msg,
+        da_setConst_dep_msg,
     ],
 )
 def test_new_callable_exists_in_cmistructure(
@@ -206,9 +223,12 @@ def test_new_callable_exists_in_cmistructure(
     if not diffpy_cmistructure_available:
         pytest.skip("diffpy.cmistructure package not available")
     new_name = get_new_name(input_message)
-    actual_is_callable = callable(resolve_dotted_name(new_name))
-    expected_is_callable = True
-    assert actual_is_callable == expected_is_callable
+    actual_result = (
+        new_name.startswith("diffpy.cmistructure."),
+        callable(resolve_dotted_name(new_name)),
+    )
+    expected_result = (True, True)
+    assert actual_result == expected_result
 
 
 def test_new_attribute_exists_in_cmistructure(diffpy_cmistructure_available):

@@ -62,25 +62,32 @@ from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 removal_version = "4.0.0"
 bl_base = "diffpy.srfit.structure.objcrystparset.ObjCrystBondLengthParameter"
+bl_new_base = "diffpy.cmistructure.objcrystparset.ObjCrystBondLengthParameter"
 
 bl_setConst_dep_msg = build_deprecation_message(
     bl_base,
     "setConst",
     "set_constant",
     removal_version,
+    new_base=bl_new_base,
 )
 
 ba_base = "diffpy.srfit.structure.objcrystparset.ObjCrystBondAngleParameter"
+ba_new_base = "diffpy.cmistructure.objcrystparset.ObjCrystBondAngleParameter"
 
 ba_setConst_dep_msg = build_deprecation_message(
     ba_base,
     "setConst",
     "set_constant",
     removal_version,
+    new_base=ba_new_base,
 )
 
 da_base = (
     "diffpy.srfit.structure.objcrystparset.ObjCrystDihedralAngleParameter"
+)
+da_new_base = (
+    "diffpy.cmistructure.objcrystparset.ObjCrystDihedralAngleParameter"
 )
 
 da_setConst_dep_msg = build_deprecation_message(
@@ -88,6 +95,7 @@ da_setConst_dep_msg = build_deprecation_message(
     "setConst",
     "set_constant",
     removal_version,
+    new_base=da_new_base,
 )
 
 molecule_stru_dep_msg = build_deprecation_message(
@@ -1443,7 +1451,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         4.0.0.
 
         Please use
-        diffpy.srfit.structure.objcryst.ObjCrystBondLengthParameter.set_constant
+        diffpy.cmistructure.objcrystparset.ObjCrystBondLengthParameter.set_constant
         instead.
         """
         self.set_constant(const, value)
@@ -1604,7 +1612,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.structure.objcryst.ObjCrystBondAngleParameter.set_constant
+        diffpy.cmistructure.objcrystparset.ObjCrystBondAngleParameter.set_constant
         instead.
         """
         self.set_constant(const, value)
@@ -1784,7 +1792,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.structure.objcryst.ObjCrystDihedralAngleParameter.set_constant
+        diffpy.cmistructure.objcrystparset.ObjCrystDihedralAngleParameter.set_constant
         instead.
         """
         self.set_constant(const, value)

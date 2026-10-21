@@ -56,10 +56,12 @@ def test_struToParameterSet(nacl_structure):
     assert actual_structure == expected_structure
 
 
-def test_restrainBVS(nacl_structure):
+def test_restrainBVS(diffpy_srreal_available, nacl_structure):
     # Case: restrainBVS is called on a DiffpyStructureParSet.
     # Expected: A DeprecationWarning points to
     # diffpy.cmistructure's restrain_bvs, and the restraint is still added.
+    if not diffpy_srreal_available:
+        pytest.skip("diffpy.srreal package not available")
     parameter_set = DiffpyStructureParSet("nacl", nacl_structure)
     expected_msg = (
         "'diffpy.srfit.structure.srrealparset.SrRealParSet.restrainBVS' is "

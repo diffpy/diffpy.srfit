@@ -285,7 +285,7 @@ class DiffpyStructureParSet(SrRealParSet):
             A diffpy.structure.Structure instance
         """
         SrRealParSet.__init__(self, name)
-        self.stru = stru
+        self.structure = stru
         self.add_parameter_set(DiffpyLatticeParSet(stru.lattice))
         self.atoms = []
 
@@ -305,7 +305,7 @@ class DiffpyStructureParSet(SrRealParSet):
         return
 
     def __repr__(self):
-        return repr(self.stru)
+        return repr(self.structure)
 
     def getLattice(self):
         """Get the ParameterSet containing the lattice Parameters."""

@@ -18,6 +18,17 @@ __all__ = ["SrRealParSet"]
 
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
 from diffpy.srfit.structure.bvsrestraint import BVSRestraint
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+removal_version = "4.0.0"
+
+restrainBVS_dep_msg = build_deprecation_message(
+    "diffpy.srfit.structure.srrealparset.SrRealParSet",
+    "restrainBVS",
+    "restrain_bvs",
+    removal_version,
+    new_base="diffpy.cmistructure.srrealparset.SrRealParSet",
+)
 
 
 class SrRealParSet(BaseStructureParSet):
@@ -28,7 +39,7 @@ class SrRealParSet(BaseStructureParSet):
 
     Attributes
     ----------
-    stru
+    structure
         The adapted object
     _usesymmetry
         A flag indicating if SrReal calculators that operate on
@@ -39,10 +50,10 @@ class SrRealParSet(BaseStructureParSet):
     def __init__(self, *args, **kw):
         BaseStructureParSet.__init__(self, *args, **kw)
         self._usesymmetry = True
-        self.stru = None
+        self.structure = None
         return
 
-    def restrainBVS(self, sig=1, scaled=False):
+    def restrain_bvs(self, sig=1, scaled=False):
         """Restrain the bond-valence sum to zero.
 
         This adds a penalty to the cost function equal to
@@ -54,14 +65,17 @@ class SrRealParSet(BaseStructureParSet):
 
         Parameters
         ----------
-        sig
+        sig : float, optional
             The uncertainty on the BVS (default 1).
-        scaled
-            A flag indicating if the restraint is scaled
+        scaled : bool, optional
+            The flag indicating if the restraint is scaled
             (multiplied) by the unrestrained point-average chi^2
             (chi^2/numpoints) (default False).
 
-        Returns the BVSRestraint object for use with the 'unrestrain' method.
+        Returns
+        -------
+        BVSRestraint
+            The restraint, for use with the 'unrestrain' method.
         """
         # Create the Restraint object
         res = BVSRestraint(self, sig, scaled)
@@ -71,6 +85,16 @@ class SrRealParSet(BaseStructureParSet):
         self._update_configuration()
         # Return the Restraint object
         return res
+
+    @deprecated(restrainBVS_dep_msg)
+    def restrainBVS(self, sig=1, scaled=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.cmistructure.srrealparset.SrRealParSet.restrain_bvs
+        instead.
+        """
+        return self.restrain_bvs(sig, scaled)
 
     def useSymmetry(self, use=True):
         """Set this structure to use symmetry.
@@ -94,5 +118,5 @@ class SrRealParSet(BaseStructureParSet):
         from diffpy.srreal.structureadapter import nosymmetry
 
         if self._usesymmetry:
-            return self.stru
-        return nosymmetry(self.stru)
+            return self.structure
+        return nosymmetry(self.structure)

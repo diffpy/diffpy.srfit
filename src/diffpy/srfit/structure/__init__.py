@@ -16,48 +16,93 @@
 ParameterSet interface and automatic structure constraint generation
 from space group information."""
 
+import warnings
+
 from diffpy.srfit.structure.sgconstraints import (
     constrain_as_space_group,
     constrainAsSpaceGroup,
 )
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+removal_version = "4.0.0"
+
+warnings.warn(
+    build_deprecation_message(
+        "diffpy.srfit",
+        "structure",
+        "cmistructure",
+        removal_version,
+        new_base="diffpy",
+    ),
+    DeprecationWarning,
+    stacklevel=2,
+)
+
+struToParameterSet_dep_msg = build_deprecation_message(
+    "diffpy.srfit.structure",
+    "struToParameterSet",
+    "structure_to_parameter_set",
+    removal_version,
+    new_base="diffpy.cmistructure",
+)
 
 
-def struToParameterSet(name, stru):
-    """Creates a ParameterSet from an structure.
+def structure_to_parameter_set(name, structure):
+    """Create a ParameterSet adapted to a structure object.
 
-    This returns a ParameterSet adapted for the structure depending on its
-    type.
+    The adapter is chosen from the type of `structure`. Supported types
+    are diffpy.structure.Structure, pyobjcryst.crystal.Crystal,
+    pyobjcryst.molecule.Molecule and
+    cctbx.crystal.special_position_settings.
 
     Parameters
     ----------
-    stru
-        a structure object known by this module
-    name
-        A name to give the structure.
+    name : str
+        The name to give the structure.
+    structure : object
+        The structure object to adapt.
 
-    Raises TypeError if stru cannot be adapted
+    Returns
+    -------
+    BaseStructureParSet
+        The ParameterSet adapting `structure`.
+
+    Raises
+    ------
+    TypeError
+        If `structure` is not one of the supported structure types.
     """
     from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
-    if DiffpyStructureParSet.canAdapt(stru):
-        return DiffpyStructureParSet(name, stru)
+    if DiffpyStructureParSet.canAdapt(structure):
+        return DiffpyStructureParSet(name, structure)
 
     from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
 
-    if ObjCrystCrystalParSet.canAdapt(stru):
-        return ObjCrystCrystalParSet(name, stru)
+    if ObjCrystCrystalParSet.canAdapt(structure):
+        return ObjCrystCrystalParSet(name, structure)
 
     from diffpy.srfit.structure.objcrystparset import ObjCrystMoleculeParSet
 
-    if ObjCrystMoleculeParSet.canAdapt(stru):
-        return ObjCrystMoleculeParSet(name, stru)
+    if ObjCrystMoleculeParSet.canAdapt(structure):
+        return ObjCrystMoleculeParSet(name, structure)
 
     from diffpy.srfit.structure.cctbxparset import CCTBXCrystalParSet
 
-    if CCTBXCrystalParSet.canAdapt(stru):
-        return CCTBXCrystalParSet(name, stru)
+    if CCTBXCrystalParSet.canAdapt(structure):
+        return CCTBXCrystalParSet(name, structure)
 
     raise TypeError("Unadaptable structure format")
+
+
+@deprecated(struToParameterSet_dep_msg)
+def struToParameterSet(name, stru):
+    """This function has been deprecated and will be removed in version
+    4.0.0.
+
+    Please use diffpy.cmistructure.structure_to_parameter_set instead.
+    """
+    return structure_to_parameter_set(name, stru)
 
 
 # silence pyflakes checker

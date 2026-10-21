@@ -44,10 +44,10 @@ def makeRecipe(molecule, datname):
     # The ProfileGenerator
     # Create a DebyePDFGenerator named "G".
     generator = DebyePDFGenerator("G")
-    generator.setStructure(molecule)
+    generator.set_structure(molecule)
     # These are metadata needed by the generator
-    generator.setQmin(0.68)
-    generator.setQmax(22)
+    generator.set_qmin(0.68)
+    generator.set_qmax(22)
 
     # The FitContribution
     contribution = FitContribution("bucky")

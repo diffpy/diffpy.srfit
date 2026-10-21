@@ -608,12 +608,14 @@ def test_non_physical_input_warns_only_once(
 
 
 @pytest.mark.parametrize(
-    "old_name, new_name, expected_signature_note, old_args, new_args",
+    "old_name, new_name, expected_cmipdf_name, expected_signature_note, "
+    "old_args, new_args",
     [
         # C1: sphericalCF forwards its arguments unchanged, only renamed.
         # Expected: The note names the renamed parameter.
         (
             "sphericalCF",
+            "spherical_particle",
             "spherical_particle",
             "Additionally, the signature has changed. Please pass the "
             "parameter 'psize' as 'particle_diameter'.",
@@ -624,6 +626,7 @@ def test_non_physical_input_warns_only_once(
         # Expected: The note names both renamed parameters.
         (
             "spheroidalCF",
+            "spheroidal_particle",
             "spheroidal_particle",
             "Additionally, the signature has changed. Please pass the "
             "parameters 'erad' and 'prad' as 'equatorial_radius' and "
@@ -637,6 +640,7 @@ def test_non_physical_input_warns_only_once(
         # Expected: The note gives the conversion, not a rename.
         (
             "spheroidalCF2",
+            "spheroidal_particle",
             "spheroidal_particle",
             "Additionally, the parameterization has changed. 'spheroidalCF2' "
             "took the equatorial diameter 'psize' and the axis ratio "
@@ -652,6 +656,7 @@ def test_non_physical_input_warns_only_once(
         (
             "lognormalSphericalCF",
             "lognormal_spherical_particle",
+            "lognormal_spherical_distribution",
             "Additionally, the signature has changed. Please pass the "
             "parameters 'psize' and 'psig' as 'particle_diameter' and "
             "'particle_diameter_sigma', respectively.",
@@ -663,6 +668,7 @@ def test_non_physical_input_warns_only_once(
         (
             "sheetCF",
             "sheet_particle",
+            "sheet_particle",
             "Additionally, the signature has changed. Please pass the "
             "parameter 'sthick' as 'sheet_thickness'.",
             (numpy.array([0.0, 2.0, 4.0]), 4.0),
@@ -673,6 +679,7 @@ def test_non_physical_input_warns_only_once(
         (
             "shellCF",
             "shell_particle",
+            "spherical_shell",
             "",
             (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
             (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
@@ -684,9 +691,10 @@ def test_non_physical_input_warns_only_once(
         (
             "shellCF2",
             "shell_particle",
+            "spherical_shell",
             "Additionally, the parameterization has changed. 'shellCF2' took "
             "the central radius 'a' and the shell thickness 'delta', while "
-            "'shell_particle' takes the inner radius. Please pass "
+            "'spherical_shell' takes the inner radius. Please pass "
             "radius = a - delta / 2 and thickness = delta.",
             (numpy.array([0.0, 5.0, 12.5]), 12.5, 5.0),
             (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
@@ -696,17 +704,18 @@ def test_non_physical_input_warns_only_once(
 def test_deprecated_functions_warn_and_forward(
     old_name,
     new_name,
+    expected_cmipdf_name,
     expected_signature_note,
     old_args,
     new_args,
 ):
     old_function = getattr(cf, old_name)
     new_function = getattr(cf, new_name)
-    module_path = "diffpy.srfit.pdf.characteristicfunctions"
     expected_characteristic_function = new_function(*new_args)
     expected_msg = (
-        f"'{module_path}.{old_name}' is deprecated and will be removed "
-        f"in version 4.0.0. Please use '{module_path}.{new_name}' "
+        f"'diffpy.srfit.pdf.characteristicfunctions.{old_name}' is "
+        f"deprecated and will be removed in version 4.0.0. Please use "
+        f"'diffpy.cmipdf.characteristicfunctions.{expected_cmipdf_name}' "
         "instead."
     )
     if expected_signature_note:

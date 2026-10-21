@@ -3,6 +3,10 @@
 diffpy.srfit.pdf package
 ========================
 
+.. deprecated:: 3.5.0
+    ``diffpy.srfit.pdf`` has moved to ``diffpy.cmipdf`` and will be removed
+    in version 4.0.0. Please use ``diffpy.cmipdf`` instead.
+
 .. automodule:: diffpy.srfit.pdf
     :members:
     :undoc-members:

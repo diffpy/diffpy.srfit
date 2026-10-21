@@ -27,10 +27,10 @@ from diffpy.srfit.pdf import PDFContribution
 # ----------------------------------------------------------------------------
 
 
-def test_pdfcontribution_loadData(datafile):
-    """LoadData passes the PDF metadata on to the built-in profile."""
+def test_pdfcontribution_load_data(datafile):
+    """load_data passes the PDF metadata on to the built-in profile."""
     contribution = PDFContribution("pdf")
-    contribution.loadData(datafile("si-q27r60-xray.gr"))
+    contribution.load_data(datafile("si-q27r60-xray.gr"))
 
     expected_metadata = {
         "version": "diffpy.pdfgetx-2.4.0",
@@ -58,25 +58,25 @@ def test_pdfcontribution_loadData(datafile):
     assert actual_point_count == expected_point_count
 
 
-def test_setQmax(diffpy_srreal_available):
-    """Check PDFContribution.setQmax()"""
+def test_set_qmax(diffpy_srreal_available):
+    """Check PDFContribution.set_qmax()"""
     from diffpy.structure import Structure
 
     if not diffpy_srreal_available:
         pytest.skip("diffpy.srreal package not available")
 
     pc = PDFContribution("pdf")
-    pc.setQmax(21)
-    pc.addStructure("empty", Structure())
-    assert 21 == pc.empty.getQmax()
-    pc.setQmax(22)
-    assert 22 == pc.getQmax()
-    assert 22 == pc.empty.getQmax()
+    pc.set_qmax(21)
+    pc.add_structure(Structure(), "empty")
+    assert 21 == pc.empty.get_qmax()
+    pc.set_qmax(22)
+    assert 22 == pc.get_qmax()
+    assert 22 == pc.empty.get_qmax()
     return
 
 
-def test_getQmax(diffpy_srreal_available):
-    """Check PDFContribution.getQmax()"""
+def test_get_qmax(diffpy_srreal_available):
+    """Check PDFContribution.get_qmax()"""
     from diffpy.structure import Structure
 
     if not diffpy_srreal_available:
@@ -85,18 +85,18 @@ def test_getQmax(diffpy_srreal_available):
     # cover all code branches in PDFContribution._get_meta_value
     # (1) contribution metadata
     pc1 = PDFContribution("pdf")
-    assert pc1.getQmax() is None
-    pc1.setQmax(17)
-    assert 17 == pc1.getQmax()
+    assert pc1.get_qmax() is None
+    pc1.set_qmax(17)
+    assert 17 == pc1.get_qmax()
     # (2) contribution metadata
     pc2 = PDFContribution("pdf")
-    pc2.addStructure("empty", Structure())
-    pc2.empty.setQmax(18)
-    assert 18 == pc2.getQmax()
+    pc2.add_structure(Structure(), "empty")
+    pc2.empty.set_qmax(18)
+    assert 18 == pc2.get_qmax()
     # (3) profile metadata
     pc3 = PDFContribution("pdf")
     pc3.profile.meta["qmax"] = 19
-    assert 19 == pc3.getQmax()
+    assert 19 == pc3.get_qmax()
     return
 
 
@@ -108,9 +108,9 @@ def test_savetxt(diffpy_srreal_available, datafile):
         pytest.skip("diffpy.srreal package not available")
 
     pc = PDFContribution("pdf")
-    pc.loadData(datafile("si-q27r60-xray.gr"))
-    pc.setCalculationRange(0, 10)
-    pc.addStructure("empty", Structure())
+    pc.load_data(datafile("si-q27r60-xray.gr"))
+    pc.set_calculation_range(0, 10)
+    pc.add_structure(Structure(), "empty")
     fp = io.BytesIO()
     with pytest.raises(SrFitError):
         pc.savetxt(fp)
@@ -130,13 +130,13 @@ def test_pickling(diffpy_srreal_available, datafile):
         pytest.skip("diffpy.srreal package not available")
 
     pc = PDFContribution("pdf")
-    pc.loadData(datafile("ni-q27r100-neutron.gr"))
+    pc.load_data(datafile("ni-q27r100-neutron.gr"))
     ciffile = datafile("ni.cif")
     cif_path = str(ciffile)
     ni = load_structure(cif_path)
     ni.Uisoequiv = 0.003
-    pc.addStructure("ni", ni)
-    pc.setCalculationRange(0, 10)
+    pc.add_structure(ni, "ni")
+    pc.set_calculation_range(0, 10)
     pc2 = pickle.loads(pickle.dumps(pc))
     res0 = pc.residual()
     assert numpy.array_equal(res0, pc2.residual())

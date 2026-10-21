@@ -60,7 +60,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # We need one of these for the x-ray data.
     xgenerator = PDFGenerator("G")
     stru = create_crystal_from_cif(str(ciffile))
-    xgenerator.setStructure(stru)
+    xgenerator.set_structure(stru)
 
     # And we need one for the neutron data. We want to refine the same
     # structure object in each PDFGenerator. This would suggest that we add the
@@ -79,7 +79,7 @@ def makeRecipe(ciffile, xdatname, ndatname):
     # Tell the neutron PDFGenerator to use the phase from the x-ray
     # PDFGenerator.
     ngenerator = PDFGenerator("G")
-    ngenerator.setPhase(xgenerator.phase)
+    ngenerator.set_structure_from_parset(xgenerator.phase)
 
     # The FitContributions
     # We associate the x-ray PDFGenerator and Profile in one FitContribution...

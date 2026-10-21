@@ -54,13 +54,13 @@ def makeRecipe(stru1, stru2, datname):
     # The generator for the CdS core. We call it "G_CdS" and will use this name
     # later when we set the fitting equation in the FitContribution.
     generator_cds = PDFGenerator("G_CdS")
-    generator_cds.setStructure(stru1)
-    generator_cds.setQmax(26)
+    generator_cds.set_structure(stru1)
+    generator_cds.set_qmax(26)
     generator_cds.qdamp.value = 0.0396
     # The generator for the ZnS shell. We call it "G_ZnS".
     generator_zns = PDFGenerator("G_ZnS")
-    generator_zns.setStructure(stru2)
-    generator_zns.setQmax(26)
+    generator_zns.set_structure(stru2)
+    generator_zns.set_qmax(26)
     generator_zns.qdamp.value = 0.0396
 
     # The FitContribution

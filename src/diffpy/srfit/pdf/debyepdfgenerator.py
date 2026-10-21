@@ -23,6 +23,30 @@ isolated scatterers, such as nanoparticles and molecules.
 __all__ = ["DebyePDFGenerator"]
 
 from diffpy.srfit.pdf.basepdfgenerator import BasePDFGenerator
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+removal_version = "4.0.0"
+debye_base = "diffpy.srfit.pdf.debyepdfgenerator.DebyePDFGenerator"
+debye_new_base = "diffpy.cmipdf.debyepdfgenerator.DebyePDFGenerator"
+
+debye_setStructure_dep_msg = (
+    build_deprecation_message(
+        debye_base,
+        "setStructure",
+        "set_structure",
+        removal_version,
+        new_base=debye_new_base,
+    )
+    + " Additionally, the signature has changed. Please pass the parameter "
+    "'stru' as 'structure'."
+)
+debye_setPhase_dep_msg = build_deprecation_message(
+    debye_base,
+    "setPhase",
+    "set_structure_from_parset",
+    removal_version,
+    new_base=debye_new_base,
+)
 
 
 class DebyePDFGenerator(BasePDFGenerator):
@@ -84,31 +108,43 @@ class DebyePDFGenerator(BasePDFGenerator):
         See Managed Parameters.
     """
 
-    def setStructure(self, stru, name="phase", periodic=False):
+    def set_structure(self, structure, name="phase", periodic=False):
         """Set the structure that will be used to calculate the PDF.
 
         This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
-        ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
-        See those classes (located in diffpy.srfit.structure) for how they are
-        used. The resulting ParameterSet will be managed by this generator.
+        ObjCrystMoleculeParSet that adapts the structure to a ParameterSet
+        interface. See those classes (located in diffpy.srfit.structure) for
+        how they are used. The resulting ParameterSet will be managed by this
+        generator.
 
         Parameters
         ----------
-        stru
+        structure
             The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
-            pyobjcryst.molecule.Molecule instance to adapt (default None).
+            pyobjcryst.molecule.Molecule instance to adapt.
         name : str, optional
-            The name to give to the managed ParameterSet that adapts stru
-            (default "phase").
+            The name to give to the managed ParameterSet that adapts the
+            structure (default "phase").
         periodic : bool, optional
             The structure should be treated as periodic (default
             False). Note that some structures do not support
             periodicity, in which case this will have no effect on the
             PDF calculation.
         """
-        return BasePDFGenerator.setStructure(self, stru, name, periodic)
+        return BasePDFGenerator.set_structure(self, structure, name, periodic)
 
-    def setPhase(self, parset, periodic=False):
+    @deprecated(debye_setStructure_dep_msg)
+    def setStructure(self, stru, name="phase", periodic=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.debyepdfgenerator.DebyePDFGenerator.set_structure
+        instead.
+        """
+        return self.set_structure(stru, name, periodic)
+
+    def set_structure_from_parset(self, parset, periodic=False):
         """Set the phase that will be used to calculate the PDF.
 
         Set the phase directly with a DiffpyStructureParSet,
@@ -124,11 +160,24 @@ class DebyePDFGenerator(BasePDFGenerator):
             BasePDFGenerators, and have the changes in one reflect in
             another.
         periodic : bool, optional
-            The structure should be treated as periodic (default True).
+            The structure should be treated as periodic (default False).
             Note that some structures do not support periodicity, in
             which case this will be ignored.
         """
-        return BasePDFGenerator.setPhase(self, parset, periodic)
+        return BasePDFGenerator.set_structure_from_parset(
+            self, parset, periodic
+        )
+
+    @deprecated(debye_setPhase_dep_msg)
+    def setPhase(self, parset, periodic=False):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.debyepdfgenerator.DebyePDFGenerator.set_structure_from_parset
+        instead.
+        """
+        return self.set_structure_from_parset(parset, periodic)
 
     def __init__(self, name="pdf"):
         """Initialize the generator.

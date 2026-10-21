@@ -31,10 +31,10 @@ def testGenerator(diffpy_srreal_available, datafile):
 
     qmax = 27.0
     gen = PDFGenerator()
-    gen.setScatteringType("N")
-    assert "N" == gen.getScatteringType()
-    gen.setQmax(qmax)
-    assert qmax == pytest.approx(gen.getQmax())
+    gen.set_scattering_type("N")
+    assert "N" == gen.get_scattering_type()
+    gen.set_qmax(qmax)
+    assert qmax == pytest.approx(gen.get_qmax())
 
     stru = PDFFitStructure()
     ciffile = datafile("ni.cif")
@@ -42,7 +42,7 @@ def testGenerator(diffpy_srreal_available, datafile):
     stru.read(cif_path)
     for i in range(4):
         stru[i].Bisoequiv = 1
-    gen.setStructure(stru)
+    gen.set_structure(stru)
 
     calc = gen._calc
     # Test parameters
@@ -78,15 +78,15 @@ def testGenerator(diffpy_srreal_available, datafile):
     return
 
 
-def test_setQmin(diffpy_srreal_available):
+def test_set_qmin(diffpy_srreal_available):
     """Verify qmin is propagated to the calculator object."""
     if not diffpy_srreal_available:
         pytest.skip("diffpy.srreal package not available")
 
     gen = PDFGenerator()
-    assert 0 == gen.getQmin()
+    assert 0 == gen.get_qmin()
     assert 0 == gen._calc.qmin
-    gen.setQmin(0.93)
-    assert 0.93 == gen.getQmin()
+    gen.set_qmin(0.93)
+    assert 0.93 == gen.get_qmin()
     assert 0.93 == gen._calc.qmin
     return

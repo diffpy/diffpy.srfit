@@ -74,25 +74,9 @@ def has_diffpy_srreal():
         logger.warning("Cannot import diffpy.srreal, PDF tests skipped.")
 
 
-@lru_cache()
-def has_diffpy_cmistructure():
-    try:
-        import diffpy.cmistructure as m
-
-        del m
-        return True
-    except ImportError:
-        return False
-
-
 @pytest.fixture(scope="session")
 def sas_available():
     return has_sas()
-
-
-@pytest.fixture(scope="session")
-def diffpy_cmistructure_available():
-    return has_diffpy_cmistructure()
 
 
 @pytest.fixture(scope="session")

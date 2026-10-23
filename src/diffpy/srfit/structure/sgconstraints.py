@@ -32,6 +32,7 @@ constrainAsSpaceGroup_dep_msg = build_deprecation_message(
     "constrainAsSpaceGroup",
     "constrain_as_space_group",
     removal_version,
+    new_base="diffpy.cmistructure.sgconstraints",
 )
 
 
@@ -146,7 +147,7 @@ def constrainAsSpaceGroup(
     4.0.0.
 
     Please use
-    diffpy.srfit.structure.sgconstraints.constrain_as_space_group
+    diffpy.cmistructure.sgconstraints.constrain_as_space_group
     instead.
     """
     return constrain_as_space_group(

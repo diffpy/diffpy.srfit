@@ -62,25 +62,32 @@ from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 removal_version = "4.0.0"
 bl_base = "diffpy.srfit.structure.objcrystparset.ObjCrystBondLengthParameter"
+bl_new_base = "diffpy.cmistructure.objcrystparset.ObjCrystBondLengthParameter"
 
 bl_setConst_dep_msg = build_deprecation_message(
     bl_base,
     "setConst",
     "set_constant",
     removal_version,
+    new_base=bl_new_base,
 )
 
 ba_base = "diffpy.srfit.structure.objcrystparset.ObjCrystBondAngleParameter"
+ba_new_base = "diffpy.cmistructure.objcrystparset.ObjCrystBondAngleParameter"
 
 ba_setConst_dep_msg = build_deprecation_message(
     ba_base,
     "setConst",
     "set_constant",
     removal_version,
+    new_base=ba_new_base,
 )
 
 da_base = (
     "diffpy.srfit.structure.objcrystparset.ObjCrystDihedralAngleParameter"
+)
+da_new_base = (
+    "diffpy.cmistructure.objcrystparset.ObjCrystDihedralAngleParameter"
 )
 
 da_setConst_dep_msg = build_deprecation_message(
@@ -88,6 +95,15 @@ da_setConst_dep_msg = build_deprecation_message(
     "setConst",
     "set_constant",
     removal_version,
+    new_base=da_new_base,
+)
+
+molecule_stru_dep_msg = build_deprecation_message(
+    "diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet",
+    "stru",
+    "structure",
+    removal_version,
+    new_base="diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet",
 )
 
 
@@ -234,7 +250,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
     ----------
     scat
         The adapted pyobjcryst.molecule.Molecule.
-    stru
+    structure
         The adapted pyobjcryst.molecule.Molecule.
     parent
         The ObjCrystCrystalParSet this belongs to.
@@ -253,6 +269,23 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
     diffpy.srfit.fitbase.parameterset.ParameterSet
     """
 
+    @property
+    @deprecated(molecule_stru_dep_msg)
+    def stru(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.structure
+        instead.
+        """
+        return self.structure
+
+    @stru.setter
+    @deprecated(molecule_stru_dep_msg)
+    def stru(self, value):
+        self.structure = value
+
     def __init__(self, name, molecule, parent=None):
         """Initialize.
 
@@ -266,7 +299,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             The ObjCrystCrystalParSet this belongs to (default None).
         """
         ObjCrystScattererParSet.__init__(self, name, molecule, parent)
-        self.stru = molecule
+        self.structure = molecule
 
         # Add orientation quaternion
         self.add_parameter(ParameterAdapter("q0", self.scat, attr="Q0"))
@@ -324,7 +357,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Molecule objects are never periodic. Return the object and let
         the SrReal adapters do the proper thing.
         """
-        return self.stru
+        return self.structure
 
     def getLattice(self):
         """Get the ParameterSet containing the lattice Parameters."""
@@ -1418,7 +1451,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         4.0.0.
 
         Please use
-        diffpy.srfit.structure.objcryst.ObjCrystBondLengthParameter.set_constant
+        diffpy.cmistructure.objcrystparset.ObjCrystBondLengthParameter.set_constant
         instead.
         """
         self.set_constant(const, value)
@@ -1579,7 +1612,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.structure.objcryst.ObjCrystBondAngleParameter.set_constant
+        diffpy.cmistructure.objcrystparset.ObjCrystBondAngleParameter.set_constant
         instead.
         """
         self.set_constant(const, value)
@@ -1759,7 +1792,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.structure.objcryst.ObjCrystDihedralAngleParameter.set_constant
+        diffpy.cmistructure.objcrystparset.ObjCrystDihedralAngleParameter.set_constant
         instead.
         """
         self.set_constant(const, value)
@@ -1834,23 +1867,29 @@ class ObjCrystCrystalParSet(SrRealParSet):
         """
         SrRealParSet.__init__(self, name)
         self.angunits = "rad"
-        self.stru = cryst
+        self.structure = cryst
         self._sgpars = None
 
-        self.add_parameter(ParameterAdapter("a", self.stru, attr="a"))
-        self.add_parameter(ParameterAdapter("b", self.stru, attr="b"))
-        self.add_parameter(ParameterAdapter("c", self.stru, attr="c"))
-        self.add_parameter(ParameterAdapter("alpha", self.stru, attr="alpha"))
-        self.add_parameter(ParameterAdapter("beta", self.stru, attr="beta"))
-        self.add_parameter(ParameterAdapter("gamma", self.stru, attr="gamma"))
+        self.add_parameter(ParameterAdapter("a", self.structure, attr="a"))
+        self.add_parameter(ParameterAdapter("b", self.structure, attr="b"))
+        self.add_parameter(ParameterAdapter("c", self.structure, attr="c"))
+        self.add_parameter(
+            ParameterAdapter("alpha", self.structure, attr="alpha")
+        )
+        self.add_parameter(
+            ParameterAdapter("beta", self.structure, attr="beta")
+        )
+        self.add_parameter(
+            ParameterAdapter("gamma", self.structure, attr="gamma")
+        )
 
         # Now we must loop over the scatterers and create parameter sets from
         # them.
         self.scatterers = []
         snames = []
 
-        for j in range(self.stru.GetNbScatterer()):
-            s = self.stru.GetScatt(j)
+        for j in range(self.structure.GetNbScatterer()):
+            s = self.structure.GetScatt(j)
             name = s.GetName()
             if not name:
                 raise ValueError("Each Scatterer must have a name")
@@ -1876,7 +1915,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
         """Constrain the space group."""
         if self._sgpars is not None:
             return self._sgpars
-        sg = self._create_space_group(self.stru.GetSpaceGroup())
+        sg = self._create_space_group(self.structure.GetSpaceGroup())
         from diffpy.srfit.structure.sgconstraints import (
             _constrain_as_space_group,
         )

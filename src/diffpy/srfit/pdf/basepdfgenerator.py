@@ -25,7 +25,7 @@ import numpy
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
-from diffpy.srfit.structure import struToParameterSet
+from diffpy.srfit.structure import structure_to_parameter_set
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 removal_version = "4.0.0"
@@ -387,7 +387,7 @@ class BasePDFGenerator(ProfileGenerator):
             periodicity, in which case this will have no effect on the
             PDF calculation.
         """
-        parset = struToParameterSet(name, structure)
+        parset = structure_to_parameter_set(name, structure)
         self.set_structure_from_parset(parset, periodic)
         return
 
@@ -424,7 +424,7 @@ class BasePDFGenerator(ProfileGenerator):
         """
         # Store the ParameterSet for easy access
         self._phase = parset
-        self.stru = self._phase.stru
+        self.stru = self._phase.structure
 
         # Put this ParameterSet in the ProfileGenerator.
         self.add_parameter_set(parset)

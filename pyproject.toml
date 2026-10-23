@@ -62,6 +62,7 @@ dependencies = {file = ["requirements/pip.txt"]}
 # Fail when srfit source calls one of srfit's own deprecated names.
 filterwarnings = [
     "error:'diffpy\\.srfit\\.:DeprecationWarning:diffpy\\.srfit",
+    "ignore:'diffpy\\.srfit\\.(pdf|sas|structure)' is deprecated:DeprecationWarning",
 ]
 
 [tool.codespell]

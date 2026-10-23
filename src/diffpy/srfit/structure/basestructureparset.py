@@ -21,6 +21,17 @@ all structure adapters.
 __all__ = ["BaseStructureParSet"]
 
 from diffpy.srfit.fitbase.parameterset import ParameterSet
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+removal_version = "4.0.0"
+
+stru_dep_msg = build_deprecation_message(
+    "diffpy.srfit.structure.basestructureparset.BaseStructureParSet",
+    "stru",
+    "structure",
+    removal_version,
+    new_base="diffpy.cmistructure.basestructureparset.BaseStructureParSet",
+)
 
 
 class BaseStructureParSet(ParameterSet):
@@ -32,9 +43,26 @@ class BaseStructureParSet(ParameterSet):
 
     Attributes
     ----------
-    stru
+    structure
         The adapted object
     """
+
+    @property
+    @deprecated(stru_dep_msg)
+    def stru(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.basestructureparset.BaseStructureParSet.structure
+        instead.
+        """
+        return self.structure
+
+    @stru.setter
+    @deprecated(stru_dep_msg)
+    def stru(self, value):
+        self.structure = value
 
     @classmethod
     def canAdapt(self, stru):

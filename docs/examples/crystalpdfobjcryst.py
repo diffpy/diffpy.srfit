@@ -57,8 +57,8 @@ def makeRecipe(ciffile, datname):
     # the previous example.
     generator = PDFGenerator("G")
     stru = create_crystal_from_cif(str(ciffile))
-    generator.setStructure(stru)
-    generator.setQmax(40.0)
+    generator.set_structure(stru)
+    generator.set_qmax(40.0)
 
     # The FitContribution
     contribution = FitContribution("nickel")
@@ -73,7 +73,7 @@ def makeRecipe(ciffile, datname):
 
     # As before, we get a handle to the structure parameter set. In this case,
     # it is a ObjCrystCrystalParSet instance that was created when we called
-    # 'setStructure' above. The ObjCrystCrystalParSet has different Parameters
+    # 'set_structure' above. The ObjCrystCrystalParSet has different Parameters
     # and options than the DiffpyStructureParSet used in the last example. See
     # its documentation in diffpy.srfit.structure.objcrystparset.
     phase = generator.phase

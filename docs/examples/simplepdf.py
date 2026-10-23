@@ -34,13 +34,13 @@ def makeRecipe(ciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
     # Work directly with a custom PDFContribution to load the data
     contribution = PDFContribution("nickel")
-    contribution.loadData(datname)
+    contribution.load_data(datname)
     contribution.set_calculation_range(xmin=1, xmax=20, dx=0.1)
 
     # and the phase
     stru = Structure()
     stru.read(str(ciffile))
-    contribution.addStructure("nickel", stru)
+    contribution.add_structure(stru, "nickel")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()

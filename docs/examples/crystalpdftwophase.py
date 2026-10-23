@@ -62,11 +62,11 @@ def makeRecipe(niciffile, siciffile, datname):
     # name later when we set the fitting equation in the FitContribution.
     generator_ni = PDFGenerator("G_ni")
     stru = create_crystal_from_cif(str(niciffile))
-    generator_ni.setStructure(stru)
+    generator_ni.set_structure(stru)
     # The generator for the silicon phase. We call it "G_si".
     generator_si = PDFGenerator("G_si")
     stru = create_crystal_from_cif(str(siciffile))
-    generator_si.setStructure(stru)
+    generator_si.set_structure(stru)
 
     # The FitContribution
     # Add both generators to the FitContribution. Add the Profile. This will

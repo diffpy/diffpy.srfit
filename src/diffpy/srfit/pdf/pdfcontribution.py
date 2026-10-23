@@ -21,6 +21,48 @@ fits.
 __all__ = ["PDFContribution"]
 
 from diffpy.srfit.fitbase import FitContribution, Profile
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+removal_version = "4.0.0"
+contribution_base = "diffpy.srfit.pdf.pdfcontribution.PDFContribution"
+contribution_new_base = "diffpy.cmipdf.pdfcontribution.PDFContribution"
+
+
+def _build_contribution_dep_msg(old_name, new_name):
+    message = build_deprecation_message(
+        contribution_base,
+        old_name,
+        new_name,
+        removal_version,
+        new_base=contribution_new_base,
+    )
+    return message
+
+
+loadData_dep_msg = _build_contribution_dep_msg("loadData", "load_data")
+setCalculationRange_dep_msg = _build_contribution_dep_msg(
+    "setCalculationRange", "set_calculation_range"
+)
+addStructure_dep_msg = (
+    _build_contribution_dep_msg("addStructure", "add_structure")
+    + " Additionally, the signature has changed. Please pass the structure "
+    "before the name, as add_structure(structure, name)."
+)
+addPhase_dep_msg = (
+    _build_contribution_dep_msg("addPhase", "add_structure_from_parset")
+    + " Additionally, the signature has changed. Please pass the parset "
+    "before the name, as add_structure_from_parset(parset, name)."
+)
+setScatteringType_dep_msg = _build_contribution_dep_msg(
+    "setScatteringType", "set_scattering_type"
+)
+getScatteringType_dep_msg = _build_contribution_dep_msg(
+    "getScatteringType", "get_scattering_type"
+)
+setQmax_dep_msg = _build_contribution_dep_msg("setQmax", "set_qmax")
+getQmax_dep_msg = _build_contribution_dep_msg("getQmax", "get_qmax")
+setQmin_dep_msg = _build_contribution_dep_msg("setQmin", "set_qmin")
+getQmin_dep_msg = _build_contribution_dep_msg("getQmin", "get_qmin")
 
 
 class PDFContribution(FitContribution):
@@ -28,7 +70,7 @@ class PDFContribution(FitContribution):
 
     Data and phases can be added directly to the PDFContribution. Setup of
     constraints and restraints requires direct interaction with the generator
-    attributes (see setPhase).
+    attributes (see add_structure_from_parset).
 
     Attributes
     ----------
@@ -104,7 +146,7 @@ class PDFContribution(FitContribution):
 
     # Data methods
 
-    def loadData(self, datafile):
+    def load_data(self, datafile):
         """Load the data from a data file.
 
         This uses the PDFParser to load the data and then passes it to
@@ -124,7 +166,18 @@ class PDFContribution(FitContribution):
         self.profile.load_parsed_data(parser)
         return
 
-    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+    @deprecated(loadData_dep_msg)
+    def loadData(self, datafile):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.load_data
+        instead.
+        """
+        return self.load_data(datafile)
+
+    def set_calculation_range(self, xmin=None, xmax=None, dx=None):
         """Set epsilon-inclusive calculation range.
 
         Adhere to the observed ``xobs`` points when ``dx`` is the same
@@ -157,6 +210,17 @@ class PDFContribution(FitContribution):
         """
         return self.profile.set_calculation_range(xmin, xmax, dx)
 
+    @deprecated(setCalculationRange_dep_msg)
+    def setCalculationRange(self, xmin=None, xmax=None, dx=None):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.set_calculation_range
+        instead.
+        """
+        return self.set_calculation_range(xmin, xmax, dx)
+
     def savetxt(self, fname, **kwargs):
         """Call numpy.savetxt with x, ycalc, y, dy.
 
@@ -173,22 +237,21 @@ class PDFContribution(FitContribution):
 
     # Phase methods
 
-    def addStructure(self, name, stru, periodic=True):
+    def add_structure(self, structure, name="phase", periodic=True):
         """Add a phase that goes into the PDF calculation.
 
         Parameters
         ----------
-        name : str
+        structure
+            The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
+            pyobjcryst.molecule.Molecule instance to adapt.
+        name : str, optional
             A name to give the generator that will manage the PDF
             calculation from the passed structure. The adapted
             structure will be accessible via the name "phase" as an
             attribute of the generator, e.g.
             contribution.name.phase, where 'contribution' is this
-            contribution and 'name' is passed name.
-            (default), then the name will be set as "phase".
-        stru
-            The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
-            pyobjcryst.molecule.Molecule instance to adapt (default None).
+            contribution and 'name' is passed name (default "phase").
         periodic : bool, optional
             The structure should be treated as periodic.  If this is
             True (default), then a PDFGenerator will be used to
@@ -201,7 +264,7 @@ class PDFContribution(FitContribution):
         -------
         ParameterSet
             The new phase, of the type appropriate for what was passed
-            in stru.
+            in structure.
         """
         # Based on periodic, create the proper generator.
         if periodic:
@@ -214,16 +277,32 @@ class PDFContribution(FitContribution):
             gen = DebyePDFGenerator(name)
 
         # Set up the generator
-        gen.setStructure(stru, "phase", periodic)
+        gen.set_structure(structure, "phase", periodic)
         self._setup_generator(gen)
 
         return gen.phase
 
-    def addPhase(self, name, parset, periodic=True):
+    @deprecated(addStructure_dep_msg)
+    def addStructure(self, name, stru, periodic=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.add_structure
+        instead.
+        """
+        return self.add_structure(stru, name, periodic)
+
+    def add_structure_from_parset(self, parset, name, periodic=True):
         """Add a phase that goes into the PDF calculation.
 
         Parameters
         ----------
+        parset
+            The SrRealParSet that holds the structural information.
+            This can be used to share the phase between multiple
+            BasePDFGenerators, and have the changes in one reflect in
+            another.
         name : str
             A name to give the generator that will manage the PDF
             calculation from the passed parameter phase. The parset
@@ -231,11 +310,6 @@ class PDFContribution(FitContribution):
             of the generator, e.g., contribution.name.phase, where
             'contribution' is this contribution and 'name' is passed
             name.
-        parset
-            The SrRealParSet that holds the structural information.
-            This can be used to share the phase between multiple
-            BasePDFGenerators, and have the changes in one reflect in
-            another.
         periodic : bool, optional
             The structure should be treated as periodic.  If this is
             True (default), then a PDFGenerator will be used to
@@ -261,16 +335,27 @@ class PDFContribution(FitContribution):
             gen = DebyePDFGenerator(name)
 
         # Set up the generator
-        gen.setPhase(parset, periodic)
+        gen.set_structure_from_parset(parset, periodic)
         self._setup_generator(gen)
 
         return gen.phase
+
+    @deprecated(addPhase_dep_msg)
+    def addPhase(self, name, parset, periodic=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.add_structure_from_parset
+        instead.
+        """
+        return self.add_structure_from_parset(parset, name, periodic)
 
     def _setup_generator(self, gen):
         """Setup a generator.
 
         The generator must already have a managed SrRealParSet, added
-        with setStructure or setPhase.
+        with set_structure or set_structure_from_parset.
         """
         # Add the generator to this FitContribution
         self.add_profile_generator(gen)
@@ -304,7 +389,7 @@ class PDFContribution(FitContribution):
         val = self.profile.meta.get(kwd)
         return val
 
-    def setScatteringType(self, type="X"):
+    def set_scattering_type(self, type="X"):
         """Set the scattering type.
 
         Parameters
@@ -319,22 +404,45 @@ class PDFContribution(FitContribution):
         """
         self._meta["stype"] = type
         for gen in self._generators.values():
-            gen.setScatteringType(type)
+            gen.set_scattering_type(type)
         return
 
-    def getScatteringType(self):
+    @deprecated(setScatteringType_dep_msg)
+    def setScatteringType(self, type="X"):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.set_scattering_type
+        instead.
+        """
+        return self.set_scattering_type(type)
+
+    def get_scattering_type(self):
         """Get the scattering type.
 
-        See ``setScatteringType``.
+        See ``set_scattering_type``.
 
         Returns
         -------
         str
             The scattering type used to calculate the PDF.
         """
-        return self._get_meta_value("stype")
+        scattering_type = self._get_meta_value("stype")
+        return scattering_type
 
-    def setQmax(self, qmax):
+    @deprecated(getScatteringType_dep_msg)
+    def getScatteringType(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.get_scattering_type
+        instead.
+        """
+        return self.get_scattering_type()
+
+    def set_qmax(self, qmax):
         """Set the qmax value.
 
         Parameters
@@ -344,10 +452,21 @@ class PDFContribution(FitContribution):
         """
         self._meta["qmax"] = qmax
         for gen in self._generators.values():
-            gen.setQmax(qmax)
+            gen.set_qmax(qmax)
         return
 
-    def getQmax(self):
+    @deprecated(setQmax_dep_msg)
+    def setQmax(self, qmax):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.set_qmax
+        instead.
+        """
+        return self.set_qmax(qmax)
+
+    def get_qmax(self):
         """Get the qmax value.
 
         Returns
@@ -355,9 +474,21 @@ class PDFContribution(FitContribution):
         float
             The maximum scattering vector used to generate the PDF.
         """
-        return self._get_meta_value("qmax")
+        qmax = self._get_meta_value("qmax")
+        return qmax
 
-    def setQmin(self, qmin):
+    @deprecated(getQmax_dep_msg)
+    def getQmax(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.get_qmax
+        instead.
+        """
+        return self.get_qmax()
+
+    def set_qmin(self, qmin):
         """Set the qmin value.
 
         Parameters
@@ -367,10 +498,21 @@ class PDFContribution(FitContribution):
         """
         self._meta["qmin"] = qmin
         for gen in self._generators.values():
-            gen.setQmin(qmin)
+            gen.set_qmin(qmin)
         return
 
-    def getQmin(self):
+    @deprecated(setQmin_dep_msg)
+    def setQmin(self, qmin):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.set_qmin
+        instead.
+        """
+        return self.set_qmin(qmin)
+
+    def get_qmin(self):
         """Get the qmin value.
 
         Returns
@@ -378,7 +520,19 @@ class PDFContribution(FitContribution):
         float
             The minimum scattering vector used to generate the PDF.
         """
-        return self._get_meta_value("qmin")
+        qmin = self._get_meta_value("qmin")
+        return qmin
+
+    @deprecated(getQmin_dep_msg)
+    def getQmin(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.pdfcontribution.PDFContribution.get_qmin
+        instead.
+        """
+        return self.get_qmin()
 
 
 # End of file

@@ -30,14 +30,14 @@ def makeRecipe(niciffile, siciffile, datname):
     """Create a fitting recipe for crystalline PDF data."""
     # Load data and add it to the profile
     contribution = PDFContribution("nisi")
-    contribution.loadData(datname)
+    contribution.load_data(datname)
     contribution.set_calculation_range(xmax=20)
 
     stru = create_crystal_from_cif(str(niciffile))
-    contribution.addStructure("ni", stru)
+    contribution.add_structure(stru, "ni")
 
     stru = create_crystal_from_cif(str(siciffile))
-    contribution.addStructure("si", stru)
+    contribution.add_structure(stru, "si")
 
     # Make the FitRecipe and add the FitContribution.
     recipe = FitRecipe()
@@ -62,7 +62,7 @@ def makeRecipe(niciffile, siciffile, datname):
     #
     # First the nickel parameters.
     # Note that ni is the name of the PDFGenerator that was automatically
-    # created by the PDFContribution. We selected this name in addStructure
+    # created by the PDFContribution. We selected this name in add_structure
     # above.
     phase_ni = contribution.ni.phase
     for par in phase_ni.sgpars:

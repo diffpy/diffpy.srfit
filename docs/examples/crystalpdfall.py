@@ -68,22 +68,22 @@ def makeRecipe(
     # We create one for each phase and share the phases.
     xgenerator_ni = PDFGenerator("xG_ni")
     stru = create_crystal_from_cif(str(ciffile_ni))
-    xgenerator_ni.setStructure(stru)
+    xgenerator_ni.set_structure(stru)
     phase_ni = xgenerator_ni.phase
 
     xgenerator_si = PDFGenerator("xG_si")
     stru = create_crystal_from_cif(str(ciffile_si))
-    xgenerator_si.setStructure(stru)
+    xgenerator_si.set_structure(stru)
     phase_si = xgenerator_si.phase
 
     ngenerator_ni = PDFGenerator("nG_ni")
-    ngenerator_ni.setPhase(phase_ni)
+    ngenerator_ni.set_structure_from_parset(phase_ni)
 
     xgenerator_sini_ni = PDFGenerator("xG_sini_ni")
-    xgenerator_sini_ni.setPhase(phase_ni)
+    xgenerator_sini_ni.set_structure_from_parset(phase_ni)
 
     xgenerator_sini_si = PDFGenerator("xG_sini_si")
-    xgenerator_sini_si.setPhase(phase_si)
+    xgenerator_sini_si.set_structure_from_parset(phase_si)
 
     # The FitContributions
     # We one of these for each data set.

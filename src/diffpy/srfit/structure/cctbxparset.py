@@ -92,32 +92,32 @@ class CCTBXScattererParSet(ParameterSet):
     def _xyzgetter(self, i):
 
         def f(dummy):
-            return self.strups.stru.scatterers()[self.idx].site[i]
+            return self.strups.structure.scatterers()[self.idx].site[i]
 
         return f
 
     def _xyzsetter(self, i):
 
         def f(dummy, value):
-            xyz = list(self.strups.stru.scatterers()[self.idx].site)
+            xyz = list(self.strups.structure.scatterers()[self.idx].site)
             xyz[i] = value
-            self.strups.stru.scatterers()[self.idx].site = tuple(xyz)
+            self.strups.structure.scatterers()[self.idx].site = tuple(xyz)
             return
 
         return f
 
     def _getocc(self, dummy):
-        return self.strups.stru.scatterers()[self.idx].occupancy
+        return self.strups.structure.scatterers()[self.idx].occupancy
 
     def _setocc(self, dummy, value):
-        self.strups.stru.scatterers()[self.idx].occupancy = value
+        self.strups.structure.scatterers()[self.idx].occupancy = value
         return
 
     def _getuiso(self, dummy):
-        return self.strups.stru.scatterers()[self.idx].u_iso
+        return self.strups.structure.scatterers()[self.idx].u_iso
 
     def _setuiso(self, dummy, value):
-        self.strups.stru.scatterers()[self.idx].u_iso = value
+        self.strups.structure.scatterers()[self.idx].u_iso = value
         return
 
     def _getelem(self):
@@ -161,7 +161,7 @@ class CCTBXUnitCellParSet(ParameterSet):
         """
         ParameterSet.__init__(self, "unitcell")
         self.strups = strups
-        self._latpars = list(self.strups.stru.unit_cell().parameters())
+        self._latpars = list(self.strups.structure.unit_cell().parameters())
 
         self.add_parameter(
             ParameterAdapter("a", None, self._latgetter(0), self._latsetter(0))
@@ -236,7 +236,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
             A CCTBX structure instance.
         """
         ParameterSet.__init__(self, name)
-        self.stru = stru
+        self.structure = stru
         self.add_parameter_set(CCTBXUnitCellParSet(self))
         self.scatterers = []
 
@@ -272,7 +272,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
             return
 
         self._update = False
-        stru = self.stru
+        stru = self.structure
         sgn = stru.space_group().match_tabulated_settings().number()
 
         # Create the symmetry object
@@ -289,7 +289,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
 
         self.unitcell._latpars = list(newstru.unit_cell().parameters())
 
-        self.stru = newstru
+        self.structure = newstru
         return
 
     @classmethod
@@ -317,7 +317,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
 
     def getSpaceGroup(self):
         """Get the HM space group symbol for the structure."""
-        sg = self.stru.space_group()
+        sg = self.structure.space_group()
         t = sg.type()
         return t.lookup_symbol()
 

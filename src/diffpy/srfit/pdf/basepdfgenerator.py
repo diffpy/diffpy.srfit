@@ -25,7 +25,7 @@ import numpy
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
-from diffpy.srfit.structure import struToParameterSet
+from diffpy.srfit.structure import structure_to_parameter_set
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
@@ -282,7 +282,7 @@ class BasePDFGenerator(ProfileGenerator):
             PDF calculation.
         """
         # Create the ParameterSet
-        parset = struToParameterSet(name, stru)
+        parset = structure_to_parameter_set(name, stru)
 
         # Set the phase
         self.setPhase(parset, periodic)
@@ -310,7 +310,7 @@ class BasePDFGenerator(ProfileGenerator):
         """
         # Store the ParameterSet for easy access
         self._phase = parset
-        self.stru = self._phase.stru
+        self.stru = self._phase.structure
 
         # Put this ParameterSet in the ProfileGenerator.
         self.add_parameter_set(parset)

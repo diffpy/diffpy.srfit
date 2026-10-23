@@ -219,11 +219,11 @@ def test_constrainAsSpaceGroup_warns_and_forwards(
         constrainAsSpaceGroup,
     )
 
-    module_path = "diffpy.srfit.structure.sgconstraints"
     expected_msg = (
-        f"'{module_path}.constrainAsSpaceGroup' is deprecated and will be "
-        f"removed in version 4.0.0. Please use "
-        f"'{module_path}.constrain_as_space_group' instead."
+        "'diffpy.srfit.structure.sgconstraints.constrainAsSpaceGroup' is "
+        "deprecated and will be removed in version 4.0.0. Please use "
+        "'diffpy.cmistructure.sgconstraints.constrain_as_space_group' "
+        "instead."
     )
 
     parset = DiffpyStructureParSet("LaMnO3", makeLaMnO3_P1(datafile))

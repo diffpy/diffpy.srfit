@@ -26,6 +26,42 @@ from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase import ProfileGenerator
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.structure import structure_to_parameter_set
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
+
+removal_version = "4.0.0"
+generator_base = "diffpy.srfit.pdf.basepdfgenerator.BasePDFGenerator"
+generator_new_base = "diffpy.cmipdf.basepdfgenerator.BasePDFGenerator"
+
+
+def _build_generator_dep_msg(old_name, new_name):
+    message = build_deprecation_message(
+        generator_base,
+        old_name,
+        new_name,
+        removal_version,
+        new_base=generator_new_base,
+    )
+    return message
+
+
+setScatteringType_dep_msg = _build_generator_dep_msg(
+    "setScatteringType", "set_scattering_type"
+)
+getScatteringType_dep_msg = _build_generator_dep_msg(
+    "getScatteringType", "get_scattering_type"
+)
+setQmax_dep_msg = _build_generator_dep_msg("setQmax", "set_qmax")
+getQmax_dep_msg = _build_generator_dep_msg("getQmax", "get_qmax")
+setQmin_dep_msg = _build_generator_dep_msg("setQmin", "set_qmin")
+getQmin_dep_msg = _build_generator_dep_msg("getQmin", "get_qmin")
+setStructure_dep_msg = (
+    _build_generator_dep_msg("setStructure", "set_structure")
+    + " Additionally, the signature has changed. Please pass the parameter "
+    "'stru' as 'structure'."
+)
+setPhase_dep_msg = _build_generator_dep_msg(
+    "setPhase", "set_structure_from_parset"
+)
 
 # FIXME - Parameter creation will have to be smarter once deeper calculator
 # configuration is enabled.
@@ -73,13 +109,13 @@ class BasePDFGenerator(ProfileGenerator):
     ---------------
     stype
         The scattering type "X" for x-ray, "N" for neutron (see
-        'setScatteringType').
+        'set_scattering_type').
     qmax
         The maximum scattering vector used to generate the PDF (see
-        setQmax).
+        set_qmax).
     qmin
         The minimum scattering vector used to generate the PDF (see
-        setQmin).
+        set_qmin).
     scale
         See Managed Parameters.
     delta1
@@ -165,15 +201,15 @@ class BasePDFGenerator(ProfileGenerator):
 
         stype = self.meta.get("stype")
         if stype is not None:
-            self.setScatteringType(stype)
+            self.set_scattering_type(stype)
 
         qmax = self.meta.get("qmax")
         if qmax is not None:
-            self.setQmax(qmax)
+            self.set_qmax(qmax)
 
         qmin = self.meta.get("qmin")
         if qmin is not None:
-            self.setQmin(qmin)
+            self.set_qmin(qmin)
 
         for name in self.__class__._parnames:
             val = self.meta.get(name)
@@ -183,7 +219,7 @@ class BasePDFGenerator(ProfileGenerator):
 
         return
 
-    def setScatteringType(self, stype="X"):
+    def set_scattering_type(self, stype="X"):
         """Set the scattering type.
 
         Parameters
@@ -200,22 +236,45 @@ class BasePDFGenerator(ProfileGenerator):
         """
         self._calc.scatteringfactortable = stype
         # update the meta dictionary only if there was no exception
-        self.meta["stype"] = self.getScatteringType()
+        self.meta["stype"] = self.get_scattering_type()
         return
 
-    def getScatteringType(self):
+    @deprecated(setScatteringType_dep_msg)
+    def setScatteringType(self, stype="X"):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.basepdfgenerator.BasePDFGenerator.set_scattering_type
+        instead.
+        """
+        return self.set_scattering_type(stype)
+
+    def get_scattering_type(self):
         """Get the scattering type.
 
-        See ``setScatteringType``.
+        See ``set_scattering_type``.
 
         Returns
         -------
         str
             The scattering type used to calculate the PDF.
         """
-        return self._calc.getRadiationType()
+        scattering_type = self._calc.getRadiationType()
+        return scattering_type
 
-    def setQmax(self, qmax):
+    @deprecated(getScatteringType_dep_msg)
+    def getScatteringType(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.basepdfgenerator.BasePDFGenerator.get_scattering_type
+        instead.
+        """
+        return self.get_scattering_type()
+
+    def set_qmax(self, qmax):
         """Set the qmax value.
 
         Parameters
@@ -224,10 +283,21 @@ class BasePDFGenerator(ProfileGenerator):
             The maximum scattering vector used to generate the PDF.
         """
         self._calc.qmax = qmax
-        self.meta["qmax"] = self.getQmax()
+        self.meta["qmax"] = self.get_qmax()
         return
 
-    def getQmax(self):
+    @deprecated(setQmax_dep_msg)
+    def setQmax(self, qmax):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.basepdfgenerator.BasePDFGenerator.set_qmax
+        instead.
+        """
+        return self.set_qmax(qmax)
+
+    def get_qmax(self):
         """Get the qmax value.
 
         Returns
@@ -235,9 +305,21 @@ class BasePDFGenerator(ProfileGenerator):
         float
             The maximum scattering vector used to generate the PDF.
         """
-        return self._calc.qmax
+        qmax = self._calc.qmax
+        return qmax
 
-    def setQmin(self, qmin):
+    @deprecated(getQmax_dep_msg)
+    def getQmax(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.basepdfgenerator.BasePDFGenerator.get_qmax
+        instead.
+        """
+        return self.get_qmax()
+
+    def set_qmin(self, qmin):
         """Set the qmin value.
 
         Parameters
@@ -246,10 +328,21 @@ class BasePDFGenerator(ProfileGenerator):
             The minimum scattering vector used to generate the PDF.
         """
         self._calc.qmin = qmin
-        self.meta["qmin"] = self.getQmin()
+        self.meta["qmin"] = self.get_qmin()
         return
 
-    def getQmin(self):
+    @deprecated(setQmin_dep_msg)
+    def setQmin(self, qmin):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.basepdfgenerator.BasePDFGenerator.set_qmin
+        instead.
+        """
+        return self.set_qmin(qmin)
+
+    def get_qmin(self):
         """Get the qmin value.
 
         Returns
@@ -257,38 +350,59 @@ class BasePDFGenerator(ProfileGenerator):
         float
             The minimum scattering vector used to generate the PDF.
         """
-        return self._calc.qmin
+        qmin = self._calc.qmin
+        return qmin
 
-    def setStructure(self, stru, name="phase", periodic=True):
+    @deprecated(getQmin_dep_msg)
+    def getQmin(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.basepdfgenerator.BasePDFGenerator.get_qmin
+        instead.
+        """
+        return self.get_qmin()
+
+    def set_structure(self, structure, name="phase", periodic=True):
         """Set the structure that will be used to calculate the PDF.
 
         This creates a DiffpyStructureParSet, ObjCrystCrystalParSet or
-        ObjCrystMoleculeParSet that adapts stru to a ParameterSet interface.
-        See those classes (located in diffpy.srfit.structure) for how they are
-        used. The resulting ParameterSet will be managed by this generator.
+        ObjCrystMoleculeParSet that adapts the structure to a ParameterSet
+        interface. See those classes (located in diffpy.srfit.structure) for
+        how they are used. The resulting ParameterSet will be managed by this
+        generator.
 
         Parameters
         ----------
-        stru
+        structure
             The diffpy.structure.Structure, pyobjcryst.crystal.Crystal or
-            pyobjcryst.molecule.Molecule instance to adapt (default None).
+            pyobjcryst.molecule.Molecule instance to adapt.
         name : str, optional
-            The name to give to the managed ParameterSet that adapts stru
-            (default "phase").
+            The name to give to the managed ParameterSet that adapts the
+            structure (default "phase").
         periodic : bool, optional
             The structure should be treated as periodic (default
             True). Note that some structures do not support
             periodicity, in which case this will have no effect on the
             PDF calculation.
         """
-        # Create the ParameterSet
-        parset = structure_to_parameter_set(name, stru)
-
-        # Set the phase
-        self.setPhase(parset, periodic)
+        parset = structure_to_parameter_set(name, structure)
+        self.set_structure_from_parset(parset, periodic)
         return
 
-    def setPhase(self, parset, periodic=True):
+    @deprecated(setStructure_dep_msg)
+    def setStructure(self, stru, name="phase", periodic=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.basepdfgenerator.BasePDFGenerator.set_structure
+        instead.
+        """
+        return self.set_structure(stru, name, periodic)
+
+    def set_structure_from_parset(self, parset, periodic=True):
         """Set the phase that will be used to calculate the PDF.
 
         Set the phase directly with a DiffpyStructureParSet,
@@ -318,6 +432,17 @@ class BasePDFGenerator(ProfileGenerator):
         # Set periodicity
         self._phase.useSymmetry(periodic)
         return
+
+    @deprecated(setPhase_dep_msg)
+    def setPhase(self, parset, periodic=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmipdf.basepdfgenerator.BasePDFGenerator.set_structure_from_parset
+        instead.
+        """
+        return self.set_structure_from_parset(parset, periodic)
 
     def _prepare(self, r):
         """Prepare the calculator when a new r-value is passed."""

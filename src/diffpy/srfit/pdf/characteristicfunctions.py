@@ -54,6 +54,7 @@ from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 removal_version = "4.0.0"
 cf_base = "diffpy.srfit.pdf.characteristicfunctions"
+cf_new_base = "diffpy.cmipdf.characteristicfunctions"
 
 
 def _build_dep_msg(old_name, new_name, signature_note=None):
@@ -63,7 +64,7 @@ def _build_dep_msg(old_name, new_name, signature_note=None):
     appended to the standard message from `build_deprecation_message`.
     """
     message = build_deprecation_message(
-        cf_base, old_name, new_name, removal_version
+        cf_base, old_name, new_name, removal_version, new_base=cf_new_base
     )
     if signature_note is None:
         return message
@@ -96,7 +97,7 @@ spheroidalCF2_dep_msg = _build_dep_msg(
 
 lognormalSphericalCF_dep_msg = _build_dep_msg(
     "lognormalSphericalCF",
-    "lognormal_spherical_particle",
+    "lognormal_spherical_distribution",
     "Additionally, the signature has changed. Please pass the parameters "
     "'psize' and 'psig' as 'particle_diameter' and "
     "'particle_diameter_sigma', respectively.",
@@ -109,14 +110,14 @@ sheetCF_dep_msg = _build_dep_msg(
     "'sthick' as 'sheet_thickness'.",
 )
 
-shellCF_dep_msg = _build_dep_msg("shellCF", "shell_particle")
+shellCF_dep_msg = _build_dep_msg("shellCF", "spherical_shell")
 
 shellCF2_dep_msg = _build_dep_msg(
     "shellCF2",
-    "shell_particle",
+    "spherical_shell",
     "Additionally, the parameterization has changed. 'shellCF2' took the "
     "central radius 'a' and the shell thickness 'delta', while "
-    "'shell_particle' takes the inner radius. Please pass "
+    "'spherical_shell' takes the inner radius. Please pass "
     "radius = a - delta / 2 and thickness = delta.",
 )
 
@@ -544,7 +545,7 @@ def sphericalCF(r, psize):
     """This function has been deprecated and will be removed in version
     4.0.0.
 
-    Please use diffpy.srfit.pdf.characteristicfunctions.spherical_particle
+    Please use diffpy.cmipdf.characteristicfunctions.spherical_particle
     instead.
     """
     return spherical_particle(r, psize)
@@ -555,7 +556,7 @@ def spheroidalCF(r, erad, prad):
     """This function has been deprecated and will be removed in version
     4.0.0.
 
-    Please use diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle
+    Please use diffpy.cmipdf.characteristicfunctions.spheroidal_particle
     instead.
     """
     return spheroidal_particle(r, erad, prad)
@@ -566,7 +567,7 @@ def spheroidalCF2(r, psize, axrat):
     """This function has been deprecated and will be removed in version
     4.0.0.
 
-    Please use diffpy.srfit.pdf.characteristicfunctions.spheroidal_particle
+    Please use diffpy.cmipdf.characteristicfunctions.spheroidal_particle
     instead.
     """
     return spheroidal_particle(r, psize / 2, axrat * psize / 2)
@@ -578,7 +579,7 @@ def lognormalSphericalCF(r, psize, psig):
     4.0.0.
 
     Please use
-    diffpy.srfit.pdf.characteristicfunctions.lognormal_spherical_particle
+    diffpy.cmipdf.characteristicfunctions.lognormal_spherical_distribution
     instead.
     """
     return lognormal_spherical_particle(r, psize, psig)
@@ -589,7 +590,7 @@ def sheetCF(r, sthick):
     """This function has been deprecated and will be removed in version
     4.0.0.
 
-    Please use diffpy.srfit.pdf.characteristicfunctions.sheet_particle
+    Please use diffpy.cmipdf.characteristicfunctions.sheet_particle
     instead.
     """
     return sheet_particle(r, sthick)
@@ -600,7 +601,7 @@ def shellCF(r, radius, thickness):
     """This function has been deprecated and will be removed in version
     4.0.0.
 
-    Please use diffpy.srfit.pdf.characteristicfunctions.shell_particle
+    Please use diffpy.cmipdf.characteristicfunctions.spherical_shell
     instead.
     """
     return shell_particle(r, radius, thickness)
@@ -611,7 +612,7 @@ def shellCF2(r, a, delta):
     """This function has been deprecated and will be removed in version
     4.0.0.
 
-    Please use diffpy.srfit.pdf.characteristicfunctions.shell_particle
+    Please use diffpy.cmipdf.characteristicfunctions.spherical_shell
     instead.
     """
     return shell_particle(r, a - delta / 2, delta)

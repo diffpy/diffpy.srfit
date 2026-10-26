@@ -16,9 +16,26 @@
 
 __all__ = ["PDFGenerator", "DebyePDFGenerator", "PDFContribution", "PDFParser"]
 
+import warnings
+
 from diffpy.srfit.pdf.debyepdfgenerator import DebyePDFGenerator
 from diffpy.srfit.pdf.pdfcontribution import PDFContribution
 from diffpy.srfit.pdf.pdfgenerator import PDFGenerator
 from diffpy.srfit.pdf.pdfparser import PDFParser
+from diffpy.utils._deprecator import build_deprecation_message
+
+removal_version = "4.0.0"
+
+warnings.warn(
+    build_deprecation_message(
+        "diffpy.srfit",
+        "pdf",
+        "cmipdf",
+        removal_version,
+        new_base="diffpy",
+    ),
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 # End of file

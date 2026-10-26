@@ -5,4 +5,3 @@ coverage
 pytest-cov
 pytest-env
 sympy
-diffpy.srreal

@@ -97,7 +97,7 @@ spheroidalCF2_dep_msg = _build_dep_msg(
 
 lognormalSphericalCF_dep_msg = _build_dep_msg(
     "lognormalSphericalCF",
-    "lognormal_spherical_distribution",
+    "lognormal_spherical_particle",
     "Additionally, the signature has changed. Please pass the parameters "
     "'psize' and 'psig' as 'particle_diameter' and "
     "'particle_diameter_sigma', respectively.",
@@ -110,14 +110,14 @@ sheetCF_dep_msg = _build_dep_msg(
     "'sthick' as 'sheet_thickness'.",
 )
 
-shellCF_dep_msg = _build_dep_msg("shellCF", "spherical_shell")
+shellCF_dep_msg = _build_dep_msg("shellCF", "shell_particle")
 
 shellCF2_dep_msg = _build_dep_msg(
     "shellCF2",
-    "spherical_shell",
+    "shell_particle",
     "Additionally, the parameterization has changed. 'shellCF2' took the "
     "central radius 'a' and the shell thickness 'delta', while "
-    "'spherical_shell' takes the inner radius. Please pass "
+    "'shell_particle' takes the inner radius. Please pass "
     "radius = a - delta / 2 and thickness = delta.",
 )
 
@@ -579,7 +579,7 @@ def lognormalSphericalCF(r, psize, psig):
     4.0.0.
 
     Please use
-    diffpy.cmipdf.characteristicfunctions.lognormal_spherical_distribution
+    diffpy.cmipdf.characteristicfunctions.lognormal_spherical_particle
     instead.
     """
     return lognormal_spherical_particle(r, psize, psig)
@@ -601,7 +601,7 @@ def shellCF(r, radius, thickness):
     """This function has been deprecated and will be removed in version
     4.0.0.
 
-    Please use diffpy.cmipdf.characteristicfunctions.spherical_shell
+    Please use diffpy.cmipdf.characteristicfunctions.shell_particle
     instead.
     """
     return shell_particle(r, radius, thickness)
@@ -612,7 +612,7 @@ def shellCF2(r, a, delta):
     """This function has been deprecated and will be removed in version
     4.0.0.
 
-    Please use diffpy.cmipdf.characteristicfunctions.spherical_shell
+    Please use diffpy.cmipdf.characteristicfunctions.shell_particle
     instead.
     """
     return shell_particle(r, a - delta / 2, delta)

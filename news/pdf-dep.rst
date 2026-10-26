@@ -4,7 +4,7 @@
 
 **Changed:**
 
-* The deprecation messages of the camelCase characteristic functions (``sphericalCF``, ``shellCF`` and the others) now point to ``diffpy.cmipdf.characteristicfunctions`` instead of ``diffpy.srfit.pdf.characteristicfunctions``. ``lognormalSphericalCF`` now points to ``lognormal_spherical_distribution``, and ``shellCF`` and ``shellCF2`` now point to ``spherical_shell``.
+* The deprecation messages of the camelCase characteristic functions (``sphericalCF``, ``shellCF`` and the others) now point to ``diffpy.cmipdf.characteristicfunctions`` instead of ``diffpy.srfit.pdf.characteristicfunctions``. ``lognormalSphericalCF``, ``shellCF`` and ``shellCF2`` point to the names srfit 3.4.0 gave them, ``lognormal_spherical_particle`` and ``shell_particle``.
 
 **Deprecated:**
 

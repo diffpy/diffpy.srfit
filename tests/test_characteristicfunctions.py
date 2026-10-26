@@ -656,7 +656,7 @@ def test_non_physical_input_warns_only_once(
         (
             "lognormalSphericalCF",
             "lognormal_spherical_particle",
-            "lognormal_spherical_distribution",
+            "lognormal_spherical_particle",
             "Additionally, the signature has changed. Please pass the "
             "parameters 'psize' and 'psig' as 'particle_diameter' and "
             "'particle_diameter_sigma', respectively.",
@@ -679,7 +679,7 @@ def test_non_physical_input_warns_only_once(
         (
             "shellCF",
             "shell_particle",
-            "spherical_shell",
+            "shell_particle",
             "",
             (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
             (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),
@@ -691,10 +691,10 @@ def test_non_physical_input_warns_only_once(
         (
             "shellCF2",
             "shell_particle",
-            "spherical_shell",
+            "shell_particle",
             "Additionally, the parameterization has changed. 'shellCF2' took "
             "the central radius 'a' and the shell thickness 'delta', while "
-            "'spherical_shell' takes the inner radius. Please pass "
+            "'shell_particle' takes the inner radius. Please pass "
             "radius = a - delta / 2 and thickness = delta.",
             (numpy.array([0.0, 5.0, 12.5]), 12.5, 5.0),
             (numpy.array([0.0, 5.0, 12.5]), 10.0, 5.0),

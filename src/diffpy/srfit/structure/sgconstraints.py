@@ -64,7 +64,7 @@ def constrain_as_space_group(
     scatterers
         The scatterer ParameterSets to constrain. If scatterers
         is None (default), then all scatterers accessible from
-        phase.getScatterers will be constrained.
+        phase.get_scatterers will be constrained.
     constrainlat
         Flag indicating whether to constrain the lattice
         (default True).
@@ -182,7 +182,7 @@ def _constrain_as_space_group(
     from diffpy.structure.symmetryutilities import stdUsymbols
 
     if scatterers is None:
-        scatterers = phase.getScatterers()
+        scatterers = phase.get_scatterers()
     if adpsymbols is None:
         adpsymbols = stdUsymbols
 
@@ -201,6 +201,29 @@ def _constrain_as_space_group(
 
 
 # End constrain_as_space_group
+
+
+base_sg_base = "diffpy.srfit.structure.sgconstraints.BaseSpaceGroupParameters"
+base_sg_new_base = "diffpy.cmistructure.sgconstraints.BaseSpaceGroupParameters"
+
+base_sg_addParameter_dep_msg = build_deprecation_message(
+    base_sg_base,
+    "addParameter",
+    "add_parameter",
+    removal_version,
+    new_base=base_sg_new_base,
+)
+
+sg_base = "diffpy.srfit.structure.sgconstraints.SpaceGroupParameters"
+sg_new_base = "diffpy.cmistructure.sgconstraints.SpaceGroupParameters"
+
+sg_sg_dep_msg = build_deprecation_message(
+    sg_base,
+    "sg",
+    "space_group",
+    removal_version,
+    new_base=sg_new_base,
+)
 
 
 class BaseSpaceGroupParameters(RecipeContainer):
@@ -226,7 +249,7 @@ class BaseSpaceGroupParameters(RecipeContainer):
         RecipeContainer.__init__(self, name)
         return
 
-    def addParameter(self, par, check=True):
+    def add_parameter(self, par, check=True):
         """Store a Parameter.
 
         Parameters
@@ -242,6 +265,17 @@ class BaseSpaceGroupParameters(RecipeContainer):
         # Store the Parameter
         RecipeContainer._add_object(self, par, self._parameters, check)
         return
+
+    @deprecated(base_sg_addParameter_dep_msg)
+    def addParameter(self, par, check=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.sgconstraints.BaseSpaceGroupParameters.add_parameter
+        instead.
+        """
+        return self.add_parameter(par, check)
 
 
 # End class BaseSpaceGroupParameters
@@ -261,7 +295,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         "sgpars"
     phase
         The constrained BaseStructure object.
-    sg
+    space_group
         The diffpy.structure.spacegroups.SpaceGroup object
         corresponding to the space group.
     sgoffset
@@ -291,6 +325,23 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         Property that populates _adppars.
     """
 
+    @property
+    @deprecated(sg_sg_dep_msg)
+    def sg(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.sgconstraints.SpaceGroupParameters.space_group
+        instead.
+        """
+        return self.space_group
+
+    @sg.setter
+    @deprecated(sg_sg_dep_msg)
+    def sg(self, value):
+        self.space_group = value
+
     def __init__(
         self,
         phase,
@@ -316,7 +367,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         scatterers
             The scatterer ParameterSets to constrain. If scatterers
             is None, then all scatterers accessible from
-            phase.getScatterers will be constrained.
+            phase.get_scatterers will be constrained.
         constrainlat
             Flag indicating whether to constrain the lattice.
         constrainadps
@@ -339,7 +390,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         self._manage(self._parsets)
 
         self.phase = phase
-        self.sg = sg
+        self.space_group = sg
         self.sgoffset = sgoffset
         self.scatterers = scatterers
         self.constrainlat = constrainlat
@@ -435,7 +486,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         # Clear the lattice
         if self.constrainlat:
 
-            lattice = phase.getLattice()
+            lattice = phase.get_lattice()
             latpars = [
                 lattice.a,
                 lattice.b,
@@ -474,9 +525,9 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             return
 
         phase = self.phase
-        sg = self.sg
+        sg = self.space_group
 
-        lattice = phase.getLattice()
+        lattice = phase.get_lattice()
         system = sg.crystal_system
         if not system:
             system = "Triclinic"
@@ -500,7 +551,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             # FIXME - the original parameter will still appear as
             # constrained.
             newpar = self.__add_par(par.name, par)
-            self._latpars.addParameter(newpar)
+            self._latpars.add_parameter(newpar)
 
         return
 
@@ -514,7 +565,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         """
         from diffpy.structure.symmetryutilities import SymmetryConstraints
 
-        sg = self.sg
+        sg = self.space_group
         sgoffset = self.sgoffset
 
         # We do this without ADPs here so we can skip much complication. See
@@ -531,7 +582,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             idx = int(idx)
             par = scatterers[idx].get(name)
             newpar = self.__add_par(pname, par)
-            self._xyzpars.addParameter(newpar)
+            self._xyzpars.add_parameter(newpar)
 
         # Constrain non-free xyz parameters
         fpos = g.position_formulas(xyznames)
@@ -562,7 +613,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
         if not self.constrainadps:
             return
 
-        sg = self.sg
+        sg = self.space_group
         sgoffset = self.sgoffset
         scatterers = self.scatterers
         isosymbol = self.isosymbol
@@ -616,13 +667,13 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
                 if par is not None:
                     parname = "%s_%i" % (isosymbol, idx)
                     newpar = self.__add_par(parname, par)
-                    self._adppars.addParameter(newpar)
+                    self._adppars.add_parameter(newpar)
                     isonames.append(newpar.name)
             else:
                 par = scatterer.get(name)
                 if par is not None:
                     newpar = self.__add_par(pname, par)
-                    self._adppars.addParameter(newpar)
+                    self._adppars.add_parameter(newpar)
 
         # Constrain dependent isotropics
         for idx, isoname in zip(isoidx[:], isonames):
@@ -661,7 +712,7 @@ class SpaceGroupParameters(BaseSpaceGroupParameters):
             Index to identify scatterer from which par comes
         """
         newpar = ParameterProxy(parname, par)
-        self.addParameter(newpar)
+        self.add_parameter(newpar)
         return newpar
 
 
@@ -684,7 +735,7 @@ def _constrain_monoclinic(lattice):
     gamma, in which case alpha and gamma are constrained to 90.
     """
     afactor = 1
-    if lattice.angunits == "rad":
+    if lattice.angle_units == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.alpha.set_constant(True, ang90)
@@ -704,7 +755,7 @@ def _constrain_orthorhombic(lattice):
     alpha, beta and gamma are constrained to 90
     """
     afactor = 1
-    if lattice.angunits == "rad":
+    if lattice.angle_units == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.alpha.set_constant(True, ang90)
@@ -720,7 +771,7 @@ def _constrain_tetragonal(lattice):
     90.
     """
     afactor = 1
-    if lattice.angunits == "rad":
+    if lattice.angle_units == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.alpha.set_constant(True, ang90)
@@ -738,7 +789,7 @@ def _constrain_trigonal(lattice):
     c are constrained to a, beta and gamma are constrained to alpha.
     """
     afactor = 1
-    if lattice.angunits == "rad":
+    if lattice.angle_units == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
@@ -762,7 +813,7 @@ def _constrain_hexagonal(lattice):
     gamma is constrained to 120.
     """
     afactor = 1
-    if lattice.angunits == "rad":
+    if lattice.angle_units == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
     ang120 = 120.0 * afactor
@@ -780,7 +831,7 @@ def _constrain_cubic(lattice):
     to 90.
     """
     afactor = 1
-    if lattice.angunits == "rad":
+    if lattice.angle_units == "rad":
         afactor = deg2rad
     ang90 = 90.0 * afactor
     lattice.add_constraint(lattice.b, lattice.a)

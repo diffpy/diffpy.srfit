@@ -107,6 +107,218 @@ molecule_stru_dep_msg = build_deprecation_message(
 )
 
 
+scatterer_base = (
+    "diffpy.srfit.structure.objcrystparset.ObjCrystScattererParSet"
+)
+scatterer_new_base = (
+    "diffpy.cmistructure.objcrystparset.ObjCrystScattererParSet"
+)
+
+scatterer_scat_dep_msg = build_deprecation_message(
+    scatterer_base,
+    "scat",
+    "scatterer",
+    removal_version,
+    new_base=scatterer_new_base,
+)
+
+scatterer_isDummy_dep_msg = build_deprecation_message(
+    scatterer_base,
+    "isDummy",
+    "is_dummy",
+    removal_version,
+    new_base=scatterer_new_base,
+)
+
+scatterer_hasScatterers_dep_msg = build_deprecation_message(
+    scatterer_base,
+    "hasScatterers",
+    "has_scatterers",
+    removal_version,
+    new_base=scatterer_new_base,
+)
+
+molecule_base = "diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeParSet"
+molecule_new_base = "diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet"
+
+molecule_canAdapt_dep_msg = build_deprecation_message(
+    molecule_base,
+    "canAdapt",
+    "can_adapt",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_useSymmetry_dep_msg = build_deprecation_message(
+    molecule_base,
+    "useSymmetry",
+    "use_symmetry",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_usingSymmetry_dep_msg = build_deprecation_message(
+    molecule_base,
+    "usingSymmetry",
+    "using_symmetry",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_getLattice_dep_msg = build_deprecation_message(
+    molecule_base,
+    "getLattice",
+    "get_lattice",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_getScatterers_dep_msg = build_deprecation_message(
+    molecule_base,
+    "getScatterers",
+    "get_scatterers",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_wrapRestraints_dep_msg = build_deprecation_message(
+    molecule_base,
+    "wrapRestraints",
+    "wrap_restraints",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_wrapStretchModeParameters_dep_msg = build_deprecation_message(
+    molecule_base,
+    "wrapStretchModeParameters",
+    "wrap_stretch_mode_parameters",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_restrainBondLength_dep_msg = build_deprecation_message(
+    molecule_base,
+    "restrainBondLength",
+    "restrain_bond_length",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_restrainBondLengthParameter_dep_msg = build_deprecation_message(
+    molecule_base,
+    "restrainBondLengthParameter",
+    "restrain_bond_length_parameter",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_restrainBondAngle_dep_msg = build_deprecation_message(
+    molecule_base,
+    "restrainBondAngle",
+    "restrain_bond_angle",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_restrainBondAngleParameter_dep_msg = build_deprecation_message(
+    molecule_base,
+    "restrainBondAngleParameter",
+    "restrain_bond_angle_parameter",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_restrainDihedralAngle_dep_msg = build_deprecation_message(
+    molecule_base,
+    "restrainDihedralAngle",
+    "restrain_dihedral_angle",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_restrainDihedralAngleParameter_dep_msg = build_deprecation_message(
+    molecule_base,
+    "restrainDihedralAngleParameter",
+    "restrain_dihedral_angle_parameter",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_addBondLengthParameter_dep_msg = build_deprecation_message(
+    molecule_base,
+    "addBondLengthParameter",
+    "add_bond_length_parameter",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_addBondAngleParameter_dep_msg = build_deprecation_message(
+    molecule_base,
+    "addBondAngleParameter",
+    "add_bond_angle_parameter",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+molecule_addDihedralAngleParameter_dep_msg = build_deprecation_message(
+    molecule_base,
+    "addDihedralAngleParameter",
+    "add_dihedral_angle_parameter",
+    removal_version,
+    new_base=molecule_new_base,
+)
+
+restraint_base = (
+    "diffpy.srfit.structure.objcrystparset.ObjCrystMoleculeRestraint"
+)
+restraint_new_base = (
+    "diffpy.cmistructure.objcrystparset.ObjCrystMoleculeRestraint"
+)
+
+restraint_res_dep_msg = build_deprecation_message(
+    restraint_base,
+    "res",
+    "restraint",
+    removal_version,
+    new_base=restraint_new_base,
+)
+
+stretch_mode_base = (
+    "diffpy.srfit.structure.objcrystparset.StretchModeParameter"
+)
+stretch_mode_new_base = (
+    "diffpy.cmistructure.objcrystparset.StretchModeParameter"
+)
+
+stretch_mode_matoms_dep_msg = build_deprecation_message(
+    stretch_mode_base,
+    "matoms",
+    "mutated_atoms",
+    removal_version,
+    new_base=stretch_mode_new_base,
+)
+
+stretch_mode_addAtoms_dep_msg = build_deprecation_message(
+    stretch_mode_base,
+    "addAtoms",
+    "add_atoms",
+    removal_version,
+    new_base=stretch_mode_new_base,
+)
+
+crystal_base = "diffpy.srfit.structure.objcrystparset.ObjCrystCrystalParSet"
+crystal_new_base = "diffpy.cmistructure.objcrystparset.ObjCrystCrystalParSet"
+
+crystal_angunits_dep_msg = build_deprecation_message(
+    crystal_base,
+    "angunits",
+    "angle_units",
+    removal_version,
+    new_base=crystal_new_base,
+)
+
+
 class ObjCrystScattererParSet(ParameterSet):
     """A base adaptor for an Objcryst Scatterer.
 
@@ -117,7 +329,7 @@ class ObjCrystScattererParSet(ParameterSet):
 
     Attributes
     ----------
-    scat
+    scatterer
         The adapted pyobjcryst object.
     parent
         The ParameterSet this belongs to
@@ -128,6 +340,23 @@ class ObjCrystScattererParSet(ParameterSet):
         Occupancy of the scatterer on its crystal site
         (ParameterWraper)
     """
+
+    @property
+    @deprecated(scatterer_scat_dep_msg)
+    def scat(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystScattererParSet.scatterer
+        instead.
+        """
+        return self.scatterer
+
+    @scat.setter
+    @deprecated(scatterer_scat_dep_msg)
+    def scat(self, value):
+        self.scatterer = value
 
     def __init__(self, name, scat, parent):
         """Initialize.
@@ -142,25 +371,47 @@ class ObjCrystScattererParSet(ParameterSet):
             The ParameterSet this belongs to
         """
         ParameterSet.__init__(self, name)
-        self.scat = scat
+        self.scatterer = scat
         self.parent = parent
 
         # x, y, z, occ
-        self.add_parameter(ParameterAdapter("x", self.scat, attr="X"))
-        self.add_parameter(ParameterAdapter("y", self.scat, attr="Y"))
-        self.add_parameter(ParameterAdapter("z", self.scat, attr="Z"))
+        self.add_parameter(ParameterAdapter("x", self.scatterer, attr="X"))
+        self.add_parameter(ParameterAdapter("y", self.scatterer, attr="Y"))
+        self.add_parameter(ParameterAdapter("z", self.scatterer, attr="Z"))
         self.add_parameter(
-            ParameterAdapter("occ", self.scat, attr="Occupancy")
+            ParameterAdapter("occ", self.scatterer, attr="Occupancy")
         )
         return
 
-    def isDummy(self):
+    def is_dummy(self):
         """Indicate whether this scatterer is a dummy atom."""
         return False
 
-    def hasScatterers(self):
+    @deprecated(scatterer_isDummy_dep_msg)
+    def isDummy(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystScattererParSet.is_dummy
+        instead.
+        """
+        return self.is_dummy()
+
+    def has_scatterers(self):
         """Indicate if this scatterer has its own scatterers."""
-        return hasattr(self, "getScatterers")
+        return hasattr(self, "get_scatterers")
+
+    @deprecated(scatterer_hasScatterers_dep_msg)
+    def hasScatterers(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystScattererParSet.has_scatterers
+        instead.
+        """
+        return self.has_scatterers()
 
 
 # End class ObjCrystScattererParSet
@@ -173,7 +424,7 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
 
     Attributes
     ----------
-    scat
+    scatterer
         The adapted pyobjcryst.atom.Atom.
     element
         Non-refinable name of the element (property).
@@ -233,7 +484,7 @@ class ObjCrystAtomParSet(ObjCrystScattererParSet):
 
     def _getelem(self):
         """Getter for the element type."""
-        return self.scat.GetScatteringPower().GetSymbol()
+        return self.scatterer.GetScatteringPower().GetSymbol()
 
     element = property(_getelem)
 
@@ -248,7 +499,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
     Attributes
     ----------
-    scat
+    scatterer
         The adapted pyobjcryst.molecule.Molecule.
     structure
         The adapted pyobjcryst.molecule.Molecule.
@@ -302,10 +553,10 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         self.structure = molecule
 
         # Add orientation quaternion
-        self.add_parameter(ParameterAdapter("q0", self.scat, attr="Q0"))
-        self.add_parameter(ParameterAdapter("q1", self.scat, attr="Q1"))
-        self.add_parameter(ParameterAdapter("q2", self.scat, attr="Q2"))
-        self.add_parameter(ParameterAdapter("q3", self.scat, attr="Q3"))
+        self.add_parameter(ParameterAdapter("q0", self.scatterer, attr="Q0"))
+        self.add_parameter(ParameterAdapter("q1", self.scatterer, attr="Q1"))
+        self.add_parameter(ParameterAdapter("q2", self.scatterer, attr="Q2"))
+        self.add_parameter(ParameterAdapter("q3", self.scatterer, attr="Q3"))
 
         # Wrap the MolAtoms within the molecule
         self.atoms = []
@@ -328,27 +579,61 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         return
 
     @classmethod
-    def canAdapt(self, stru):
+    def can_adapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         from pyobjcryst.molecule import Molecule
 
         return isinstance(stru, Molecule)
 
+    @classmethod
+    @deprecated(molecule_canAdapt_dep_msg)
+    def canAdapt(self, stru):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.can_adapt
+        instead.
+        """
+        return self.can_adapt(stru)
+
     # Part of SrRealParSet interface
-    def useSymmetry(self, use=True):
+    def use_symmetry(self, use=True):
         """Set this structure to use symmetry.
 
         This structure object does not support symmetry.
         """
         return
 
+    @deprecated(molecule_useSymmetry_dep_msg)
+    def useSymmetry(self, use=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.use_symmetry
+        instead.
+        """
+        return self.use_symmetry(use)
+
     # Part of SrRealParSet interface
-    def usingSymmetry(self):
+    def using_symmetry(self):
         """Check if symmetry is being used.
 
         This structure object does not support symmetry.
         """
         return False
+
+    @deprecated(molecule_usingSymmetry_dep_msg)
+    def usingSymmetry(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.using_symmetry
+        instead.
+        """
+        return self.using_symmetry()
 
     # Part of SrRealParSet interface
     def _get_srreal_structure(self):
@@ -359,19 +644,30 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         """
         return self.structure
 
-    def getLattice(self):
+    def get_lattice(self):
         """Get the ParameterSet containing the lattice Parameters."""
         lattice = ParameterSet("lattice")
-        lattice.newPar("a", 1.0)
-        lattice.newPar("b", 1.0)
-        lattice.newPar("c", 1.0)
-        lattice.newPar("alpha", 90)
-        lattice.newPar("beta", 90)
-        lattice.newPar("gamma", 90)
-        lattice.angunits = "deg"
+        lattice.new_parameter("a", 1.0)
+        lattice.new_parameter("b", 1.0)
+        lattice.new_parameter("c", 1.0)
+        lattice.new_parameter("alpha", 90)
+        lattice.new_parameter("beta", 90)
+        lattice.new_parameter("gamma", 90)
+        lattice.angle_units = "deg"
         return lattice
 
-    def getScatterers(self):
+    @deprecated(molecule_getLattice_dep_msg)
+    def getLattice(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.get_lattice
+        instead.
+        """
+        return self.get_lattice()
+
+    def get_scatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
         The site positions must be accessible from the list entries via
@@ -381,7 +677,18 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         """
         return self.atoms
 
-    def wrapRestraints(self):
+    @deprecated(molecule_getScatterers_dep_msg)
+    def getScatterers(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.get_scatterers
+        instead.
+        """
+        return self.get_scatterers()
+
+    def wrap_restraints(self):
         """Wrap the restraints implicit to the molecule.
 
         This will wrap MolBonds, MolBondAngles and MolDihedralAngles of
@@ -389,21 +696,32 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         """
         # Wrap restraints. Restraints wrapped in this way cannot be modified
         # from within this class.
-        for b in self.scat.GetBondList():
+        for b in self.scatterer.GetBondList():
             res = ObjCrystMoleculeRestraint(b)
             self.register_soft_bounds(res)
 
-        for ba in self.scat.GetBondAngleList():
+        for ba in self.scatterer.GetBondAngleList():
             res = ObjCrystMoleculeRestraint(ba)
             self.register_soft_bounds(res)
 
-        for da in self.scat.GetDihedralAngleList():
+        for da in self.scatterer.GetDihedralAngleList():
             res = ObjCrystMoleculeRestraint(da)
             self.register_soft_bounds(res)
 
         return
 
-    def wrapStretchModeParameters(self):
+    @deprecated(molecule_wrapRestraints_dep_msg)
+    def wrapRestraints(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.wrap_restraints
+        instead.
+        """
+        return self.wrap_restraints()
+
+    def wrap_stretch_mode_parameters(self):
         """Wrap the stretch modes implicit to the Molecule as
         Parameters.
 
@@ -417,7 +735,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         bond lengths: "bl_aname1_aname2"
         bond angles: "ba_aname1_aname2_aname3"
         """
-        for mode in self.scat.GetStretchModeBondLengthList():
+        for mode in self.scatterer.GetStretchModeBondLengthList():
             name1 = mode.mpAtom0.GetName()
             name2 = mode.mpAtom1.GetName()
 
@@ -433,11 +751,11 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
                 name = a.GetName()
                 atoms.append(getattr(self, name))
 
-            par.AddAtoms(atoms)
+            par.add_atoms(atoms)
 
             self.add_parameter(par)
 
-        for mode in self.scat.GetStretchModeBondAngleList():
+        for mode in self.scatterer.GetStretchModeBondAngleList():
             name1 = mode.mpAtom0.GetName()
             name2 = mode.mpAtom1.GetName()
             name3 = mode.mpAtom2.GetName()
@@ -456,13 +774,24 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             for a in mode.GetAtoms():
                 name = a.GetName()
                 atoms.append(getattr(self, name))
-            par.AddAtoms(atoms)
+            par.add_atoms(atoms)
 
             self.add_parameter(par)
 
         return
 
-    def restrainBondLength(
+    @deprecated(molecule_wrapStretchModeParameters_dep_msg)
+    def wrapStretchModeParameters(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.wrap_stretch_mode_parameters
+        instead.
+        """
+        return self.wrap_stretch_mode_parameters()
+
+    def restrain_bond_length(
         self, atom1, atom2, length, sigma, delta, scaled=False
     ):
         """Add a bond length restraint.
@@ -500,7 +829,22 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return res
 
-    def restrainBondLengthParameter(
+    @deprecated(molecule_restrainBondLength_dep_msg)
+    def restrainBondLength(
+        self, atom1, atom2, length, sigma, delta, scaled=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.restrain_bond_length
+        instead.
+        """
+        return self.restrain_bond_length(
+            atom1, atom2, length, sigma, delta, scaled
+        )
+
+    def restrain_bond_length_parameter(
         self, par, length, sigma, delta, scaled=False
     ):
         """Add a bond length restraint.
@@ -511,7 +855,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Parameters
         ----------
         par
-            A ObjCrystBondLengthParameter (see addBondLengthParameter)
+            A ObjCrystBondLengthParameter (see add_bond_length_parameter)
         length
             The length of the bond (Angstroms)
         sigma
@@ -529,11 +873,26 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             Returns the ObjCrystBondLengthRestraint object for use with the
             'unrestrain' method.
         """
-        return self.restrainBondLength(
+        return self.restrain_bond_length(
             par.atom1, par.atom2, length, sigma, delta, scaled
         )
 
-    def restrainBondAngle(
+    @deprecated(molecule_restrainBondLengthParameter_dep_msg)
+    def restrainBondLengthParameter(
+        self, par, length, sigma, delta, scaled=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.restrain_bond_length_parameter
+        instead.
+        """
+        return self.restrain_bond_length_parameter(
+            par, length, sigma, delta, scaled
+        )
+
+    def restrain_bond_angle(
         self, atom1, atom2, atom3, angle, sigma, delta, scaled=False
     ):
         """Add a bond angle restraint.
@@ -574,7 +933,22 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return res
 
-    def restrainBondAngleParameter(
+    @deprecated(molecule_restrainBondAngle_dep_msg)
+    def restrainBondAngle(
+        self, atom1, atom2, atom3, angle, sigma, delta, scaled=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.restrain_bond_angle
+        instead.
+        """
+        return self.restrain_bond_angle(
+            atom1, atom2, atom3, angle, sigma, delta, scaled
+        )
+
+    def restrain_bond_angle_parameter(
         self, par, angle, sigma, delta, scaled=False
     ):
         """Add a bond angle restraint.
@@ -585,7 +959,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         Parameters
         ----------
         par
-            A ObjCrystBondAngleParameter (see addBondAngleParameter)
+            A ObjCrystBondAngleParameter (see add_bond_angle_parameter)
         angle
             The bond angle (radians)
         sigma
@@ -603,11 +977,26 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             Returns the ObjCrystBondAngleRestraint object for use with the
             'unrestrain' method.
         """
-        return self.restrainBondAngle(
+        return self.restrain_bond_angle(
             par.atom1, par.atom2, par.atom3, angle, sigma, delta, scaled
         )
 
-    def restrainDihedralAngle(
+    @deprecated(molecule_restrainBondAngleParameter_dep_msg)
+    def restrainBondAngleParameter(
+        self, par, angle, sigma, delta, scaled=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.restrain_bond_angle_parameter
+        instead.
+        """
+        return self.restrain_bond_angle_parameter(
+            par, angle, sigma, delta, scaled
+        )
+
+    def restrain_dihedral_angle(
         self, atom1, atom2, atom3, atom4, angle, sigma, delta, scaled=False
     ):
         """Add a dihedral angle restraint.
@@ -649,7 +1038,22 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return res
 
-    def restrainDihedralAngleParameter(
+    @deprecated(molecule_restrainDihedralAngle_dep_msg)
+    def restrainDihedralAngle(
+        self, atom1, atom2, atom3, atom4, angle, sigma, delta, scaled=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.restrain_dihedral_angle
+        instead.
+        """
+        return self.restrain_dihedral_angle(
+            atom1, atom2, atom3, atom4, angle, sigma, delta, scaled
+        )
+
+    def restrain_dihedral_angle_parameter(
         self, par, angle, sigma, delta, scaled=False
     ):
         """Add a dihedral angle restraint.
@@ -661,7 +1065,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
         ----------
         par
             A ObjCrystDihedralAngleParameter (see
-            addDihedralAngleParameter)
+            add_dihedral_angle_parameter)
         angle
             The dihedral angle (radians)
         sigma
@@ -679,7 +1083,7 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             Returns the ObjCrystDihedralAngleRestraint object for use with the
             'unrestrain' method.
         """
-        return self.restrainDihedralAngle(
+        return self.restrain_dihedral_angle(
             par.atom1,
             par.atom2,
             par.atom3,
@@ -690,7 +1094,22 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
             scaled,
         )
 
-    def addBondLengthParameter(
+    @deprecated(molecule_restrainDihedralAngleParameter_dep_msg)
+    def restrainDihedralAngleParameter(
+        self, par, angle, sigma, delta, scaled=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.restrain_dihedral_angle_parameter
+        instead.
+        """
+        return self.restrain_dihedral_angle_parameter(
+            par, angle, sigma, delta, scaled
+        )
+
+    def add_bond_length_parameter(
         self, name, atom1, atom2, value=None, const=False
     ):
         """Add a bond length to the Molecule.
@@ -725,7 +1144,20 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return par
 
-    def addBondAngleParameter(
+    @deprecated(molecule_addBondLengthParameter_dep_msg)
+    def addBondLengthParameter(
+        self, name, atom1, atom2, value=None, const=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.add_bond_length_parameter
+        instead.
+        """
+        return self.add_bond_length_parameter(name, atom1, atom2, value, const)
+
+    def add_bond_angle_parameter(
         self, name, atom1, atom2, atom3, value=None, const=False
     ):
         """Add a bond angle to the Molecule.
@@ -765,7 +1197,22 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return par
 
-    def addDihedralAngleParameter(
+    @deprecated(molecule_addBondAngleParameter_dep_msg)
+    def addBondAngleParameter(
+        self, name, atom1, atom2, atom3, value=None, const=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.add_bond_angle_parameter
+        instead.
+        """
+        return self.add_bond_angle_parameter(
+            name, atom1, atom2, atom3, value, const
+        )
+
+    def add_dihedral_angle_parameter(
         self, name, atom1, atom2, atom3, atom4, value=None, const=False
     ):
         """Add a dihedral angle to the Molecule.
@@ -809,6 +1256,21 @@ class ObjCrystMoleculeParSet(ObjCrystScattererParSet):
 
         return par
 
+    @deprecated(molecule_addDihedralAngleParameter_dep_msg)
+    def addDihedralAngleParameter(
+        self, name, atom1, atom2, atom3, atom4, value=None, const=False
+    ):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeParSet.add_dihedral_angle_parameter
+        instead.
+        """
+        return self.add_dihedral_angle_parameter(
+            name, atom1, atom2, atom3, atom4, value, const
+        )
+
 
 # End class ObjCrystMoleculeParSet
 
@@ -822,7 +1284,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
 
     Attributes
     ----------
-    scat
+    scatterer
         The adapted pyobjcryst.molecule.MolAtom.
     parent
         The ObjCrystCrystalParSet this belongs to
@@ -836,7 +1298,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
         (ParameterAdapter)
     Biso
         Isotropic scattering factor (ParameterAdapter). This does
-        not exist for dummy atoms. See the 'isDummy' method.
+        not exist for dummy atoms. See the 'is_dummy' method.
         B11, B22, B33, B12, B21, B23, B32, B13, B31
         --  Anisotropic displacement factor for scatterer
         (ParameterAdapter or ParameterProxy). Note that the Bij and Bji
@@ -881,7 +1343,7 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
 
     def _getelem(self):
         """Getter for the element type."""
-        sp = self.scat.GetScatteringPower()
+        sp = self.scatterer.GetScatteringPower()
         if sp:
             return sp.GetSymbol()
         else:
@@ -889,9 +1351,9 @@ class ObjCrystMolAtomParSet(ObjCrystScattererParSet):
 
     element = property(_getelem)
 
-    def isDummy(self):
+    def is_dummy(self):
         """Indicate whether this atom is a dummy atom."""
-        return self.scat.IsDummy()
+        return self.scatterer.IsDummy()
 
 
 # End class ObjCrystMolAtomParSet
@@ -907,13 +1369,30 @@ class ObjCrystMoleculeRestraint(object):
 
     Attributes
     ----------
-    res
+    restraint
         The pyobjcryst Molecule restraint.
     scaled
         A flag indicating if the restraint is scaled (multiplied) by
         the unrestrained point-average chi^2 (chi^2/numpoints) (default
         False).
     """
+
+    @property
+    @deprecated(restraint_res_dep_msg)
+    def res(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystMoleculeRestraint.restraint
+        instead.
+        """
+        return self.restraint
+
+    @res.setter
+    @deprecated(restraint_res_dep_msg)
+    def res(self, value):
+        self.restraint = value
 
     def __init__(self, res, scaled=False):
         """Create a Restraint-like from a pyobjcryst Molecule restraint.
@@ -927,13 +1406,13 @@ class ObjCrystMoleculeRestraint(object):
             by the unrestrained point-average chi^2 (chi^2/numpoints)
             (default False).
         """
-        self.res = res
+        self.restraint = res
         self.scaled = scaled
         return
 
     def __str__(self):
         """Return the restrained atoms with the restraint settings."""
-        res = self.res
+        res = self.restraint
         if hasattr(res, "GetLength0"):
             target = (
                 f"length = {res.GetLength0():f}, "
@@ -958,7 +1437,7 @@ class ObjCrystMoleculeRestraint(object):
             The point-average chi^2 which is optionally used to scale the
             penalty (default 1.0).
         """
-        penalty = self.res.GetLogLikelihood()
+        penalty = self.restraint.GetLogLikelihood()
         if self.scaled:
             penalty *= w
         return penalty
@@ -982,7 +1461,7 @@ class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
         The uncertainty of the bond length (Angstroms)
     delta
         The width of the bond (Angstroms)
-    res
+    restraint
         The pyobjcryst BondLength restraint
     scaled
         A flag indicating if the restraint is scaled (multiplied) by
@@ -1013,24 +1492,24 @@ class ObjCrystBondLengthRestraint(ObjCrystMoleculeRestraint):
         self.atom1 = atom1
         self.atom2 = atom2
 
-        m = self.atom1.scat.GetMolecule()
-        res = m.AddBond(atom1.scat, atom2.scat, length, sigma, delta)
+        m = self.atom1.scatterer.GetMolecule()
+        res = m.AddBond(atom1.scatterer, atom2.scatterer, length, sigma, delta)
 
         ObjCrystMoleculeRestraint.__init__(self, res, scaled)
         return
 
     # Give access to the parameters of the restraint
     length = property(
-        lambda self: self.res.GetLength0(),
-        lambda self, val: self.res.SetLength0(val),
+        lambda self: self.restraint.GetLength0(),
+        lambda self, val: self.restraint.SetLength0(val),
     )
     sigma = property(
-        lambda self: self.res.GetLengthSigma(),
-        lambda self, val: self.res.SetLengthSigma(val),
+        lambda self: self.restraint.GetLengthSigma(),
+        lambda self, val: self.restraint.SetLengthSigma(val),
     )
     delta = property(
-        lambda self: self.res.GetLengthDelta(),
-        lambda self, val: self.res.SetLengthDelta(val),
+        lambda self: self.restraint.GetLengthDelta(),
+        lambda self, val: self.restraint.SetLengthDelta(val),
     )
 
 
@@ -1054,7 +1533,7 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
         The uncertainty of the bond angle (radians)
     delta
         The width of the bond angle (radians)
-    res
+    restraint
         The pyobjcryst BondAngle restraint
     scaled
         A flag indicating if the restraint is scaled (multiplied) by
@@ -1089,9 +1568,14 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
         self.atom2 = atom2
         self.atom3 = atom3
 
-        m = self.atom1.scat.GetMolecule()
+        m = self.atom1.scatterer.GetMolecule()
         res = m.AddBondAngle(
-            atom1.scat, atom2.scat, atom3.scat, angle, sigma, delta
+            atom1.scatterer,
+            atom2.scatterer,
+            atom3.scatterer,
+            angle,
+            sigma,
+            delta,
         )
 
         ObjCrystMoleculeRestraint.__init__(self, res, scaled)
@@ -1099,16 +1583,16 @@ class ObjCrystBondAngleRestraint(ObjCrystMoleculeRestraint):
 
     # Give access to the parameters of the restraint
     angle = property(
-        lambda self: self.res.GetAngle0(),
-        lambda self, val: self.res.SetAngle0(val),
+        lambda self: self.restraint.GetAngle0(),
+        lambda self, val: self.restraint.SetAngle0(val),
     )
     sigma = property(
-        lambda self: self.res.GetAngleSigma(),
-        lambda self, val: self.res.SetAngleSigma(val),
+        lambda self: self.restraint.GetAngleSigma(),
+        lambda self, val: self.restraint.SetAngleSigma(val),
     )
     delta = property(
-        lambda self: self.res.GetAngleDelta(),
-        lambda self, val: self.res.SetAngleDelta(val),
+        lambda self: self.restraint.GetAngleDelta(),
+        lambda self, val: self.restraint.SetAngleDelta(val),
     )
 
 
@@ -1134,7 +1618,7 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
         The uncertainty of the dihedral angle (radians)
     delta
         The width of the dihedral angle (radians)
-    res
+    restraint
         The pyobjcryst DihedralAngle restraint
     scaled
         A flag indicating if the restraint is scaled (multiplied) by
@@ -1173,9 +1657,15 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
         self.atom3 = atom3
         self.atom4 = atom4
 
-        m = self.atom1.scat.GetMolecule()
+        m = self.atom1.scatterer.GetMolecule()
         res = m.AddDihedralAngle(
-            atom1.scat, atom2.scat, atom3.scat, atom4.scat, angle, sigma, delta
+            atom1.scatterer,
+            atom2.scatterer,
+            atom3.scatterer,
+            atom4.scatterer,
+            angle,
+            sigma,
+            delta,
         )
 
         ObjCrystMoleculeRestraint.__init__(self, res, scaled)
@@ -1183,16 +1673,16 @@ class ObjCrystDihedralAngleRestraint(ObjCrystMoleculeRestraint):
 
     # Give access to the parameters of the restraint
     angle = property(
-        lambda self: self.res.GetAngle0(),
-        lambda self, val: self.res.SetAngle0(val),
+        lambda self: self.restraint.GetAngle0(),
+        lambda self, val: self.restraint.SetAngle0(val),
     )
     sigma = property(
-        lambda self: self.res.GetAngleSigma(),
-        lambda self, val: self.res.SetAngleSigma(val),
+        lambda self: self.restraint.GetAngleSigma(),
+        lambda self, val: self.restraint.SetAngleSigma(val),
     )
     delta = property(
-        lambda self: self.res.GetAngleDelta(),
-        lambda self, val: self.res.SetAngleDelta(val),
+        lambda self: self.restraint.GetAngleDelta(),
+        lambda self, val: self.restraint.SetAngleDelta(val),
     )
 
 
@@ -1207,7 +1697,7 @@ class StretchModeParameter(Parameter):
 
     Required attributes
     -------------------
-    matoms
+    mutated_atoms
         The set of all mutated AtomParSets
     molecule
         The ObjCrystMoleculeParSet the atoms belong to
@@ -1219,6 +1709,23 @@ class StretchModeParameter(Parameter):
         molecule stationary within the crystal when changing the
         value of the parameter (bool, default True).
     """
+
+    @property
+    @deprecated(stretch_mode_matoms_dep_msg)
+    def matoms(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.StretchModeParameter.mutated_atoms
+        instead.
+        """
+        return self.mutated_atoms
+
+    @matoms.setter
+    @deprecated(stretch_mode_matoms_dep_msg)
+    def matoms(self, value):
+        self.mutated_atoms = value
 
     def __init__(self, name, value=None, const=False):
         """Initialization.
@@ -1256,7 +1763,7 @@ class StretchModeParameter(Parameter):
 
         return self
 
-    def addAtoms(self, atomlist):
+    def add_atoms(self, atomlist):
         """Associate ObjCrystMolAtomParSets with the Parameter.
 
         This will associate additional ObjCrystMolAtomParSets with the
@@ -1268,7 +1775,7 @@ class StretchModeParameter(Parameter):
         if not hasattr(atomlist, "__iter__"):
             atomlist = [atomlist]
         # Record the added atoms in the Parameter
-        self.matoms.update(atomlist)
+        self.mutated_atoms.update(atomlist)
         # Make sure we're observing these atoms
         for a in atomlist:
             a.x.add_observer(self._flush)
@@ -1276,9 +1783,20 @@ class StretchModeParameter(Parameter):
             a.z.add_observer(self._flush)
 
         # Record the added atoms in the StretchMode
-        scatlist = [a.scat for a in atomlist]
+        scatlist = [a.scatterer for a in atomlist]
         self.mode.AddAtoms(scatlist)
         return self
+
+    @deprecated(stretch_mode_addAtoms_dep_msg)
+    def addAtoms(self, atomlist):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.StretchModeParameter.add_atoms
+        instead.
+        """
+        return self.add_atoms(atomlist)
 
     def notify(self, other=()):
         """Notify all mutated Parameters and observers.
@@ -1289,7 +1807,7 @@ class StretchModeParameter(Parameter):
         """
         noneother = ()
         # Notify the atoms that have moved
-        for a in self.matoms:
+        for a in self.mutated_atoms:
             a.x._flush(noneother)
             a.y._flush(noneother)
             a.z._flush(noneother)
@@ -1339,7 +1857,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         The first ObjCrystMolAtomParSet in the bond
     atom2
         The second (mutated) ObjCrystMolAtomParSet in the bond
-    matoms
+    mutated_atoms
         The set of all mutated ObjCrystMolAtomParSets
     molecule
         The ObjCrystMoleculeParSet the ObjCrystMolAtomParSets
@@ -1393,10 +1911,12 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         # Create the mode
         self.mode = mode
         if mode is None:
-            self.mode = StretchModeBondLength(atom1.scat, atom2.scat, None)
+            self.mode = StretchModeBondLength(
+                atom1.scatterer, atom2.scatterer, None
+            )
         # We only add the last atom. This is the one that will move
-        self.mode.AddAtom(atom2.scat)
-        self.matoms = set([atom2])
+        self.mode.AddAtom(atom2.scatterer)
+        self.mutated_atoms = set([atom2])
 
         # Observe the atom positions
         for a in [atom1, atom2]:
@@ -1410,7 +1930,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
 
         # We do this last so the atoms are defined before we set any values.
         if value is None:
-            value = GetBondLength(atom1.scat, atom2.scat)
+            value = GetBondLength(atom1.scatterer, atom2.scatterer)
         StretchModeParameter.__init__(self, name, value, const)
         self.set_constant(const)
 
@@ -1465,7 +1985,7 @@ class ObjCrystBondLengthParameter(StretchModeParameter):
         necessary each time this is called.
         """
         if self._value is None:
-            val = GetBondLength(self.atom1.scat, self.atom2.scat)
+            val = GetBondLength(self.atom1.scatterer, self.atom2.scatterer)
             Parameter.set_value(self, val)
 
         return self._value
@@ -1494,7 +2014,7 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         The second (central) ObjCrystMolAtomParSet in the bond angle
     atom3
         The third (mutated) ObjCrystMolAtomParSet in the bond angle
-    matoms
+    mutated_atoms
         The set of all mutated ObjCrystMolAtomParSets
     molecule
         The ObjCrystMoleculeParSet the ObjCrystMolAtomParSets
@@ -1553,11 +2073,11 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         self.mode = mode
         if mode is None:
             self.mode = StretchModeBondAngle(
-                atom1.scat, atom2.scat, atom3.scat, None
+                atom1.scatterer, atom2.scatterer, atom3.scatterer, None
             )
         # We only add the last atom. This is the one that will move
-        self.mode.AddAtom(atom3.scat)
-        self.matoms = set([atom3])
+        self.mode.AddAtom(atom3.scatterer)
+        self.mutated_atoms = set([atom3])
 
         # Observe the atom positions
         for a in [atom1, atom2, atom3]:
@@ -1572,7 +2092,9 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
 
         # We do this last so the atoms are defined before we set any values.
         if value is None:
-            value = GetBondAngle(atom1.scat, atom2.scat, atom3.scat)
+            value = GetBondAngle(
+                atom1.scatterer, atom2.scatterer, atom3.scatterer
+            )
         StretchModeParameter.__init__(self, name, value, const)
         self.set_constant(const)
 
@@ -1627,7 +2149,9 @@ class ObjCrystBondAngleParameter(StretchModeParameter):
         """
         if self._value is None:
             val = GetBondAngle(
-                self.atom1.scat, self.atom2.scat, self.atom3.scat
+                self.atom1.scatterer,
+                self.atom2.scatterer,
+                self.atom3.scatterer,
             )
             Parameter.set_value(self, val)
 
@@ -1662,7 +2186,7 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
     atom4
         The fourth (mutated) ObjCrystMolAtomParSet in the dihedral
         angle
-    matoms
+    mutated_atoms
         The set of all mutated ObjCrystMolAtomParSets
     molecule
         The ObjCrystMoleculeParSet the atoms belong to
@@ -1732,10 +2256,12 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
         # Create the stretch mode
         self.mode = mode
         if mode is None:
-            self.mode = StretchModeTorsion(atom2.scat, atom3.scat, None)
+            self.mode = StretchModeTorsion(
+                atom2.scatterer, atom3.scatterer, None
+            )
         # We only add the last atom. This is the one that will move
-        self.mode.AddAtom(atom4.scat)
-        self.matoms = set([atom4])
+        self.mode.AddAtom(atom4.scatterer)
+        self.mutated_atoms = set([atom4])
 
         # Observe the atom positions
         for a in [atom1, atom2, atom3, atom4]:
@@ -1752,7 +2278,10 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
         # We do this last so the atoms are defined before we set any values.
         if value is None:
             value = GetDihedralAngle(
-                atom1.scat, atom2.scat, atom3.scat, atom4.scat
+                atom1.scatterer,
+                atom2.scatterer,
+                atom3.scatterer,
+                atom4.scatterer,
             )
         StretchModeParameter.__init__(self, name, value, const)
         self.set_constant(const)
@@ -1807,10 +2336,10 @@ class ObjCrystDihedralAngleParameter(StretchModeParameter):
         """
         if self._value is None:
             val = GetDihedralAngle(
-                self.atom1.scat,
-                self.atom2.scat,
-                self.atom3.scat,
-                self.atom4.scat,
+                self.atom1.scatterer,
+                self.atom2.scatterer,
+                self.atom3.scatterer,
+                self.atom4.scatterer,
             )
             Parameter.set_value(self, val)
 
@@ -1840,7 +2369,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
         module.
     sgpars
         property that creates _sgpars when it is needed.
-    angunits
+    angle_units
         "rad", the units of angle
 
     Parameters
@@ -1855,6 +2384,23 @@ class ObjCrystCrystalParSet(SrRealParSet):
         Occupancy of the scatterer on its crystal site (ParameterWraper)
     """
 
+    @property
+    @deprecated(crystal_angunits_dep_msg)
+    def angunits(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.objcrystparset.ObjCrystCrystalParSet.angle_units
+        instead.
+        """
+        return self.angle_units
+
+    @angunits.setter
+    @deprecated(crystal_angunits_dep_msg)
+    def angunits(self, value):
+        self.angle_units = value
+
     def __init__(self, name, cryst):
         """Initialize.
 
@@ -1866,7 +2412,7 @@ class ObjCrystCrystalParSet(SrRealParSet):
             An pyobjcryst.Crystal instance.
         """
         SrRealParSet.__init__(self, name)
-        self.angunits = "rad"
+        self.angle_units = "rad"
         self.structure = cryst
         self._sgpars = None
 
@@ -1984,17 +2530,17 @@ class ObjCrystCrystalParSet(SrRealParSet):
         return sg
 
     @classmethod
-    def canAdapt(self, stru):
+    def can_adapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         from pyobjcryst.crystal import Crystal
 
         return isinstance(stru, Crystal)
 
-    def getLattice(self):
+    def get_lattice(self):
         """Get the ParameterSet containing the lattice Parameters."""
         return self
 
-    def getScatterers(self):
+    def get_scatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
         The site positions must be accessible from the list entries via

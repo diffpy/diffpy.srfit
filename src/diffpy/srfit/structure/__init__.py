@@ -74,22 +74,22 @@ def structure_to_parameter_set(name, structure):
     """
     from diffpy.srfit.structure.diffpyparset import DiffpyStructureParSet
 
-    if DiffpyStructureParSet.canAdapt(structure):
+    if DiffpyStructureParSet.can_adapt(structure):
         return DiffpyStructureParSet(name, structure)
 
     from diffpy.srfit.structure.objcrystparset import ObjCrystCrystalParSet
 
-    if ObjCrystCrystalParSet.canAdapt(structure):
+    if ObjCrystCrystalParSet.can_adapt(structure):
         return ObjCrystCrystalParSet(name, structure)
 
     from diffpy.srfit.structure.objcrystparset import ObjCrystMoleculeParSet
 
-    if ObjCrystMoleculeParSet.canAdapt(structure):
+    if ObjCrystMoleculeParSet.can_adapt(structure):
         return ObjCrystMoleculeParSet(name, structure)
 
     from diffpy.srfit.structure.cctbxparset import CCTBXCrystalParSet
 
-    if CCTBXCrystalParSet.canAdapt(structure):
+    if CCTBXCrystalParSet.can_adapt(structure):
         return CCTBXCrystalParSet(name, structure)
 
     raise TypeError("Unadaptable structure format")

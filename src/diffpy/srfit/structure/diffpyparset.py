@@ -35,9 +35,23 @@ from diffpy.srfit.fitbase.parameter import ParameterAdapter, ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.srrealparset import SrRealParSet
 from diffpy.srfit.util.argbinders import bind2nd
-
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 # Accessor for xyz of atoms
+removal_version = "4.0.0"
+
+lattice_base = "diffpy.srfit.structure.diffpyparset.DiffpyLatticeParSet"
+lattice_new_base = "diffpy.cmistructure.diffpyparset.DiffpyLatticeParSet"
+
+lattice_angunits_dep_msg = build_deprecation_message(
+    lattice_base,
+    "angunits",
+    "angle_units",
+    removal_version,
+    new_base=lattice_new_base,
+)
+
+
 class _xyzgetter(object):
 
     def __init__(self, i):
@@ -185,7 +199,7 @@ class DiffpyLatticeParSet(ParameterSet):
         The diffpy.structure.Lattice this is adapting
     name
         Always "lattice"
-    angunits
+    angle_units
         "deg", the units of angle
 
     Parameters
@@ -204,6 +218,23 @@ class DiffpyLatticeParSet(ParameterSet):
         Unit cell parameters (ParameterAdapter).
     """
 
+    @property
+    @deprecated(lattice_angunits_dep_msg)
+    def angunits(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.diffpyparset.DiffpyLatticeParSet.angle_units
+        instead.
+        """
+        return self.angle_units
+
+    @angunits.setter
+    @deprecated(lattice_angunits_dep_msg)
+    def angunits(self, value):
+        self.angle_units = value
+
     def __init__(self, lattice):
         """Initialize.
 
@@ -213,7 +244,7 @@ class DiffpyLatticeParSet(ParameterSet):
             A diffpy.structure.Lattice instance
         """
         ParameterSet.__init__(self, "lattice")
-        self.angunits = "deg"
+        self.angle_units = "deg"
         self.lattice = lattice
         lat = lattice
         self.add_parameter(
@@ -307,18 +338,18 @@ class DiffpyStructureParSet(SrRealParSet):
     def __repr__(self):
         return repr(self.structure)
 
-    def getLattice(self):
+    def get_lattice(self):
         """Get the ParameterSet containing the lattice Parameters."""
         return self.lattice
 
     @classmethod
-    def canAdapt(self, stru):
+    def can_adapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         from diffpy.structure import Structure
 
         return isinstance(stru, Structure)
 
-    def getScatterers(self):
+    def get_scatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
         The site positions must be accessible from the list entries via

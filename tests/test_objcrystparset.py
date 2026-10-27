@@ -148,7 +148,7 @@ class TestParameterAdapter:
         # make our crystal
         cryst = ObjCrystCrystalParSet("bucky", occryst)
         m = cryst.c60
-        m.wrapRestraints()
+        m.wrap_restraints()
 
         # make sure that we have some restraints in the molecule
         assert 2 == len(m._restraints)
@@ -232,6 +232,22 @@ class TestParameterAdapter:
         _testMolecule()
         return
 
+    def test_get_lattice_of_molecule(self):
+        # Case: get_lattice is called on an ObjCrystMoleculeParSet.
+        # Expected: A cubic placeholder lattice with unit cell lengths of
+        # 1 and angles of 90 degrees is returned.
+        molecule = ObjCrystCrystalParSet("bucky", self.occryst).c60
+        lattice = molecule.get_lattice()
+        actual_names = lattice.get_names()
+        expected_names = ["a", "b", "c", "alpha", "beta", "gamma"]
+        assert actual_names == expected_names
+        actual_values = lattice.get_values()
+        expected_values = [1.0, 1.0, 1.0, 90, 90, 90]
+        assert actual_values == expected_values
+        actual_angle_units = lattice.angle_units
+        expected_angle_units = "deg"
+        assert actual_angle_units == expected_angle_units
+
     def testImplicitBondLengthRestraints(self):
         """Test the structure with implicit bond lengths."""
         occryst = self.occryst
@@ -244,7 +260,7 @@ class TestParameterAdapter:
         # make our crystal
         cryst = ObjCrystCrystalParSet("bucky", occryst)
         m = cryst.c60
-        m.wrapRestraints()
+        m.wrap_restraints()
 
         # make sure that we have some restraints in the molecule
         assert 2 == len(m._restraints)
@@ -274,7 +290,7 @@ class TestParameterAdapter:
         # make our crystal
         cryst = ObjCrystCrystalParSet("bucky", occryst)
         m = cryst.c60
-        m.wrapRestraints()
+        m.wrap_restraints()
 
         # make sure that we have some restraints in the molecule
         assert 2 == len(m._restraints)
@@ -288,10 +304,34 @@ class TestParameterAdapter:
 
         return
 
-    def testImplicitStretchModes(self):
-        """Test the molecule with implicit stretch modes."""
-        # Not sure how to make this happen.
-        pass
+    def test_wrap_stretch_mode_parameters(self):
+        # Case: The molecule has two bond lengths and one bond angle in the
+        # chain C0-C1-C2, and its stretch modes are built.
+        # Expected: Each bond length and bond angle stretch mode is wrapped
+        # as a Parameter named after its atoms. pyobjcryst builds one mode
+        # for each side of a bond or angle, so every name appears in both
+        # atom orders.
+        ocmol = self.ocmol
+        ocmol.AddBond(ocmol[0], ocmol[1], 1.37, 0.1, 0.1)
+        ocmol.AddBond(ocmol[1], ocmol[2], 6.9, 0.1, 0.1)
+        ocmol.AddBondAngle(ocmol[0], ocmol[1], ocmol[2], 1.57, 0.1, 0.1)
+        ocmol.BuildStretchModeBondLength()
+        ocmol.BuildStretchModeBondAngle()
+        molecule = ObjCrystCrystalParSet("bucky", self.occryst).c60
+        parameter_names_before = set(molecule._parameters)
+        molecule.wrap_stretch_mode_parameters()
+        actual_names = sorted(
+            set(molecule._parameters) - parameter_names_before
+        )
+        expected_names = [
+            "ba_C0_C1_C2",
+            "ba_C2_C1_C0",
+            "bl_C0_C1",
+            "bl_C1_C0",
+            "bl_C1_C2",
+            "bl_C2_C1",
+        ]
+        assert actual_names == expected_names
 
     def testExplicitBondLengthRestraints(self):
         """Test the structure with explicit bond lengths."""
@@ -303,8 +343,8 @@ class TestParameterAdapter:
         m = cryst.c60
 
         # make some bond angle restraints
-        res0 = m.restrainBondLength(m.atoms[0], m.atoms[5], 3.3, 0.1, 0.1)
-        res1 = m.restrainBondLength(m.atoms[0], m.atoms[7], 3.3, 0.1, 0.1)
+        res0 = m.restrain_bond_length(m.atoms[0], m.atoms[5], 3.3, 0.1, 0.1)
+        res1 = m.restrain_bond_length(m.atoms[0], m.atoms[7], 3.3, 0.1, 0.1)
 
         # make sure that we have some restraints in the molecule
         assert 2 == len(m._restraints)
@@ -326,9 +366,11 @@ class TestParameterAdapter:
         cryst = ObjCrystCrystalParSet("bucky", self.occryst)
         molecule = cryst.c60
         atoms = molecule.atoms
-        molecule.restrainBondLength(atoms[0], atoms[5], 3.3, 0.1, 0.2)
-        molecule.restrainBondAngle(atoms[0], atoms[5], atoms[7], 1.0, 0.1, 0.2)
-        molecule.restrainDihedralAngle(
+        molecule.restrain_bond_length(atoms[0], atoms[5], 3.3, 0.1, 0.2)
+        molecule.restrain_bond_angle(
+            atoms[0], atoms[5], atoms[7], 1.0, 0.1, 0.2
+        )
+        molecule.restrain_dihedral_angle(
             atoms[0], atoms[5], atoms[7], atoms[8], 2.0, 0.1, 0.2
         )
         lines = capturestdout(cryst.show, textwidth=0).splitlines()
@@ -356,7 +398,7 @@ class TestParameterAdapter:
             ocmol[0], ocmol[5], ocmol[7], ocmol[8], 2.0, 0.1, 0.2
         )
         cryst = ObjCrystCrystalParSet("bucky", self.occryst)
-        cryst.c60.wrapRestraints()
+        cryst.c60.wrap_restraints()
         lines = capturestdout(cryst.show, textwidth=0).splitlines()
         actual_restraint_lines = set(lines[lines.index("Restraints") + 2 :])
         expected_restraint_lines = {
@@ -383,10 +425,10 @@ class TestParameterAdapter:
         m = cryst.c60
 
         # restrain some bond angles
-        res0 = m.restrainBondAngle(
+        res0 = m.restrain_bond_angle(
             m.atoms[0], m.atoms[5], m.atoms[8], 3.3, 0.1, 0.1
         )
-        res1 = m.restrainBondAngle(
+        res1 = m.restrain_bond_angle(
             m.atoms[0], m.atoms[7], m.atoms[44], 3.3, 0.1, 0.1
         )
 
@@ -411,10 +453,10 @@ class TestParameterAdapter:
         m = cryst.c60
 
         # Restrain some dihedral angles.
-        res0 = m.restrainDihedralAngle(
+        res0 = m.restrain_dihedral_angle(
             m.atoms[0], m.atoms[5], m.atoms[8], m.atoms[41], 1.1, 0.1, 0.1
         )
-        res1 = m.restrainDihedralAngle(
+        res1 = m.restrain_dihedral_angle(
             m.atoms[0], m.atoms[7], m.atoms[44], m.atoms[2], 1.1, 0.1, 0.1
         )
 
@@ -442,9 +484,9 @@ class TestParameterAdapter:
         a20 = m.atoms[20]
 
         # Add a parameter
-        p1 = m.addBondLengthParameter("C07", a0, a7)
+        p1 = m.add_bond_length_parameter("C07", a0, a7)
         # Have another atom tag along for the ride
-        p1.addAtoms([a20])
+        p1.add_atoms([a20])
 
         xyz0 = numpy.array(
             [a0.x.get_value(), a0.y.get_value(), a0.z.get_value()]
@@ -533,9 +575,9 @@ class TestParameterAdapter:
         angle0 = numpy.arccos(numpy.dot(v1, v2) / (d1 * d2))
 
         # Add a parameter
-        p1 = m.addBondAngleParameter("C0720", a0, a7, a20)
+        p1 = m.add_bond_angle_parameter("C0720", a0, a7, a20)
         # Have another atom tag along for the ride
-        p1.addAtoms([a25])
+        p1.add_atoms([a25])
 
         assert angle0 == pytest.approx(p1.get_value(), abs=1e-6)
 
@@ -618,9 +660,9 @@ class TestParameterAdapter:
         angle0 = -numpy.arccos(numpy.dot(v123, v234) / (d123 * d234))
 
         # Add a parameter
-        p1 = m.addDihedralAngleParameter("C072025", a0, a7, a20, a25)
+        p1 = m.add_dihedral_angle_parameter("C072025", a0, a7, a20, a25)
         # Have another atom tag along for the ride
-        p1.addAtoms([a33])
+        p1.add_atoms([a33])
 
         assert angle0 == pytest.approx(p1.get_value(), abs=1e-6)
 

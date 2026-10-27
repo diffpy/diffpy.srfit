@@ -3,6 +3,10 @@
 diffpy.srfit.structure package
 ==============================
 
+.. deprecated:: 3.5.0
+    ``diffpy.srfit.structure`` has moved to ``diffpy.cmistructure`` and will
+    be removed in version 4.0.0. Please use ``diffpy.cmistructure`` instead.
+
 .. automodule:: diffpy.srfit.structure
     :members:
     :undoc-members:

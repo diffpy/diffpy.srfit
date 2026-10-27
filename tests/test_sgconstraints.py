@@ -47,7 +47,7 @@ def test_ObjCryst_constrain_space_group(pyobjcryst_available):
     stru.sgpars.adppars
 
     # Check the orthorhombic lattice
-    lattice = stru.getLattice()
+    lattice = stru.get_lattice()
     assert lattice.alpha.const
     assert lattice.beta.const
     assert lattice.gamma.const
@@ -61,7 +61,7 @@ def test_ObjCryst_constrain_space_group(pyobjcryst_available):
     assert 0 == len(lattice._constraints)
 
     # Now make sure the scatterers are constrained properly
-    scatterers = stru.getScatterers()
+    scatterers = stru.get_scatterers()
     la = scatterers[0]
     assert not la.x.const
     assert not la.y.const
@@ -120,7 +120,7 @@ def test_DiffPy_constrain_as_space_group(datafile, pyobjcryst_available):
     sgpars = constrain_as_space_group(
         parset,
         "P b n m",
-        scatterers=parset.getScatterers()[::2],
+        scatterers=parset.get_scatterers()[::2],
         constrainadps=True,
     )
 
@@ -130,7 +130,7 @@ def test_DiffPy_constrain_as_space_group(datafile, pyobjcryst_available):
         assert par.get_value() is not None
 
     # Test the unconstrained atoms
-    for scatterer in parset.getScatterers()[1::2]:
+    for scatterer in parset.get_scatterers()[1::2]:
         assert not scatterer.x.const
         assert not scatterer.y.const
         assert not scatterer.z.const
@@ -156,7 +156,7 @@ def test_DiffPy_constrain_as_space_group(datafile, pyobjcryst_available):
     def _alltests(par):
         return _consttest(par) or _constrainedtest(par) or _proxytest(par)
 
-    for idx, scatterer in enumerate(parset.getScatterers()[::2]):
+    for idx, scatterer in enumerate(parset.get_scatterers()[::2]):
         # Under this scheme, atom 6 is free to vary
         test = False
         for par in [scatterer.x, scatterer.y, scatterer.z]:

@@ -142,7 +142,7 @@ def test_show_bvs_restraint(capturestdout, diffpy_srreal_available):
     parameter_set = DiffpyStructureParSet(
         "nacl", Structure(atoms, lattice=lattice)
     )
-    parameter_set.restrainBVS(sig=0.5, scaled=True)
+    parameter_set.restrain_bvs(sig=0.5, scaled=True)
     lines = capturestdout(parameter_set.show).splitlines()
     actual_restraint_lines = lines[lines.index("Restraints") + 2 :]
     expected_restraint_lines = ["BVS of nacl: sig = 0.500000, scaled = True"]

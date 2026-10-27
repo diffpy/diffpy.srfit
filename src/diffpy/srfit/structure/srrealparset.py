@@ -31,6 +31,26 @@ restrainBVS_dep_msg = build_deprecation_message(
 )
 
 
+srreal_base = "diffpy.srfit.structure.srrealparset.SrRealParSet"
+srreal_new_base = "diffpy.cmistructure.srrealparset.SrRealParSet"
+
+srreal_useSymmetry_dep_msg = build_deprecation_message(
+    srreal_base,
+    "useSymmetry",
+    "use_symmetry",
+    removal_version,
+    new_base=srreal_new_base,
+)
+
+srreal_usingSymmetry_dep_msg = build_deprecation_message(
+    srreal_base,
+    "usingSymmetry",
+    "using_symmetry",
+    removal_version,
+    new_base=srreal_new_base,
+)
+
+
 class SrRealParSet(BaseStructureParSet):
     """Base class for SrReal-compatible structure adapters.
 
@@ -96,7 +116,7 @@ class SrRealParSet(BaseStructureParSet):
         """
         return self.restrain_bvs(sig, scaled)
 
-    def useSymmetry(self, use=True):
+    def use_symmetry(self, use=True):
         """Set this structure to use symmetry.
 
         This determines how the structure is treated by SrReal
@@ -105,9 +125,29 @@ class SrRealParSet(BaseStructureParSet):
         self._usesymmetry = bool(use)
         return
 
-    def usingSymmetry(self):
+    @deprecated(srreal_useSymmetry_dep_msg)
+    def useSymmetry(self, use=True):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.cmistructure.srrealparset.SrRealParSet.use_symmetry
+        instead.
+        """
+        return self.use_symmetry(use)
+
+    def using_symmetry(self):
         """Check if symmetry is being used."""
         return self._usesymmetry
+
+    @deprecated(srreal_usingSymmetry_dep_msg)
+    def usingSymmetry(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.cmistructure.srrealparset.SrRealParSet.using_symmetry
+        instead.
+        """
+        return self.using_symmetry()
 
     def _get_srreal_structure(self):
         """Get the structure object for use with SrReal calculators.

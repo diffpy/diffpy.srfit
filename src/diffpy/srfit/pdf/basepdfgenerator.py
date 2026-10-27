@@ -430,7 +430,7 @@ class BasePDFGenerator(ProfileGenerator):
         self.add_parameter_set(parset)
 
         # Set periodicity
-        self._phase.useSymmetry(periodic)
+        self._phase.use_symmetry(periodic)
         return
 
     @deprecated(setPhase_dep_msg)

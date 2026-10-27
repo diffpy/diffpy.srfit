@@ -185,8 +185,8 @@ def _call_organizer_method(organizer, method_name, args):
         ("unconstrain", "remove_constraint", ("y",)),
         # C7: getConstrainedPars gets the constrained Parameters.
         # Expected: Warns and gives the same result as
-        # get_constrained_parmeters.
-        ("getConstrainedPars", "get_constrained_parmeters", ()),
+        # get_constrained_parameters.
+        ("getConstrainedPars", "get_constrained_parameters", ()),
         # C8: clearConstraints removes all constraints.
         # Expected: Warns and gives the same result as
         # clear_all_constraints.

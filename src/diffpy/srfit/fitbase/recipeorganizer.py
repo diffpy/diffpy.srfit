@@ -107,7 +107,7 @@ isConstrained_deprecation_msg = build_deprecation_message(
 getConstrainedPars_deprecation_msg = build_deprecation_message(
     recipeorganizer_base,
     "getConstrainedPars",
-    "get_constrained_parmeters",
+    "get_constrained_parameters",
     removal_version,
 )
 
@@ -1313,7 +1313,7 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         self.remove_constraint(*pars)
         return
 
-    def get_constrained_parmeters(self, recurse=False):
+    def get_constrained_parameters(self, recurse=False):
         """Get the constrained managed Parameters in this object.
 
         Parameters
@@ -1338,10 +1338,10 @@ class RecipeOrganizer(_recipeorganizer_interface, RecipeContainer):
         version 4.0.0.
 
         Please use
-        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.get_constrained_parmeters
+        diffpy.srfit.fitbase.recipeorganizer.RecipeOrganizer.get_constrained_parameters
         instead.
         """
-        return self.get_constrained_parmeters(recurse=recurse)
+        return self.get_constrained_parameters(recurse=recurse)
 
     def clear_all_constraints(self, recurse=False):
         """Clear all constraints managed by this organizer.

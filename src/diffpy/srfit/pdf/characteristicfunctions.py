@@ -121,6 +121,14 @@ shellCF2_dep_msg = _build_dep_msg(
     "radius = a - delta / 2 and thickness = delta.",
 )
 
+SASCF_dep_msg = build_deprecation_message(
+    cf_base,
+    "SASCF",
+    "SASCF",
+    removal_version,
+    new_base="diffpy.cmisas.characteristicfunctions",
+)
+
 
 # The record of non-physical input warnings already issued in this process,
 # keyed by (function name, requirement). See _warn_non_physical.
@@ -621,6 +629,11 @@ def shellCF2(r, a, delta):
 class SASCF(Calculator):
     """Calculator class for characteristic functions from sas-models.
 
+    .. deprecated:: 3.5.0
+        ``SASCF`` has moved to ``diffpy.cmisas.characteristicfunctions``
+        and will be removed in version 4.0.0. Please use
+        ``diffpy.cmisas.characteristicfunctions.SASCF`` instead.
+
     This class wraps a sas.models.BaseModel to calculate I(Q) related to
     nanoparticle shape. This I(Q) is inverted to f(r) according to:
     f(r) = 1 / (4 pi r) * SINFT(I(Q)),
@@ -648,6 +661,7 @@ class SASCF(Calculator):
         model : BaseModel
             The sas.models.BaseModel object this adapts.
         """
+        warnings.warn(SASCF_dep_msg, DeprecationWarning, stacklevel=2)
         Calculator.__init__(self, name)
 
         self._model = model

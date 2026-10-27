@@ -3,6 +3,10 @@
 diffpy.srfit.sas package
 ========================
 
+.. deprecated:: 3.5.0
+    ``diffpy.srfit.sas`` has moved to ``diffpy.cmisas`` and will be removed
+    in version 4.0.0. Please use ``diffpy.cmisas`` instead.
+
 .. automodule:: diffpy.srfit.sas
     :members:
     :undoc-members:

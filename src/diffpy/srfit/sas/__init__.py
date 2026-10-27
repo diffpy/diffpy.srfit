@@ -22,9 +22,27 @@ __all__ = [
     "CFCalculator",
 ]
 
+import warnings
+
+from diffpy.utils._deprecator import build_deprecation_message
+
 from .prcalculator import CFCalculator, PrCalculator
 from .sasgenerator import SASGenerator
 from .sasparser import SASParser
 from .sasprofile import SASProfile
+
+removal_version = "4.0.0"
+
+warnings.warn(
+    build_deprecation_message(
+        "diffpy.srfit",
+        "sas",
+        "cmisas",
+        removal_version,
+        new_base="diffpy",
+    ),
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 # End of file

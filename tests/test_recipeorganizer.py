@@ -372,7 +372,7 @@ def _get_constraint_state(organizer, parameter):
         organizer.is_constrained(parameter),
         [
             constrained.name
-            for constrained in organizer.get_constrained_parmeters()
+            for constrained in organizer.get_constrained_parameters()
         ],
         len(organizer._constraints),
     )

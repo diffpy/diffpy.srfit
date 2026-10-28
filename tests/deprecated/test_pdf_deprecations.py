@@ -196,7 +196,7 @@ def test_setStructure(
     actual_structure = generator.stru
     expected_structure = nacl_structure
     assert actual_structure == expected_structure
-    actual_periodic = generator.phase.usingSymmetry()
+    actual_periodic = generator.phase.using_symmetry()
     assert actual_periodic == expected_periodic
 
 
@@ -246,7 +246,7 @@ def test_setPhase(
     actual_phase = generator.phase
     expected_phase = parameter_set
     assert actual_phase == expected_phase
-    actual_periodic = generator.phase.usingSymmetry()
+    actual_periodic = generator.phase.using_symmetry()
     assert actual_periodic == expected_periodic
 
 

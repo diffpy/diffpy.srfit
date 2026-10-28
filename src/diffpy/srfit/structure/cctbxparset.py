@@ -30,8 +30,53 @@ The following classes are adapted:
 from diffpy.srfit.fitbase.parameter import ParameterAdapter
 from diffpy.srfit.fitbase.parameterset import ParameterSet
 from diffpy.srfit.structure.basestructureparset import BaseStructureParSet
+from diffpy.utils._deprecator import build_deprecation_message, deprecated
 
 __all__ = ["CCTBXScattererParSet", "CCTBXUnitCellParSet", "CCTBXCrystalParSet"]
+
+
+removal_version = "4.0.0"
+
+scatterer_base = "diffpy.srfit.structure.cctbxparset.CCTBXScattererParSet"
+scatterer_new_base = "diffpy.cmistructure.cctbxparset.CCTBXScattererParSet"
+
+scatterer_strups_dep_msg = build_deprecation_message(
+    scatterer_base,
+    "strups",
+    "structure_parameter_set",
+    removal_version,
+    new_base=scatterer_new_base,
+)
+
+scatterer_idx_dep_msg = build_deprecation_message(
+    scatterer_base,
+    "idx",
+    "index",
+    removal_version,
+    new_base=scatterer_new_base,
+)
+
+unit_cell_base = "diffpy.srfit.structure.cctbxparset.CCTBXUnitCellParSet"
+unit_cell_new_base = "diffpy.cmistructure.cctbxparset.CCTBXUnitCellParSet"
+
+unit_cell_strups_dep_msg = build_deprecation_message(
+    unit_cell_base,
+    "strups",
+    "structure_parameter_set",
+    removal_version,
+    new_base=unit_cell_new_base,
+)
+
+crystal_base = "diffpy.srfit.structure.cctbxparset.CCTBXCrystalParSet"
+crystal_new_base = "diffpy.cmistructure.cctbxparset.CCTBXCrystalParSet"
+
+crystal_getSpaceGroup_dep_msg = build_deprecation_message(
+    crystal_base,
+    "getSpaceGroup",
+    "get_space_group",
+    removal_version,
+    new_base=crystal_new_base,
+)
 
 
 class CCTBXScattererParSet(ParameterSet):
@@ -53,6 +98,39 @@ class CCTBXScattererParSet(ParameterSet):
         Isotropic scattering factor (ParameterAdapter).
     """
 
+    @property
+    @deprecated(scatterer_idx_dep_msg)
+    def idx(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use diffpy.cmistructure.cctbxparset.CCTBXScattererParSet.index
+        instead.
+        """
+        return self.index
+
+    @idx.setter
+    @deprecated(scatterer_idx_dep_msg)
+    def idx(self, value):
+        self.index = value
+
+    @property
+    @deprecated(scatterer_strups_dep_msg)
+    def strups(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.cctbxparset.CCTBXScattererParSet.structure_parameter_set
+        instead.
+        """
+        return self.structure_parameter_set
+
+    @strups.setter
+    @deprecated(scatterer_strups_dep_msg)
+    def strups(self, value):
+        self.structure_parameter_set = value
+
     def __init__(self, name, strups, idx):
         """Initialize.
 
@@ -66,8 +144,8 @@ class CCTBXScattererParSet(ParameterSet):
             The index of the scatterer in the structure.
         """
         ParameterSet.__init__(self, name)
-        self.strups = strups
-        self.idx = idx
+        self.structure_parameter_set = strups
+        self.index = idx
 
         # x, y, z, occupancy
         self.add_parameter(
@@ -92,32 +170,48 @@ class CCTBXScattererParSet(ParameterSet):
     def _xyzgetter(self, i):
 
         def f(dummy):
-            return self.strups.structure.scatterers()[self.idx].site[i]
+            return self.structure_parameter_set.structure.scatterers()[
+                self.index
+            ].site[i]
 
         return f
 
     def _xyzsetter(self, i):
 
         def f(dummy, value):
-            xyz = list(self.strups.structure.scatterers()[self.idx].site)
+            xyz = list(
+                self.structure_parameter_set.structure.scatterers()[
+                    self.index
+                ].site
+            )
             xyz[i] = value
-            self.strups.structure.scatterers()[self.idx].site = tuple(xyz)
+            self.structure_parameter_set.structure.scatterers()[
+                self.index
+            ].site = tuple(xyz)
             return
 
         return f
 
     def _getocc(self, dummy):
-        return self.strups.structure.scatterers()[self.idx].occupancy
+        return self.structure_parameter_set.structure.scatterers()[
+            self.index
+        ].occupancy
 
     def _setocc(self, dummy, value):
-        self.strups.structure.scatterers()[self.idx].occupancy = value
+        self.structure_parameter_set.structure.scatterers()[
+            self.index
+        ].occupancy = value
         return
 
     def _getuiso(self, dummy):
-        return self.strups.structure.scatterers()[self.idx].u_iso
+        return self.structure_parameter_set.structure.scatterers()[
+            self.index
+        ].u_iso
 
     def _setuiso(self, dummy, value):
-        self.strups.structure.scatterers()[self.idx].u_iso = value
+        self.structure_parameter_set.structure.scatterers()[
+            self.index
+        ].u_iso = value
         return
 
     def _getelem(self):
@@ -150,6 +244,23 @@ class CCTBXUnitCellParSet(ParameterSet):
         Unit cell parameters (ParameterAdapter).
     """
 
+    @property
+    @deprecated(unit_cell_strups_dep_msg)
+    def strups(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.cctbxparset.CCTBXUnitCellParSet.structure_parameter_set
+        instead.
+        """
+        return self.structure_parameter_set
+
+    @strups.setter
+    @deprecated(unit_cell_strups_dep_msg)
+    def strups(self, value):
+        self.structure_parameter_set = value
+
     def __init__(self, strups):
         """Initialize.
 
@@ -160,8 +271,10 @@ class CCTBXUnitCellParSet(ParameterSet):
             and the unit cell we're wrapper.
         """
         ParameterSet.__init__(self, "unitcell")
-        self.strups = strups
-        self._latpars = list(self.strups.structure.unit_cell().parameters())
+        self.structure_parameter_set = strups
+        self._latpars = list(
+            self.structure_parameter_set.structure.unit_cell().parameters()
+        )
 
         self.add_parameter(
             ParameterAdapter("a", None, self._latgetter(0), self._latsetter(0))
@@ -201,7 +314,7 @@ class CCTBXUnitCellParSet(ParameterSet):
 
         def f(dummy, value):
             self._latpars[i] = value
-            self.strups._update = True
+            self.structure_parameter_set._update = True
             return
 
         return f
@@ -255,7 +368,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         # Constrain the lattice
         from diffpy.srfit.structure.sgconstraints import _constrain_space_group
 
-        symbol = self.getSpaceGroup()
+        symbol = self.get_space_group()
         _constrain_space_group(self, symbol)
 
         return
@@ -293,7 +406,7 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         return
 
     @classmethod
-    def canAdapt(self, stru):
+    def can_adapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         try:
             from cctbx.crystal import special_position_settings
@@ -301,11 +414,11 @@ class CCTBXCrystalParSet(BaseStructureParSet):
             return False
         return isinstance(stru, special_position_settings)
 
-    def getLattice(self):
+    def get_lattice(self):
         """Get the ParameterSet containing the lattice Parameters."""
         return self.unitcell
 
-    def getScatterers(self):
+    def get_scatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
         The site positions must be accessible from the list entries via
@@ -315,11 +428,22 @@ class CCTBXCrystalParSet(BaseStructureParSet):
         """
         return self.scatterers
 
-    def getSpaceGroup(self):
+    def get_space_group(self):
         """Get the HM space group symbol for the structure."""
         sg = self.structure.space_group()
         t = sg.type()
         return t.lookup_symbol()
+
+    @deprecated(crystal_getSpaceGroup_dep_msg)
+    def getSpaceGroup(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.cctbxparset.CCTBXCrystalParSet.get_space_group
+        instead.
+        """
+        return self.get_space_group()
 
 
 # End class CCTBXCrystalParSet

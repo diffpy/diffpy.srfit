@@ -34,6 +34,34 @@ stru_dep_msg = build_deprecation_message(
 )
 
 
+parset_base = "diffpy.srfit.structure.basestructureparset.BaseStructureParSet"
+parset_new_base = "diffpy.cmistructure.basestructureparset.BaseStructureParSet"
+
+parset_canAdapt_dep_msg = build_deprecation_message(
+    parset_base,
+    "canAdapt",
+    "can_adapt",
+    removal_version,
+    new_base=parset_new_base,
+)
+
+parset_getLattice_dep_msg = build_deprecation_message(
+    parset_base,
+    "getLattice",
+    "get_lattice",
+    removal_version,
+    new_base=parset_new_base,
+)
+
+parset_getScatterers_dep_msg = build_deprecation_message(
+    parset_base,
+    "getScatterers",
+    "get_scatterers",
+    removal_version,
+    new_base=parset_new_base,
+)
+
+
 class BaseStructureParSet(ParameterSet):
     """Base class for structure adapters.
 
@@ -65,23 +93,46 @@ class BaseStructureParSet(ParameterSet):
         self.structure = value
 
     @classmethod
-    def canAdapt(self, stru):
+    def can_adapt(self, stru):
         """Return whether the structure can be adapted by this class."""
         return False
 
-    def getLattice(self):
+    @classmethod
+    @deprecated(parset_canAdapt_dep_msg)
+    def canAdapt(self, stru):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.basestructureparset.BaseStructureParSet.can_adapt
+        instead.
+        """
+        return self.can_adapt(stru)
+
+    def get_lattice(self):
         """Get a ParameterSet containing the lattice Parameters.
 
         The returned ParameterSet may contain other Parameters than the
         lattice Parameters. It is assumed that the lattice parameters
         are named "a", "b", "c", "alpha", "beta", "gamma".
 
-        Lattice must also have the "angunits" attribute, which is either
-        "deg" or "rad", to signify degrees or radians.
+        Lattice must also have the "angle_units" attribute, which is
+        either "deg" or "rad", to signify degrees or radians.
         """
         raise NotImplementedError("The must be overloaded")
 
-    def getScatterers(self):
+    @deprecated(parset_getLattice_dep_msg)
+    def getLattice(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.basestructureparset.BaseStructureParSet.get_lattice
+        instead.
+        """
+        return self.get_lattice()
+
+    def get_scatterers(self):
         """Get a list of ParameterSets that represents the scatterers.
 
         The site positions must be accessible from the list entries via
@@ -90,3 +141,14 @@ class BaseStructureParSet(ParameterSet):
         isotropic, anisotropic) depends on the adapted structure.
         """
         raise NotImplementedError("The must be overloaded")
+
+    @deprecated(parset_getScatterers_dep_msg)
+    def getScatterers(self):
+        """This function has been deprecated and will be removed in version
+        4.0.0.
+
+        Please use
+        diffpy.cmistructure.basestructureparset.BaseStructureParSet.get_scatterers
+        instead.
+        """
+        return self.get_scatterers()

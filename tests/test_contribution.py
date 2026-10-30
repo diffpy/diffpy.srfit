@@ -14,6 +14,8 @@
 ##############################################################################
 """Tests for the fitcontribution module."""
 
+import re
+
 import pytest
 from numpy import arange, array_equal, dot, sin
 
@@ -273,6 +275,66 @@ def test_residual(
     actual_builders = find_builders_with_observers()
     expected_builders = []
     assert actual_builders == expected_builders
+
+
+# The chiv residual divides by the uncertainties dy, so it can't be
+# computed at a point whose uncertainty is zero or not a number. The
+# profile is observed at the 20 points x = 0, 0.5, ..., 9.5 with y = x, and
+# the equation is "A*x" with A = 2.
+@pytest.mark.parametrize(
+    "input_dyobs, expected_invalid_count",
+    [
+        # C1: A user loads data whose last point has an uncertainty of
+        # zero.
+        # Expected: An SrFitError says that 1 of the 20 points has an
+        # uncertainty that is zero or not a number, and suggests excluding
+        # it or setting valid uncertainties.
+        ([1.0] * 19 + [0.0], "1"),
+        # C2: A user loads data whose last three points have uncertainties
+        # of zero, as at the end of a detector bank.
+        # Expected: An SrFitError says that 3 of the 20 points do.
+        ([1.0] * 17 + [0.0] * 3, "3"),
+        # C3: A user loads data with one uncertainty that is not a number.
+        # Expected: An SrFitError says that 1 of the 20 points does.
+        ([1.0] * 10 + [float("nan")] + [1.0] * 9, "1"),
+    ],
+)
+def test_residual_with_invalid_uncertainties(
+    input_dyobs, expected_invalid_count
+):
+    profile = Profile()
+    profile.set_observed_profile(XOBS, XOBS, input_dyobs)
+    contribution = FitContribution("test")
+    contribution.set_profile(profile)
+    contribution.set_equation("A*x")
+    contribution.A.set_value(2)
+    expected_msg = (
+        "The residual of FitContribution 'test' can't be computed at "
+        f"{expected_invalid_count} of its 20 points, because their "
+        "uncertainties are zero or not a number. Please exclude those "
+        "points with Profile.set_calculation_range, or set valid "
+        "uncertainties with Profile.set_observed_profile."
+    )
+    with pytest.raises(SrFitError, match=re.escape(expected_msg)):
+        contribution.residual()
+
+
+def test_residual_with_invalid_uncertainties_outside_calculation_range():
+    # Test computing the residual when the points with zero uncertainties
+    # are outside the calculation range, as when a user cuts off the end
+    # of a detector bank
+    # Expected: The residual is computed on the calculation range, with
+    # the observed uncertainties of one.
+    profile = Profile()
+    profile.set_observed_profile(XOBS, XOBS, [1.0] * 17 + [0.0] * 3)
+    profile.set_calculation_range(xmax=8.0)
+    contribution = FitContribution("test")
+    contribution.set_profile(profile)
+    contribution.set_equation("A*x")
+    contribution.A.set_value(2)
+    actual_residual = contribution.residual().tolist()
+    expected_residual = arange(0, 8.5, 0.5).tolist()
+    assert actual_residual == expected_residual
 
 
 # The cached values of the profile and residual equations are cleared

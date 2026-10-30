@@ -195,6 +195,9 @@ class Profile(Observable, Validatable):
             ``dyobs`` is None (default), ``dyobs`` stays None to
             indicate no uncertainty was observed, and the calculated
             ``dy`` will be set to 1 at each calculation point instead.
+            Points whose uncertainties are zero or not a number can't
+            weight a fit, so the residual raises an error unless
+            ``set_calculation_range`` excludes them.
 
         Raises
         ------

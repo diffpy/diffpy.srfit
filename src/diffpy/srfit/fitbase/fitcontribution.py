@@ -24,6 +24,8 @@ See the examples in the documentation for how to use a FitContribution.
 
 __all__ = ["FitContribution"]
 
+import numpy
+
 from diffpy.srfit.exceptions import SrFitError
 from diffpy.srfit.fitbase.parameter import ParameterProxy
 from diffpy.srfit.fitbase.parameterset import ParameterSet
@@ -478,12 +480,31 @@ class FitContribution(ParameterSet):
         -------
         numpy.ndarray
             The array of residual values.
+
+        Raises
+        ------
+        SrFitError
+            If the residual isn't finite at points whose uncertainties
+            ``dy`` are zero or not a number.
         """
         # Assign the calculated profile
         self.profile.ycalc = self._eq()
         # Note that equations only recompute when their inputs are modified, so
         # the following will not recompute the equation.
-        return self._reseq()
+        residual = self._reseq()
+        if not numpy.all(numpy.isfinite(residual)):
+            dy = self.profile.dy
+            invalid_count = numpy.count_nonzero((dy == 0) | numpy.isnan(dy))
+            if invalid_count > 0:
+                raise SrFitError(
+                    f"The residual of FitContribution '{self.name}' can't "
+                    f"be computed at {invalid_count} of its {len(dy)} "
+                    "points, because their uncertainties are zero or not a "
+                    "number. Please exclude those points with "
+                    "Profile.set_calculation_range, or set valid "
+                    "uncertainties with Profile.set_observed_profile."
+                )
+        return residual
 
     def evaluate(self):
         """Evaluate the contribution equation and update profile.ycalc.

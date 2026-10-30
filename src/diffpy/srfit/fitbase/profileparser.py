@@ -23,6 +23,7 @@ See the class documentation for more information.
 """
 
 import warnings
+from pathlib import Path
 
 import numpy as np
 
@@ -297,12 +298,21 @@ class ProfileParser(object):
             )
         column_format = self._detect_column_format(data, column_format)
         columns = self._map_column_labels_to_data(data, column_format)
+        dy = self._validate_uncertainty(columns.get("dy"))
+        if "dy" in columns and dy is None:
+            warnings.warn(
+                f"The dy column of '{Path(filename).name}' has uncertainties "
+                "that are zero, negative, infinite or not a number, so all "
+                "of them are ignored and every point is weighted equally. "
+                "Please check the uncertainties in the file, or set them "
+                "with Profile.set_observed_profile."
+            )
         self._banks.append(
             [
                 columns["x"],
                 columns["y"],
                 self._validate_uncertainty(columns.get("dx")),
-                self._validate_uncertainty(columns.get("dy")),
+                dy,
             ]
         )
 

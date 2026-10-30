@@ -1,4 +1,5 @@
 import re
+import warnings
 from pathlib import Path
 
 import pytest
@@ -74,17 +75,6 @@ EXPECTED_META = {
             [2.0, 2.1, 2.2],
             [0.1, 0.3, 0.5],
             [0.2, 0.4, 0.6],
-        ),
-        # C5: 4-column file where dx/dy contain NaN and inf values
-        # Expected: x, y, and metadata are read correctly; dx and dy
-        # are set to None
-        (
-            Path("four_col_nan_inf.gr"),
-            None,
-            [1.0, 1.1, 1.2],
-            [2.0, 2.1, 2.2],
-            None,
-            None,
         ),
     ],
 )
@@ -169,6 +159,73 @@ def test_parse_file_bad(parser_datafiles, input_file, column_order, msg):
     parser = ProfileParser()
     with pytest.raises(ParseError, match=re.escape(msg)):
         parser.parse_file(parser_datafiles / input_file, column_order)
+
+
+@pytest.mark.parametrize(
+    "input_file, expected_dx, expected_dy",
+    [
+        # Test reading a file whose dy column has uncertainties that can't
+        # weight a fit
+        # C1: A user loads a file whose dy column has one zero.
+        # Expected: A warning says the whole dy column is ignored and
+        # suggests checking it, and dy is None.
+        ("three_col_zero_dy.dat", None, None),
+        # C2: A user loads a file whose dx and dy columns have NaN and inf
+        # values.
+        # Expected: Only the dy column gives a warning, since dx doesn't
+        # weight a fit, and dx and dy are None.
+        ("four_col_nan_inf.gr", None, None),
+    ],
+)
+def test_parse_file_with_invalid_dy(
+    as_list, parser_datafiles, input_file, expected_dx, expected_dy
+):
+    # Parse the file, recording every warning to check that only one is
+    # raised
+    parser = ProfileParser()
+    with warnings.catch_warnings(record=True) as caught_warnings:
+        warnings.simplefilter("always")
+        parser.parse_file(parser_datafiles / input_file)
+    actual_warning_messages = []
+    for caught_warning in caught_warnings:
+        if issubclass(caught_warning.category, UserWarning):
+            actual_warning_messages.append(str(caught_warning.message))
+    actual_dx = as_list(parser._dx)
+    actual_dy = as_list(parser._dy)
+    expected_warning_messages = [
+        f"The dy column of '{input_file}' has uncertainties that are "
+        "zero, negative, infinite or not a number, so all of them are "
+        "ignored and every point is weighted equally. Please check the "
+        "uncertainties in the file, or set them with "
+        "Profile.set_observed_profile."
+    ]
+    assert actual_warning_messages == expected_warning_messages
+    assert actual_dx == expected_dx
+    assert actual_dy == expected_dy
+
+
+def test_parse_file_with_zero_dx(as_list, parser_datafiles):
+    # Test reading a PDF file whose dr column is all zeros, as PDFgetX2
+    # writes it
+    # Expected: dx is None and dy is read, with no warning, since dx
+    # doesn't weight a fit.
+    parser = ProfileParser()
+    # Parse the file, recording every warning to check that none is raised
+    with warnings.catch_warnings(record=True) as caught_warnings:
+        warnings.simplefilter("always")
+        parser.parse_file(parser_datafiles / "four_col_zero_dx.gr")
+    actual_warning_messages = []
+    for caught_warning in caught_warnings:
+        if issubclass(caught_warning.category, UserWarning):
+            actual_warning_messages.append(str(caught_warning.message))
+    actual_dx = as_list(parser._dx)
+    actual_dy = as_list(parser._dy)
+    expected_warning_messages = []
+    expected_dx = None
+    expected_dy = [0.2, 0.4, 0.6]
+    assert actual_warning_messages == expected_warning_messages
+    assert actual_dx == expected_dx
+    assert actual_dy == expected_dy
 
 
 # ProfileParser is an extension point. A subclass customizes a format by

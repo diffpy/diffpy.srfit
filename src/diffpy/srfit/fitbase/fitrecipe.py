@@ -37,7 +37,7 @@ __all__ = ["FitRecipe"]
 from collections import OrderedDict
 from pathlib import Path
 
-from numpy import array, concatenate, dot, sqrt
+from numpy import array, concatenate, count_nonzero, dot, isinf, sqrt
 
 import diffpy.srfit.util.inpututils as utils
 from diffpy.srfit.fitbase.fithook import PrintFitHook
@@ -532,8 +532,11 @@ class FitRecipe(_fitrecipe_interface, RecipeOrganizer):
             ]
         )
 
-        # Calculate the point-average chi^2
-        w = dot(chiv, chiv) / len(chiv)
+        # Calculate the point-average chi^2 over the points with weight
+        unweighted_count = 0
+        for con in self._contributions.values():
+            unweighted_count += count_nonzero(isinf(con.profile.dy))
+        w = dot(chiv, chiv) / (len(chiv) - unweighted_count)
         # Now we must append the restraints
         penalties = [sqrt(res.penalty(w)) for res in self._restraintlist]
         chiv = concatenate([chiv, penalties])

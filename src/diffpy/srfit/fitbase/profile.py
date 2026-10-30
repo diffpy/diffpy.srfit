@@ -87,7 +87,9 @@ class Profile(Observable, Validatable):
         property gets and sets the value of ``ypar``.
     dy : numpy.ndarray or None
         The uncertainty in the profile over the calculation range
-        (default None). This property gets and sets the value of
+        (default None). It is infinite at points with no weight in a fit,
+        and one everywhere when no point in the range has a valid
+        uncertainty. This property gets and sets the value of
         ``dypar``.
     ycalc : numpy.ndarray or None
         The calculated signal (default None). This property gets and
@@ -195,9 +197,11 @@ class Profile(Observable, Validatable):
             ``dyobs`` is None (default), ``dyobs`` stays None to
             indicate no uncertainty was observed, and the calculated
             ``dy`` will be set to 1 at each calculation point instead.
-            Points whose uncertainties are zero or not a number can't
-            weight a fit, so the residual raises an error unless
-            ``set_calculation_range`` excludes them.
+            ``dyobs`` is kept as given. A point whose uncertainty is
+            zero, negative, infinite or not a number gets no weight in a
+            fit, so its calculated ``dy`` is infinite. If no point in the
+            calculation range has a valid uncertainty, ``dy`` is set to 1
+            at each calculation point, as when ``dyobs`` is None.
 
         Raises
         ------
@@ -339,11 +343,7 @@ class Profile(Observable, Validatable):
             indices = (lo - epslo <= self.xobs) & (self.xobs <= hi + epshi)
             self.x = self.xobs[indices]
             self.y = self.yobs[indices]
-            self.dy = (
-                self.dyobs[indices]
-                if self.dyobs is not None
-                else numpy.ones_like(self.x)
-            )
+            self.dy = self._compute_calculation_uncertainty()
         else:
             x1 = numpy.arange(lo, hi + epshi, step)
             self.set_calculation_points(x1)
@@ -365,7 +365,10 @@ class Profile(Observable, Validatable):
         """Set the calculation points.
 
         This creates ``y`` and ``dy`` on the specified grid if
-        ``xobs``, ``yobs`` and ``dyobs`` exist.
+        ``xobs``, ``yobs`` and ``dyobs`` exist. On a grid that differs
+        from ``xobs``, ``dy`` is interpolated from the valid observed
+        uncertainties only, and a calculation point next to an observed
+        point with no weight gets no weight either.
 
         Parameters
         ----------
@@ -380,18 +383,30 @@ class Profile(Observable, Validatable):
         self.x = x
         if self.yobs is not None:
             self.y = _rebin_array(self.yobs, self.xobs, self.x)
-        if self.dyobs is not None:
-            # work around for interpolation issue making some of these non-1
-            if (self.dyobs == 1).all():
-                self.dy = numpy.ones_like(self.x)
-            else:
-                # FIXME - This does not follow error propagation rules and it
-                # introduces (more) correlation between the data points.
-                self.dy = _rebin_array(self.dyobs, self.xobs, self.x)
-        elif self.yobs is not None:
-            self.dy = numpy.ones_like(self.x)
-
+            self.dy = self._compute_calculation_uncertainty()
         return
+
+    def _compute_calculation_uncertainty(self):
+        """Return dy on the calculation points, infinite where a point
+        has no weight, or ones when no point has a valid uncertainty."""
+        unweighted_dy = numpy.ones_like(self.x, dtype=float)
+        if self.dyobs is None:
+            return unweighted_dy
+        is_valid = numpy.isfinite(self.dyobs) & (self.dyobs > 0)
+        # A calculation point between an observed point with no weight and
+        # its neighbour interpolates to less than 1, so it has no weight.
+        is_weighted = (
+            _rebin_array(is_valid.astype(float), self.xobs, self.x) == 1
+        )
+        if not is_weighted.any():
+            return unweighted_dy
+        dy = numpy.full_like(self.x, numpy.inf, dtype=float)
+        # FIXME - This does not follow error propagation rules and it
+        # introduces (more) correlation between the data points.
+        dy[is_weighted] = numpy.interp(
+            self.x[is_weighted], self.xobs[is_valid], self.dyobs[is_valid]
+        )
+        return dy
 
     @deprecated(setCalculationPoints_dep_msg)
     def setCalculationPoints(self, x):

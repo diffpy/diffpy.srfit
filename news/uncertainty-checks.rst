@@ -4,7 +4,8 @@
 
 **Changed:**
 
-* ``ProfileParser`` warns when it ignores a ``dy`` column whose uncertainties are zero, negative, infinite or not a number, instead of weighting every point equally without saying so.
+* ``ProfileParser`` reads the ``dy`` column as it is in the file, instead of dropping the whole column when one uncertainty is zero, negative, infinite or not a number.
+* ``FitResults`` counts only the points with weight in Reduced Chi2, and says how many points of each contribution have no weight.
 
 **Deprecated:**
 
@@ -16,7 +17,7 @@
 
 **Fixed:**
 
-* ``FitContribution.residual`` raises an ``SrFitError`` that counts the points whose uncertainties are zero or not a number, instead of returning an infinite or undefined residual, unless ``Profile.set_calculation_range`` excludes them.
+* A point whose uncertainty is zero, negative, infinite or not a number gets no weight in a fit, instead of making the residual infinite or undefined. When no point in the calculation range has a valid uncertainty, the profile is weighted as if it had none.
 
 **Security:**
 

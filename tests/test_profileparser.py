@@ -3,6 +3,7 @@ import warnings
 from pathlib import Path
 
 import pytest
+from numpy import array_equal, inf, nan
 
 from diffpy.srfit import ProfileParser
 from diffpy.srfit.exceptions import ParseError
@@ -162,27 +163,24 @@ def test_parse_file_bad(parser_datafiles, input_file, column_order, msg):
 
 
 @pytest.mark.parametrize(
-    "input_file, expected_dx, expected_dy",
+    "input_file, expected_dy",
     [
-        # Test reading a file whose dy column has uncertainties that can't
-        # weight a fit
+        # Test reading a file whose dy column has uncertainties that are
+        # zero, negative, infinite or not a number, which a Profile gives
+        # no weight in a fit
         # C1: A user loads a file whose dy column has one zero.
-        # Expected: A warning says the whole dy column is ignored and
-        # suggests checking it, and dy is None.
-        ("three_col_zero_dy.dat", None, None),
+        # Expected: dy is read as it is in the file, with no warning.
+        ("three_col_zero_dy.dat", [0.2, 0.0, 0.6]),
         # C2: A user loads a file whose dx and dy columns have NaN and inf
         # values.
-        # Expected: Only the dy column gives a warning, since dx doesn't
-        # weight a fit, and dx and dy are None.
-        ("four_col_nan_inf.gr", None, None),
+        # Expected: dy is read as it is in the file, with no warning, and
+        # dx is None, since dx doesn't weight a fit.
+        ("four_col_nan_inf.gr", [inf, 1.0, nan]),
     ],
 )
-def test_parse_file_with_invalid_dy(
-    as_list, parser_datafiles, input_file, expected_dx, expected_dy
-):
-    # Parse the file, recording every warning to check that only one is
-    # raised
+def test_parse_file_with_invalid_dy(parser_datafiles, input_file, expected_dy):
     parser = ProfileParser()
+    # Parse the file, recording every warning to check that none is raised
     with warnings.catch_warnings(record=True) as caught_warnings:
         warnings.simplefilter("always")
         parser.parse_file(parser_datafiles / input_file)
@@ -190,18 +188,13 @@ def test_parse_file_with_invalid_dy(
     for caught_warning in caught_warnings:
         if issubclass(caught_warning.category, UserWarning):
             actual_warning_messages.append(str(caught_warning.message))
-    actual_dx = as_list(parser._dx)
-    actual_dy = as_list(parser._dy)
-    expected_warning_messages = [
-        f"The dy column of '{input_file}' has uncertainties that are "
-        "zero, negative, infinite or not a number, so all of them are "
-        "ignored and every point is weighted equally. Please check the "
-        "uncertainties in the file, or set them with "
-        "Profile.set_observed_profile."
-    ]
+    actual_dx = parser._dx
+    actual_dy = parser._dy
+    expected_warning_messages = []
+    expected_dx = None
     assert actual_warning_messages == expected_warning_messages
     assert actual_dx == expected_dx
-    assert actual_dy == expected_dy
+    assert array_equal(actual_dy, expected_dy, equal_nan=True)
 
 
 def test_parse_file_with_zero_dx(as_list, parser_datafiles):

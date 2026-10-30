@@ -23,7 +23,6 @@ See the class documentation for more information.
 """
 
 import warnings
-from pathlib import Path
 
 import numpy as np
 
@@ -101,8 +100,8 @@ class ProfileParser(object):
             uncertainty cannot be read.
         dy : np.ndarray
             The uncertainties associated with y
-            read from the file. This is None if the
-            uncertainty cannot be read.
+            read from the file, as they are in the file.
+            This is None if the file has no dy column.
     _x : np.ndarray
         Independent variable from the chosen bank
     _y : np.ndarray
@@ -188,8 +187,11 @@ class ProfileParser(object):
         - For files with 4 columns: assumes (x, y, dx, dy).
         - For other cases: ``column_format`` must be explicitly specified.
 
-        Uncertainty columns (dx, dy) are only considered valid if all values
-        are positive and not NaN/Inf. Otherwise they are set to None.
+        The dy column is read as it is, since a ``Profile`` gives the
+        points whose uncertainties are zero, negative, infinite or not a
+        number no weight in a fit. The dx column is only considered valid
+        if all values are positive and not NaN/Inf. Otherwise it is set to
+        None.
 
         This wipes out the currently loaded data and selected bank number.
 
@@ -298,21 +300,12 @@ class ProfileParser(object):
             )
         column_format = self._detect_column_format(data, column_format)
         columns = self._map_column_labels_to_data(data, column_format)
-        dy = self._validate_uncertainty(columns.get("dy"))
-        if "dy" in columns and dy is None:
-            warnings.warn(
-                f"The dy column of '{Path(filename).name}' has uncertainties "
-                "that are zero, negative, infinite or not a number, so all "
-                "of them are ignored and every point is weighted equally. "
-                "Please check the uncertainties in the file, or set them "
-                "with Profile.set_observed_profile."
-            )
         self._banks.append(
             [
                 columns["x"],
                 columns["y"],
                 self._validate_uncertainty(columns.get("dx")),
-                dy,
+                columns.get("dy"),
             ]
         )
 

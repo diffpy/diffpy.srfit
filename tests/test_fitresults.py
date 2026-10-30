@@ -15,6 +15,7 @@
 """Tests for the fitresults module."""
 
 import pytest
+from numpy import array, dot, inf, isfinite, linspace, pi, sin, sqrt
 from scipy.optimize import leastsq
 
 from diffpy.srfit import FitResults
@@ -121,3 +122,63 @@ def test_get_results_dictionary(build_recipes_one_contribution):
     actual_amplitude = actual_results_dict["amplitude"]
     expected_amplitude = 1
     assert actual_amplitude == pytest.approx(expected_amplitude, abs=1e-5)
+
+
+# Points whose uncertainties are zero, negative, infinite or not a number
+# are left out of Chi2, Reduced Chi2 and Rw, as if they weren't in the
+# data, and the results say how many there are. The recipe compares
+# A*sin(k*x + c), with A = 0.8, k = 1.2 and c = 0.1, to sin(x) on 21 points
+# in [0, pi], without refining. The three variables are counted in Reduced
+# Chi2.
+@pytest.mark.parametrize(
+    "input_dyobs, expected_dy, expected_messages",
+    [
+        # C1: A user fits data whose uncertainties are all valid.
+        # Expected: Every point counts, and there are no messages.
+        ([0.1] * 21, [0.1] * 21, []),
+        # C2: A user fits data whose last three uncertainties are zero, as
+        # at the end of a detector bank.
+        # Expected: Only the other 18 points count, and a message says how
+        # many points have no weight and how to set their uncertainties.
+        (
+            [0.1] * 18 + [0.0] * 3,
+            [0.1] * 18 + [inf] * 3,
+            [
+                "3 of the 21 points of contribution 'c1' have no weight, "
+                "because their uncertainties are zero, negative, infinite "
+                "or not a number. To include them in the fit, please set "
+                "valid uncertainties with Profile.set_observed_profile."
+            ],
+        ),
+        # C3: A user fits data whose uncertainties are all zero.
+        # Expected: Every point counts with an uncertainty of one, and the
+        # message for missing uncertainties is given.
+        (
+            [0.0] * 21,
+            [1.0] * 21,
+            ["Some quantities invalid due to missing profile uncertainty"],
+        ),
+    ],
+)
+def test_results_with_invalid_uncertainties(
+    build_recipe_with_uncertainty, input_dyobs, expected_dy, expected_messages
+):
+    # Compute the results at the starting values
+    recipe, profile = build_recipe_with_uncertainty(input_dyobs)
+    results = FitResults(recipe)
+    results.get_results_string()
+    actual_messages = results.messages
+    actual_metrics = [results.chi2, results.rchi2, results.rw]
+    # Compute the expected metrics from the points with weight only
+    x = linspace(0, pi, 21)
+    y = sin(x)
+    dy = array(expected_dy)
+    is_weighted = isfinite(dy)
+    chiv = (0.8 * sin(1.2 * x + 0.1) - y)[is_weighted] / dy[is_weighted]
+    weighted_y = y[is_weighted] / dy[is_weighted]
+    expected_chi2 = dot(chiv, chiv)
+    expected_rchi2 = expected_chi2 / (is_weighted.sum() - 3)
+    expected_rw = sqrt(expected_chi2 / dot(weighted_y, weighted_y))
+    expected_metrics = [expected_chi2, expected_rchi2, expected_rw]
+    assert actual_messages == expected_messages
+    assert actual_metrics == pytest.approx(expected_metrics)

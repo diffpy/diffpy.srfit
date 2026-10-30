@@ -14,10 +14,10 @@
 ##############################################################################
 """Tests for the fitcontribution module."""
 
-import re
+import warnings
 
 import pytest
-from numpy import arange, array_equal, dot, sin
+from numpy import allclose, arange, array_equal, dot, nan, sin
 
 from diffpy.srfit import FitContribution, Profile, ProfileGenerator
 from diffpy.srfit.exceptions import SrFitError
@@ -277,64 +277,43 @@ def test_residual(
     assert actual_builders == expected_builders
 
 
-# The chiv residual divides by the uncertainties dy, so it can't be
-# computed at a point whose uncertainty is zero or not a number. The
-# profile is observed at the 20 points x = 0, 0.5, ..., 9.5 with y = x, and
-# the equation is "A*x" with A = 2.
+# A point whose uncertainty is zero or not a number has no weight, so its
+# chiv residual is zero. The profile is observed at x = 1, 2, 3, 4, 5 with
+# y = x, and the equation is "A*x" with A = 2, so the residual of every
+# point with an uncertainty of one is x.
 @pytest.mark.parametrize(
-    "input_dyobs, expected_invalid_count",
+    "input_dyobs, expected_residual",
     [
-        # C1: A user loads data whose last point has an uncertainty of
-        # zero.
-        # Expected: An SrFitError says that 1 of the 20 points has an
-        # uncertainty that is zero or not a number, and suggests excluding
-        # it or setting valid uncertainties.
-        ([1.0] * 19 + [0.0], "1"),
-        # C2: A user loads data whose last three points have uncertainties
-        # of zero, as at the end of a detector bank.
-        # Expected: An SrFitError says that 3 of the 20 points do.
-        ([1.0] * 17 + [0.0] * 3, "3"),
-        # C3: A user loads data with one uncertainty that is not a number.
-        # Expected: An SrFitError says that 1 of the 20 points does.
-        ([1.0] * 10 + [float("nan")] + [1.0] * 9, "1"),
+        # C1: A user loads data whose last two points have uncertainties of
+        # zero, as at the end of a detector bank.
+        # Expected: The residual is zero at those two points, with no
+        # warning.
+        ([1.0, 1.0, 1.0, 0.0, 0.0], [1.0, 2.0, 3.0, 0.0, 0.0]),
+        # C2: A user loads data with one uncertainty that is not a number,
+        # at x = 3.
+        # Expected: The residual is zero at x = 3, with no warning.
+        ([1.0, 1.0, nan, 1.0, 1.0], [1.0, 2.0, 0.0, 4.0, 5.0]),
     ],
 )
-def test_residual_with_invalid_uncertainties(
-    input_dyobs, expected_invalid_count
-):
+def test_residual_with_invalid_uncertainties(input_dyobs, expected_residual):
+    input_xobs = [1.0, 2.0, 3.0, 4.0, 5.0]
     profile = Profile()
-    profile.set_observed_profile(XOBS, XOBS, input_dyobs)
+    profile.set_observed_profile(input_xobs, input_xobs, input_dyobs)
     contribution = FitContribution("test")
     contribution.set_profile(profile)
     contribution.set_equation("A*x")
     contribution.A.set_value(2)
-    expected_msg = (
-        "The residual of FitContribution 'test' can't be computed at "
-        f"{expected_invalid_count} of its 20 points, because their "
-        "uncertainties are zero or not a number. Please exclude those "
-        "points with Profile.set_calculation_range, or set valid "
-        "uncertainties with Profile.set_observed_profile."
-    )
-    with pytest.raises(SrFitError, match=re.escape(expected_msg)):
-        contribution.residual()
-
-
-def test_residual_with_invalid_uncertainties_outside_calculation_range():
-    # Test computing the residual when the points with zero uncertainties
-    # are outside the calculation range, as when a user cuts off the end
-    # of a detector bank
-    # Expected: The residual is computed on the calculation range, with
-    # the observed uncertainties of one.
-    profile = Profile()
-    profile.set_observed_profile(XOBS, XOBS, [1.0] * 17 + [0.0] * 3)
-    profile.set_calculation_range(xmax=8.0)
-    contribution = FitContribution("test")
-    contribution.set_profile(profile)
-    contribution.set_equation("A*x")
-    contribution.A.set_value(2)
-    actual_residual = contribution.residual().tolist()
-    expected_residual = arange(0, 8.5, 0.5).tolist()
-    assert actual_residual == expected_residual
+    # Compute the residual, recording every warning to check that none is
+    # raised
+    with warnings.catch_warnings(record=True) as caught_warnings:
+        warnings.simplefilter("always")
+        actual_residual = contribution.residual()
+    actual_warning_messages = []
+    for caught_warning in caught_warnings:
+        actual_warning_messages.append(str(caught_warning.message))
+    expected_warning_messages = []
+    assert allclose(actual_residual, expected_residual)
+    assert actual_warning_messages == expected_warning_messages
 
 
 # The cached values of the profile and residual equations are cleared

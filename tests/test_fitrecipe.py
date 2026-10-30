@@ -1302,3 +1302,38 @@ def test_residual_is_weighted_by_uncertainty(
     expected_residual = (profile.ycalc - profile.y) / expected_dy
     assert actual_dy == pytest.approx(expected_dy)
     assert actual_residual == pytest.approx(expected_residual)
+
+
+def test_residual_with_restraint_and_points_with_no_weight(
+    build_recipe_with_uncertainty,
+):
+    # Test the residual of a recipe with scaled soft bounds whose data have
+    # three points with no weight, compared with the same recipe on data
+    # without those points
+    # Expected: The residuals are the same, apart from the zeros of the
+    # points with no weight, because the scaled restraint is weighted by
+    # the average chi2 of the points with weight only.
+    # Build the recipe whose last three points have no weight
+    recipe_with_unweighted_points, _ = build_recipe_with_uncertainty(
+        [0.1] * 18 + [0.0] * 3
+    )
+    recipe_with_unweighted_points.add_soft_bounds(
+        "A", lower_bound=1.0, scaled=True
+    )
+    # Build the same recipe on the first 18 points only
+    xobs = linspace(0, pi, 21)[:18]
+    profile = Profile()
+    profile.set_observed_profile(xobs, sin(xobs), [0.1] * 18)
+    contribution = FitContribution("c1")
+    contribution.set_profile(profile)
+    contribution.set_equation("A*sin(k*x + c)")
+    recipe_without_points = FitRecipe()
+    recipe_without_points.add_contribution(contribution)
+    recipe_without_points.add_variable(contribution.A, 0.8)
+    recipe_without_points.add_variable(contribution.k, 1.2)
+    recipe_without_points.add_variable(contribution.c, 0.1)
+    recipe_without_points.add_soft_bounds("A", lower_bound=1.0, scaled=True)
+    actual_residual = recipe_with_unweighted_points.residual().tolist()
+    expected_residual = recipe_without_points.residual().tolist()
+    expected_residual[18:18] = [0.0, 0.0, 0.0]
+    assert actual_residual == pytest.approx(expected_residual)

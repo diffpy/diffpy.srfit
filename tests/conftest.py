@@ -418,6 +418,32 @@ def parser_datafiles(tmp_path):
         )
     )
 
+    (tmp_path / "three_col_zero_dy.dat").write_text(
+        metadata
+        + "\n".join(
+            [
+                r"#L r($\AA$)  G($\AA^{-2}$) dG($\AA^{-2}$)",
+                "1.0 2.0 0.2",
+                "1.1 2.1 0.0",
+                "1.2 2.2 0.6",
+                "",
+            ]
+        )
+    )
+
+    (tmp_path / "four_col_zero_dx.gr").write_text(
+        metadata
+        + "\n".join(
+            [
+                r"#L r($\AA$)  G($\AA^{-2}$) dr($\AA$) dG($\AA^{-2}$)",
+                "1.0 2.0 0.0 0.2",
+                "1.1 2.1 0.0 0.4",
+                "1.2 2.2 0.0 0.6",
+                "",
+            ]
+        )
+    )
+
     (tmp_path / "one_col.gr").write_text(
         metadata
         + "\n".join(

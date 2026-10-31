@@ -18,7 +18,7 @@ import io
 import re
 
 import pytest
-from numpy import allclose, arange, array, array_equal
+from numpy import allclose, arange, array, array_equal, inf, nan
 
 from diffpy.srfit import FitContribution, Profile, ProfileParser
 from diffpy.srfit.exceptions import SrFitError
@@ -83,6 +83,95 @@ def test_set_observed_profile(
     assert actual_calculated == expected_calculated
     actual_dy = profile.dy.tolist()
     assert actual_dy == expected_dy
+
+
+# A point whose observed uncertainty isn't finite and positive gets no
+# weight in a fit, so its calculated dy is infinite, unless no point has a
+# valid uncertainty, when the profile is weighted as if it had none. The
+# observed uncertainties dyobs are kept as given. The profile is observed
+# at x = 1, 2, 3, 4 with y = x.
+@pytest.mark.parametrize(
+    "input_dyobs, expected_dy",
+    [
+        # C1: A user sets data with one uncertainty of zero.
+        # Expected: dy is infinite at that point, and the other points keep
+        # their uncertainties.
+        ([0.1, 0.0, 0.3, 0.4], [0.1, inf, 0.3, 0.4]),
+        # C2: A user sets data with a negative, an infinite and a NaN
+        # uncertainty.
+        # Expected: dy is infinite at those three points.
+        ([0.1, -0.2, inf, nan], [0.1, inf, inf, inf]),
+        # C3: A user sets data whose uncertainties are all zero, as in a
+        # file whose uncertainty column is all zeros.
+        # Expected: dy is one everywhere, as for data with no uncertainties.
+        ([0.0, 0.0, 0.0, 0.0], [1.0, 1.0, 1.0, 1.0]),
+        # C4: A user sets data whose uncertainties are all invalid in
+        # different ways.
+        # Expected: dy is one everywhere.
+        ([0.0, -0.2, inf, nan], [1.0, 1.0, 1.0, 1.0]),
+    ],
+)
+def test_set_observed_profile_with_invalid_uncertainties(
+    input_dyobs, expected_dy
+):
+    input_xobs = [1.0, 2.0, 3.0, 4.0]
+    profile = Profile()
+    profile.set_observed_profile(input_xobs, input_xobs, input_dyobs)
+    actual_dyobs = profile.dyobs
+    actual_dy = profile.dy
+    expected_dyobs = input_dyobs
+    assert array_equal(actual_dyobs, expected_dyobs, equal_nan=True)
+    assert array_equal(actual_dy, expected_dy)
+
+
+# Whether a profile is fully, partly or not at all weighted depends only on
+# the uncertainties inside its calculation range. The profile is observed
+# at x = 1, 2, ..., 6 with uncertainties of 0.1, except 0 at x = 5 and 6, as
+# at the end of a detector bank.
+@pytest.mark.parametrize(
+    "input_range, expected_dy",
+    [
+        # C1: A user fits the whole range.
+        # Expected: dy is infinite at x = 5 and 6, so only those points have
+        # no weight.
+        ({}, [0.1, 0.1, 0.1, 0.1, inf, inf]),
+        # C2: A user cuts off the end of the bank.
+        # Expected: dy keeps the uncertainties of 0.1.
+        ({"xmax": 4}, [0.1, 0.1, 0.1, 0.1]),
+        # C3: A user fits only the end of the bank.
+        # Expected: dy is one everywhere, as for data with no uncertainties.
+        ({"xmin": 5}, [1.0, 1.0]),
+    ],
+)
+def test_set_calculation_range_with_invalid_uncertainties(
+    input_range, expected_dy
+):
+    input_xobs = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
+    profile = Profile()
+    profile.set_observed_profile(
+        input_xobs, input_xobs, [0.1, 0.1, 0.1, 0.1, 0.0, 0.0]
+    )
+    profile.set_calculation_range(**input_range)
+    actual_dy = profile.dy
+    assert array_equal(actual_dy, expected_dy)
+
+
+def test_set_calculation_points_with_invalid_uncertainties():
+    # Test resampling a profile whose uncertainty at x = 2 is zero onto a
+    # grid twice as fine
+    # Expected: The calculation points next to x = 2 have no weight, so dy
+    # is infinite there, and dy at the other points is interpolated from
+    # the valid uncertainties only.
+    profile = Profile()
+    profile.set_observed_profile(
+        [0.0, 1.0, 2.0, 3.0, 4.0],
+        [0.0, 1.0, 2.0, 3.0, 4.0],
+        [0.1, 0.2, 0.0, 0.4, 0.5],
+    )
+    profile.set_calculation_points(arange(0, 4.1, 0.5))
+    actual_dy = profile.dy
+    expected_dy = [0.1, 0.15, 0.2, inf, inf, inf, 0.4, 0.45, 0.5]
+    assert allclose(actual_dy, expected_dy)
 
 
 # set_calculation_range needs an observed profile to work on.

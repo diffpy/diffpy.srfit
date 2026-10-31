@@ -100,8 +100,8 @@ class ProfileParser(object):
             uncertainty cannot be read.
         dy : np.ndarray
             The uncertainties associated with y
-            read from the file. This is None if the
-            uncertainty cannot be read.
+            read from the file, as they are in the file.
+            This is None if the file has no dy column.
     _x : np.ndarray
         Independent variable from the chosen bank
     _y : np.ndarray
@@ -187,8 +187,11 @@ class ProfileParser(object):
         - For files with 4 columns: assumes (x, y, dx, dy).
         - For other cases: ``column_format`` must be explicitly specified.
 
-        Uncertainty columns (dx, dy) are only considered valid if all values
-        are positive and not NaN/Inf. Otherwise they are set to None.
+        The dy column is read as it is, since a ``Profile`` gives the
+        points whose uncertainties are zero, negative, infinite or not a
+        number no weight in a fit. The dx column is only considered valid
+        if all values are positive and not NaN/Inf. Otherwise it is set to
+        None.
 
         This wipes out the currently loaded data and selected bank number.
 
@@ -302,7 +305,7 @@ class ProfileParser(object):
                 columns["x"],
                 columns["y"],
                 self._validate_uncertainty(columns.get("dx")),
-                self._validate_uncertainty(columns.get("dy")),
+                columns.get("dy"),
             ]
         )
 

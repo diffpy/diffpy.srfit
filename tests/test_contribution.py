@@ -14,8 +14,10 @@
 ##############################################################################
 """Tests for the fitcontribution module."""
 
+import warnings
+
 import pytest
-from numpy import arange, array_equal, dot, sin
+from numpy import allclose, arange, array_equal, dot, nan, sin
 
 from diffpy.srfit import FitContribution, Profile, ProfileGenerator
 from diffpy.srfit.exceptions import SrFitError
@@ -273,6 +275,45 @@ def test_residual(
     actual_builders = find_builders_with_observers()
     expected_builders = []
     assert actual_builders == expected_builders
+
+
+# A point whose uncertainty is zero or not a number has no weight, so its
+# chiv residual is zero. The profile is observed at x = 1, 2, 3, 4, 5 with
+# y = x, and the equation is "A*x" with A = 2, so the residual of every
+# point with an uncertainty of one is x.
+@pytest.mark.parametrize(
+    "input_dyobs, expected_residual",
+    [
+        # C1: A user loads data whose last two points have uncertainties of
+        # zero, as at the end of a detector bank.
+        # Expected: The residual is zero at those two points, with no
+        # warning.
+        ([1.0, 1.0, 1.0, 0.0, 0.0], [1.0, 2.0, 3.0, 0.0, 0.0]),
+        # C2: A user loads data with one uncertainty that is not a number,
+        # at x = 3.
+        # Expected: The residual is zero at x = 3, with no warning.
+        ([1.0, 1.0, nan, 1.0, 1.0], [1.0, 2.0, 0.0, 4.0, 5.0]),
+    ],
+)
+def test_residual_with_invalid_uncertainties(input_dyobs, expected_residual):
+    input_xobs = [1.0, 2.0, 3.0, 4.0, 5.0]
+    profile = Profile()
+    profile.set_observed_profile(input_xobs, input_xobs, input_dyobs)
+    contribution = FitContribution("test")
+    contribution.set_profile(profile)
+    contribution.set_equation("A*x")
+    contribution.A.set_value(2)
+    # Compute the residual, recording every warning to check that none is
+    # raised
+    with warnings.catch_warnings(record=True) as caught_warnings:
+        warnings.simplefilter("always")
+        actual_residual = contribution.residual()
+    actual_warning_messages = []
+    for caught_warning in caught_warnings:
+        actual_warning_messages.append(str(caught_warning.message))
+    expected_warning_messages = []
+    assert allclose(actual_residual, expected_residual)
+    assert actual_warning_messages == expected_warning_messages
 
 
 # The cached values of the profile and residual equations are cleared

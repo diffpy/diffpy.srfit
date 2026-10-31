@@ -137,7 +137,8 @@ class FitResults(object):
         The cumulative chi-squared as a function of data index.
 
     rchi2 : float
-        The reduced chi-squared of the fit.
+        The reduced chi-squared of the fit. Only the points with weight
+        in the fit are counted.
 
     rw : float
         The weighted R-factor of the fit.
@@ -255,7 +256,10 @@ class FitResults(object):
         self._calculate_metrics()
 
         # Calculate the restraints penalty
-        w = self.chi2 / len(res)
+        unweighted_count = 0
+        for con in self.conresults.values():
+            unweighted_count += numpy.count_nonzero(numpy.isinf(con.dy))
+        w = self.chi2 / (len(res) - unweighted_count)
         self.penalty = sum([r.penalty(w) for r in recipe._restraintlist])
 
         return
@@ -356,7 +360,7 @@ class FitResults(object):
             c2last = cumchi2[-1:].sum()
             cumchi2 = numpy.concatenate([cumchi2, c2last + cc2w])
             yw2tot += con.weight * (con.chi2 / con.rw**2)
-            numpoints += len(con.x)
+            numpoints += numpy.count_nonzero(numpy.isfinite(con.dy))
 
         chi2 = cumchi2[-1:].sum()
         cumrw = numpy.sqrt(cumchi2 / yw2tot)
@@ -440,6 +444,19 @@ class FitResults(object):
             )
             if err_msg not in self.messages:
                 self.messages.append(err_msg)
+        for con_name, con in self.conresults.items():
+            unweighted_count = numpy.count_nonzero(numpy.isinf(con.dy))
+            if unweighted_count == 0:
+                continue
+            unweighted_msg = (
+                f"{unweighted_count} of the {len(con.dy)} points of "
+                f"contribution '{con_name}' have no weight, because their "
+                "uncertainties are zero, negative, infinite or not a number. "
+                "To include them in the fit, please set valid uncertainties "
+                "with Profile.set_observed_profile."
+            )
+            if unweighted_msg not in self.messages:
+                self.messages.append(unweighted_msg)
 
         lines.extend(self.messages)
 

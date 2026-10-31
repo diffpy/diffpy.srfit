@@ -474,6 +474,9 @@ class FitContribution(ParameterSet):
         The residual equation can be changed with the
         ``set_residual_equation`` method.
 
+        A point with no weight, whose ``dy`` is infinite, has a ``chiv``
+        residual of zero.
+
         Returns
         -------
         numpy.ndarray

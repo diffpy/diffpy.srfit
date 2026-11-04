@@ -301,8 +301,16 @@ def short_decay_recipe():
 
 @pytest.fixture
 def plain_terminal(monkeypatch):
-    """Make rich print without colors or styles on a console 100
-    characters wide, whatever terminal the tests run in."""
+    """Make rich print the same plain tables on every machine.
+
+    rich reads the console width and the color settings from the
+    environment, so the printed tables could differ from the expected
+    ones depending on where the tests run. ``COLUMNS`` is set to 100
+    because rich would otherwise squeeze or wrap the tables in a narrow
+    terminal. ``FORCE_COLOR`` and ``TTY_COMPATIBLE`` are removed because
+    some CI setups and shell profiles set them, which would make rich
+    add color codes to the tables.
+    """
     monkeypatch.setenv("COLUMNS", "100")
     monkeypatch.delenv("FORCE_COLOR", raising=False)
     monkeypatch.delenv("TTY_COMPATIBLE", raising=False)
@@ -310,8 +318,18 @@ def plain_terminal(monkeypatch):
 
 @pytest.fixture
 def color_terminal(monkeypatch):
-    """Make rich print in 16 colors on a console 100 characters wide, as
-    in a terminal that shows colors."""
+    """Make rich print in the same 16 colors on every machine.
+
+    rich reads the console width and the color settings from the
+    environment, and pytest's captured output isn't a terminal, so rich
+    would print no colors at all. ``COLUMNS`` is set to 100 so that the
+    tables aren't squeezed in a narrow terminal. ``FORCE_COLOR`` makes
+    rich print colors. ``TERM`` is set to "xterm" and ``COLORTERM`` is
+    removed so that rich uses the basic 16 colors, in which red is
+    ``\\x1b[31m``, rather than the codes of a 256-color or true-color
+    terminal. ``NO_COLOR`` is removed because it would turn the colors
+    off.
+    """
     monkeypatch.setenv("COLUMNS", "100")
     monkeypatch.setenv("FORCE_COLOR", "1")
     monkeypatch.setenv("TERM", "xterm")

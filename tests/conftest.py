@@ -5,7 +5,7 @@ import sys
 from functools import lru_cache
 
 import pytest
-from numpy import arange, array, linspace, pi, sin
+from numpy import arange, array, exp, full_like, linspace, pi, sin
 
 import diffpy.srfit.equation.literals as literals
 from diffpy.srfit import (
@@ -225,6 +225,116 @@ def build_recipe_two_contributions():
     recipe.add_soft_bounds(contribution1.k, 0.8, 1.2)
 
     return recipe
+
+
+@pytest.fixture
+def two_sample_decay_recipe():
+    """Return a recipe fitting the decays of two samples that share one
+    rate constant.
+
+    Each contribution, ``sample_A`` and ``sample_B`` (weight 0.5), fits
+    ``A*exp(-k*t) + b`` to a noiseless decay on 41 points in [0, 20]
+    with uncertainties of 0.05. The data have ``k = 0.35``, ``A = 3`` and
+    ``b = 0.2`` for sample A, and ``A = 1.5`` and ``b = 0.5`` for sample
+    B. The variables start away from these values and are added in this
+    order: ``A_B = 1.4`` (untagged), ``k = 0.3`` (tagged "shared"),
+    ``A_A = 2.8`` and ``b_A = 0.25`` (tagged "sample A"), and
+    ``b_B = 0.5``, which is fixed. Sample B's rate is constrained to
+    ``k``. The default PrintFitHook is silenced.
+    """
+    t = linspace(0, 20, 41)
+    profile_a = Profile()
+    profile_a.set_observed_profile(
+        t, 3 * exp(-0.35 * t) + 0.2, full_like(t, 0.05)
+    )
+    sample_a = FitContribution("sample_A")
+    sample_a.set_profile(profile_a, xname="t")
+    sample_a.set_equation("A*exp(-k*t) + b")
+    profile_b = Profile()
+    profile_b.set_observed_profile(
+        t, 1.5 * exp(-0.35 * t) + 0.5, full_like(t, 0.05)
+    )
+    sample_b = FitContribution("sample_B")
+    sample_b.set_profile(profile_b, xname="t")
+    sample_b.set_equation("A*exp(-k*t) + b")
+    recipe = FitRecipe()
+    recipe.fithooks[0].verbose = 0
+    recipe.add_contribution(sample_a)
+    recipe.add_contribution(sample_b, weight=0.5)
+    recipe.add_variable(sample_b.A, 1.4, name="A_B")
+    recipe.add_variable(sample_a.k, 0.3, name="k", tag="shared")
+    recipe.add_constraint(sample_b.k, "k")
+    recipe.add_variable(sample_a.A, 2.8, name="A_A", tag="sample A")
+    recipe.add_variable(sample_a.b, 0.25, name="b_A", tag="sample A")
+    recipe.add_variable(sample_b.b, 0.5, name="b_B", fixed=True)
+    return recipe
+
+
+@pytest.fixture
+def short_decay_recipe():
+    """Return a recipe fitting a decay measured only until it is about
+    to level off.
+
+    The contribution ``decay`` fits ``A*exp(-k*t) + b`` to the noiseless
+    decay with ``A = 3``, ``k = 0.35`` and ``b = 0.2`` on 41 points in
+    [0, 10]. The uncertainties are 0.05, except for the last three
+    points, whose uncertainties are zero. The untagged variables start at
+    ``A = 2.8``, ``k = 0.3`` and ``b = 0.25``. The default PrintFitHook is
+    silenced.
+    """
+    t = linspace(0, 10, 41)
+    dy = full_like(t, 0.05)
+    dy[-3:] = 0
+    profile = Profile()
+    profile.set_observed_profile(t, 3 * exp(-0.35 * t) + 0.2, dy)
+    contribution = FitContribution("decay")
+    contribution.set_profile(profile, xname="t")
+    contribution.set_equation("A*exp(-k*t) + b")
+    recipe = FitRecipe()
+    recipe.fithooks[0].verbose = 0
+    recipe.add_contribution(contribution)
+    recipe.add_variable(contribution.A, 2.8)
+    recipe.add_variable(contribution.k, 0.3)
+    recipe.add_variable(contribution.b, 0.25)
+    return recipe
+
+
+@pytest.fixture
+def plain_terminal(monkeypatch):
+    """Make rich print the same plain tables on every machine.
+
+    rich reads the console width and the color settings from the
+    environment, so the printed tables could differ from the expected
+    ones depending on where the tests run. ``COLUMNS`` is set to 100
+    because rich would otherwise squeeze or wrap the tables in a narrow
+    terminal. ``FORCE_COLOR`` and ``TTY_COMPATIBLE`` are removed because
+    some CI setups and shell profiles set them, which would make rich
+    add color codes to the tables.
+    """
+    monkeypatch.setenv("COLUMNS", "100")
+    monkeypatch.delenv("FORCE_COLOR", raising=False)
+    monkeypatch.delenv("TTY_COMPATIBLE", raising=False)
+
+
+@pytest.fixture
+def color_terminal(monkeypatch):
+    """Make rich print in the same 16 colors on every machine.
+
+    rich reads the console width and the color settings from the
+    environment, and pytest's captured output isn't a terminal, so rich
+    would print no colors at all. ``COLUMNS`` is set to 100 so that the
+    tables aren't squeezed in a narrow terminal. ``FORCE_COLOR`` makes
+    rich print colors. ``TERM`` is set to "xterm" and ``COLORTERM`` is
+    removed so that rich uses the basic 16 colors, in which red is
+    ``\\x1b[31m``, rather than the codes of a 256-color or true-color
+    terminal. ``NO_COLOR`` is removed because it would turn the colors
+    off.
+    """
+    monkeypatch.setenv("COLUMNS", "100")
+    monkeypatch.setenv("FORCE_COLOR", "1")
+    monkeypatch.setenv("TERM", "xterm")
+    monkeypatch.delenv("COLORTERM", raising=False)
+    monkeypatch.delenv("NO_COLOR", raising=False)
 
 
 @pytest.fixture(scope="session")

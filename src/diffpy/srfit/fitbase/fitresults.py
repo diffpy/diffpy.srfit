@@ -28,8 +28,11 @@ import re
 from collections import OrderedDict
 
 import numpy
+from rich.console import Console
+from rich.table import Table
+from rich.text import Text
 
-from diffpy.srfit.util import _DASHEDLINE
+from diffpy.srfit.util import _DASHEDLINE, format_value_with_uncertainty
 from diffpy.srfit.util import sort_key_for_numeric_string as numstr
 from diffpy.srfit.util.inpututils import convert_input_to_string
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
@@ -397,6 +400,35 @@ class FitResults(object):
             self.conunc.append(sig2c**0.5)
         return
 
+    def _check_uncertainties(self):
+        """Add a message for each problem with the profile uncertainties
+        and return whether the uncertainties are reliable."""
+        certain = True
+        for con in self.conresults.values():
+            if (con.dy == 1).all():
+                certain = False
+                break
+        if not certain:
+            err_msg = (
+                "Some quantities invalid due to missing profile uncertainty"
+            )
+            if err_msg not in self.messages:
+                self.messages.append(err_msg)
+        for con_name, con in self.conresults.items():
+            unweighted_count = numpy.count_nonzero(numpy.isinf(con.dy))
+            if unweighted_count == 0:
+                continue
+            unweighted_msg = (
+                f"{unweighted_count} of the {len(con.dy)} points of "
+                f"contribution '{con_name}' have no weight, because their "
+                "uncertainties are zero, negative, infinite or not a number. "
+                "To include them in the fit, please set valid uncertainties "
+                "with Profile.set_observed_profile."
+            )
+            if unweighted_msg not in self.messages:
+                self.messages.append(unweighted_msg)
+        return certain
+
     def get_results_string(self, header="", footer="", update=False):
         """Format the results and return them in a string.
 
@@ -427,36 +459,11 @@ class FitResults(object):
         p = self.precision
         pe = "%-" + "%i.%ie" % (p + 6, p)
         pet = "%" + ".%ie" % (p,)
-        # Check to see if the uncertainty values are reliable.
-        certain = True
-        for con in self.conresults.values():
-            if (con.dy == 1).all():
-                certain = False
-                break
+        certain = self._check_uncertainties()
 
         # User-defined header
         if header:
             lines.append(header)
-
-        if not certain:
-            err_msg = (
-                "Some quantities invalid due to missing profile uncertainty"
-            )
-            if err_msg not in self.messages:
-                self.messages.append(err_msg)
-        for con_name, con in self.conresults.items():
-            unweighted_count = numpy.count_nonzero(numpy.isinf(con.dy))
-            if unweighted_count == 0:
-                continue
-            unweighted_msg = (
-                f"{unweighted_count} of the {len(con.dy)} points of "
-                f"contribution '{con_name}' have no weight, because their "
-                "uncertainties are zero, negative, infinite or not a number. "
-                "To include them in the fit, please set valid uncertainties "
-                "with Profile.set_observed_profile."
-            )
-            if unweighted_msg not in self.messages:
-                self.messages.append(unweighted_msg)
 
         lines.extend(self.messages)
 
@@ -630,6 +637,176 @@ class FitResults(object):
         print(self.get_results_string(header, footer, update).rstrip())
         return
 
+    def print_results_table(self, header="", footer="", update=False):
+        """Print the results as tables.
+
+        The tables hold the same results as ``print_results``. The overall
+        metrics come first, then the metrics of each contribution when
+        there is more than one. The refined variables are grouped by the
+        tag they were added with and keep the order they were added in.
+        Each one shows its value with its uncertainty in parenthesis
+        notation and its relative uncertainty. A Tag column is shown only
+        when at least one variable is tagged; untagged variables are then
+        listed under "untagged", after the tagged ones. The fixed
+        variables follow when ``showfixed`` is True, then the correlations
+        greater than 25%, strongest first.
+
+        In a terminal that shows colors, the messages about the results,
+        such as missing uncertainties, are yellow, and relative
+        uncertainties greater than 10% and correlations greater than 80%
+        are red.
+
+        Parameters
+        ----------
+        header : str
+            The header to print before the tables (default "").
+        footer : str
+            The footer to print after the tables (default "").
+        update : bool
+            The flag indicating whether to call ``update()`` (default
+            False).
+        """
+        if update:
+            self.update()
+        self._check_uncertainties()
+        console = Console(highlight=False)
+        if header:
+            console.print(Text(header), soft_wrap=True)
+        for message in self.messages:
+            console.print(Text(message, style="yellow"), soft_wrap=True)
+        console.print(self._get_overall_table())
+        if len(self.conresults) > 1:
+            console.print(self._get_contributions_table())
+        if self.varnames:
+            console.print(self._get_variables_table())
+        if self.showfixed and self.fixednames:
+            console.print(self._get_fixed_variables_table())
+        corrmin = 0.25
+        correlations = self._get_correlations_greater_than(corrmin)
+        corint = int(corrmin * 100)
+        if correlations:
+            console.print(self._get_correlations_table(correlations, corint))
+        else:
+            console.print(Text("No correlations greater than %i%%" % corint))
+        if footer:
+            console.print(Text(footer), soft_wrap=True)
+        return
+
+    def _get_overall_table(self):
+        overall_table = Table(title="Overall", show_header=False)
+        overall_table.add_column()
+        overall_table.add_column(justify="right")
+        metrics = [
+            ("Residual", self.residual),
+            ("Contributions", self.residual - self.penalty),
+            ("Restraints", self.penalty),
+            ("Chi2", self.chi2),
+            ("Reduced Chi2", self.rchi2),
+            ("Rw", self.rw),
+        ]
+        for metric_name, metric_value in metrics:
+            overall_table.add_row(metric_name, f"{metric_value:.6g}")
+        return overall_table
+
+    def _get_contributions_table(self):
+        contributions_table = Table(title="Contributions")
+        contributions_table.add_column("Contribution")
+        for column_name in ["Weight", "Residual", "Chi2", "Rw"]:
+            contributions_table.add_column(column_name, justify="right")
+        for name in sorted(self.conresults, key=numstr):
+            con = self.conresults[name]
+            contributions_table.add_row(
+                Text(name),
+                f"{con.weight:.6g}",
+                f"{con.residual:.6g}",
+                f"{con.chi2:.6g}",
+                f"{con.rw:.6g}",
+            )
+        return contributions_table
+
+    def _get_variable_tags(self):
+        """Return the first tag given to each variable, or "" for a
+        variable without one."""
+        recipe = self.recipe
+        variable_tags = []
+        for name in self.varnames:
+            automatic_tags = {name, "all", recipe._fixedtag}
+            given_tags = []
+            for tag in recipe._tagmanager.tags(recipe.get(name)):
+                if tag not in automatic_tags:
+                    given_tags.append(tag)
+            variable_tags.append(given_tags[0] if given_tags else "")
+        return variable_tags
+
+    def _get_variables_table(self):
+        variable_tags = self._get_variable_tags()
+        show_tags = any(variable_tags)
+        indices_by_tag = {}
+        for index, tag in enumerate(variable_tags):
+            indices_by_tag.setdefault(tag or "untagged", []).append(index)
+        if "untagged" in indices_by_tag:
+            indices_by_tag["untagged"] = indices_by_tag.pop("untagged")
+        variables_table = Table(title="Variables")
+        if show_tags:
+            variables_table.add_column("Tag")
+        variables_table.add_column("Variable")
+        variables_table.add_column("Value(unc)", justify="right")
+        variables_table.add_column("Rel. unc.", justify="right")
+        for tag, indices in indices_by_tag.items():
+            for position, index in enumerate(indices):
+                value = self.varvals[index]
+                uncertainty = self.varunc[index]
+                row = [
+                    Text(self.varnames[index]),
+                    Text(format_value_with_uncertainty(value, uncertainty)),
+                    _get_relative_uncertainty_text(value, uncertainty),
+                ]
+                if show_tags:
+                    row.insert(0, Text(tag if position == 0 else ""))
+                is_last_with_tag = position == len(indices) - 1
+                variables_table.add_row(
+                    *row, end_section=show_tags and is_last_with_tag
+                )
+        return variables_table
+
+    def _get_fixed_variables_table(self):
+        fixed_variables_table = Table(title="Fixed Variables")
+        fixed_variables_table.add_column("Variable")
+        fixed_variables_table.add_column("Value", justify="right")
+        for name, value in zip(self.fixednames, self.fixedvals):
+            fixed_variables_table.add_row(Text(name), f"{value:.6g}")
+        return fixed_variables_table
+
+    def _get_correlations_greater_than(self, corrmin):
+        """Return (correlation, i, j) for each pair of variables i < j
+        whose correlation is greater than ``corrmin`` in magnitude,
+        strongest first."""
+        correlations = []
+        n = len(self.varnames)
+        for i in range(n):
+            for j in range(i + 1, n):
+                val = self.cov[i, j] / (self.cov[i, i] * self.cov[j, j]) ** 0.5
+                if abs(val) > corrmin:
+                    correlations.append((val, i, j))
+        correlations.sort(key=lambda vij: abs(vij[0]), reverse=True)
+        return correlations
+
+    def _get_correlations_table(self, correlations, corint):
+        correlations_table = Table(
+            title="Variable Correlations greater than %i%%" % corint
+        )
+        correlations_table.add_column("Variable 1")
+        correlations_table.add_column("Variable 2")
+        correlations_table.add_column("Correlation", justify="right")
+        for val, i, j in correlations:
+            style = "red" if abs(val) > 0.8 else ""
+            correlations_table.add_row(
+                Text(self.varnames[i]),
+                Text(self.varnames[j]),
+                Text("%.4f" % val, style=style),
+            )
+        return correlations_table
+
     @deprecated(printResults_dep_msg)
     def printResults(self, header="", footer="", update=False):
         """This function has been deprecated and will be removed in version
@@ -712,6 +889,20 @@ class FitResults(object):
 
 
 # End class FitResults
+
+
+def _get_relative_uncertainty_text(value, uncertainty):
+    """Return the relative uncertainty as a percentage, in red when it
+    is greater than 10%, or a dash when it can't be computed."""
+    if value == 0 or not numpy.isfinite(uncertainty):
+        relative_uncertainty_text = Text("—")
+        return relative_uncertainty_text
+    relative_uncertainty = abs(uncertainty / value)
+    style = "red" if relative_uncertainty > 0.1 else ""
+    relative_uncertainty_text = Text(
+        "%.2f%%" % (relative_uncertainty * 100), style=style
+    )
+    return relative_uncertainty_text
 
 
 class ContributionResults(object):

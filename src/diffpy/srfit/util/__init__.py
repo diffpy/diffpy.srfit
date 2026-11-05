@@ -14,6 +14,7 @@
 ##############################################################################
 """Utilities and constants used throughout SrFit."""
 
+import math
 import re
 
 from diffpy.utils._deprecator import build_deprecation_message, deprecated
@@ -63,6 +64,39 @@ def sortKeyForNumericString(s):
     Please use diffpy.srfit.util.sort_key_for_numeric_string instead.
     """
     return sort_key_for_numeric_string(s)
+
+
+def format_value_with_uncertainty(value, uncertainty):
+    """Return a value and its uncertainty in parenthesis notation.
+
+    The uncertainty is rounded to two significant digits, and the value is
+    rounded to the same decimal place, so ``3.19965644 +/- 0.0021228`` gives
+    ``"3.1997(21)"``. An uncertainty that is zero, negative, infinite or not
+    a number gives the value alone, with six significant digits.
+
+    Parameters
+    ----------
+    value : float
+        The value to format.
+    uncertainty : float
+        The uncertainty in ``value``.
+
+    Returns
+    -------
+    str
+        The value with the digits of its uncertainty in parentheses, e.g.
+        ``"3.1997(21)"``.
+    """
+    if not math.isfinite(uncertainty) or uncertainty <= 0:
+        formatted_value = f"{value:.6g}"
+        return formatted_value
+    decimals = 1 - math.floor(math.log10(uncertainty))
+    if round(uncertainty * 10**decimals) >= 100:
+        decimals -= 1
+    decimals = max(0, decimals)
+    uncertainty_digits = round(uncertainty * 10**decimals)
+    formatted_value = f"{value:.{decimals}f}({uncertainty_digits})"
+    return formatted_value
 
 
 # End of file
